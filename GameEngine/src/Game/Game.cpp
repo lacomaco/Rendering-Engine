@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <glm/glm.hpp>
-#include "Logger.h"
+#include "../Logger/Logger.h"
 
 void Game::ProcessInput()
 {
