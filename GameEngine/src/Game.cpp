@@ -2,6 +2,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <glm/glm.hpp>
+#include "Logger.h"
 
 void Game::ProcessInput()
 {
@@ -21,11 +23,18 @@ void Game::ProcessInput()
 }
 
 void Game::Setup() {
-	// TODO: 오브젝트들 셋업, (에셋들)
+	playerPosition = glm::vec2(10.0, 20.0);
+	playerVelocity = glm::vec2(60.0f, 60.0f);
 }
 
 void Game::Update()
 {
+	// 초단위임. 0.1 <- 0.1초
+	float deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
+
+	millisecsPreviousFrame = SDL_GetTicks();
+
+	playerPosition += playerVelocity * deltaTime;
 }
 
 void Game::Render()
@@ -38,7 +47,10 @@ void Game::Render()
 	SDL_FreeSurface(surface);
 
 	SDL_Rect dstRect = {
-		10,10,20,20
+		playerPosition.x,
+		playerPosition.y,
+		32,
+		32
 	};
 
 	SDL_RenderCopy(renderer, texture, NULL, &dstRect);
@@ -51,18 +63,17 @@ void Game::Render()
 Game::Game()
 {
 	isRunning = false;
-	std::cout << "Game constructor called!" << std::endl;
+	Logger::Log("Game constructor called!");
 }
 
 Game::~Game()
 {
-	std::cout << "Game destructor called" << std::endl;
 }
 
 void Game::Initialize()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING)!=0) {
-		std::cerr << "Error initializing SDL." << std::endl;
+		Logger::Err("Error initializing SDL.");
 		return;
 	}
 
@@ -81,7 +92,7 @@ void Game::Initialize()
 	);
 
 	if (!window) {
-		std::cerr << "Error SDL Create Window failed" << std::endl;
+		Logger::Err("Error creating SDL window.");
 		return;
 	}
 
@@ -90,7 +101,7 @@ void Game::Initialize()
 	);
 
 	if (!renderer) {
-		std::cerr << "Error! SDL Create Renderer Failed" << std::endl;
+		Logger::Err("Error creating SDL renderer.");
 		return;
 	}
 
@@ -116,5 +127,3 @@ void Game::Destroy()
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
-
-
