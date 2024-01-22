@@ -4,6 +4,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include "../Logger/Logger.h"
+#include "../ECS/ECS.h"
 
 void Game::ProcessInput()
 {
@@ -23,8 +24,11 @@ void Game::ProcessInput()
 }
 
 void Game::Setup() {
-	playerPosition = glm::vec2(10.0, 20.0);
-	playerVelocity = glm::vec2(60.0f, 60.0f);
+	// TODO:
+	// Entity tank = registry.CreateEntity();
+	// tank.AddComponent<TransformComponent>();
+	// tank.AddComponent<SpriteComponent>();
+	// tank.AddComponent<BoxColliderComponent>();
 }
 
 void Game::Update()
@@ -34,7 +38,10 @@ void Game::Update()
 
 	millisecsPreviousFrame = SDL_GetTicks();
 
-	playerPosition += playerVelocity * deltaTime;
+	// TODO:
+	// MovementSystem.Update();
+	// CollisionSystem.Update();
+	// DamageSystem.Update();
 }
 
 void Game::Render()
@@ -42,21 +49,8 @@ void Game::Render()
 	SDL_SetRenderDrawColor(renderer, 21,21,21,255);
 	SDL_RenderClear(renderer);
 
-	SDL_Surface* surface = IMG_Load("./assets/images/tank-tiger-right.png");
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
-	SDL_FreeSurface(surface);
+	// TODO: Render game objects with Entity
 
-	SDL_Rect dstRect = {
-		playerPosition.x,
-		playerPosition.y,
-		32,
-		32
-	};
-
-	SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-	SDL_DestroyTexture(texture);
-
-	// 내부적으로 더블버퍼 쓰고있음.
 	SDL_RenderPresent(renderer);
 }
 

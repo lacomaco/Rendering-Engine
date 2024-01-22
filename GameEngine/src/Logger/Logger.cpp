@@ -37,7 +37,7 @@ void Logger::Log(const std::string& message)
 	messages.push_back({
 		LOG_INFO,
 		oss
-		});
+	});
 }
 
 void Logger::Err(const std::string& message)
@@ -46,7 +46,7 @@ void Logger::Err(const std::string& message)
 	// 12-Oct-2020 09:34:10 - Message
 	std::cerr << "[ERR] : " << oss << " - " << message << std::endl;
 	messages.push_back({
-	LOG_ERROR,
-	oss
-		});
+		LOG_ERROR,
+		oss
+	});
 }
