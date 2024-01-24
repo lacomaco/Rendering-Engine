@@ -3,6 +3,10 @@
 #include <vector>
 #include <unordered_map>
 #include <typeindex>
+#include <memory>
+#include "../Logger/Logger.h "
+#include <utility>
+
 
 const unsigned int MAX_COMPONENTS = 32;
 
@@ -17,6 +21,7 @@ protected:
 
 template <typename T>
 class Component : public IComponent {
+public:
 	static int GetId() {
 		static auto id = nextId++;
 		return id;
@@ -45,6 +50,15 @@ public:
 	bool operator>(const Entity & other) const {
 		return id > other.id;
 	}
+
+	template <typename T, typename ...TArgs> void AddComponent(TArgs&& ...args);
+	template <typename T> void RemoveComponent();
+	template <typename T> bool HasComponent() const;
+	template <typename T> T& GetComponent() const;
+
+	// 부모 registry
+	// forward declaration
+	class Registry* registry;
 };
 
 class System {
@@ -144,9 +158,10 @@ private:
 	 * 엔티티가 컴포넌트를 가지고 있는지 조회하는건 entityComponentSignatures을 통해서 하는것이 더 편합니다.
 	 * 
 	*/
-	std::vector<IPool*> componentPools;
+	std::vector<std::shared_ptr<IPool>> componentPools;
 	std::vector<Signature> entityComponentSignatures;
-	std::unordered_map<std::type_index, System&> systems;
+
+	std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 
 	std::vector<Entity> entitiesToBeAdded;
 	std::vector<Entity> entitiesToBeKilled;
@@ -156,12 +171,37 @@ public:
 
 	Entity CreateEntity();
 	void Update();
-	void AddEntityToSystem(Entity entity);
 
 	template <typename T, typename ...TArgs> void AddComponent(Entity entitiy, TArgs&& ...args);
-	
+	template <typename T> void RemoveComponent(Entity entity);
+	template <typename T> bool HasComponent(Entity entity);
+	template <typename T> T& GetComponent(Entity entity) const;
+
+	// System
+
+	template<typename T, typename ...TArgs> void AddSystem(TArgs&& ...args);
+	template<typename T> void RemoveSystem();
+	template<typename T> bool HasSystem() const;
+	template<typename T> T& GetSystem() const;
+
+	/*
+	* entity가 가지고 잇는 컴포넌트 데이터를 조회해서 system을 등록한다.
+	*/
+	void AddEntityToSystems(Entity entity);
 
 };
+
+template<typename T>
+T& Registry::GetComponent(Entity entity) const
+{
+	const auto componentId = Component<T>::GetId();
+	const auto entityId = entity.GetId();
+
+	auto componentPool = 
+		std::static_pointer_cast<Pool<T>>(componentPools[componentId]);
+
+	return componentPool->Get(entityId);
+}	
 
 template<typename T>
 void System::RequireComponent()
@@ -170,8 +210,32 @@ void System::RequireComponent()
 	componentSignature.set(componentId);
 }
 
+template<typename T, typename ...TArgs>
+void Registry::AddSystem(TArgs&& ...args) {
+	std::shared_ptr<T> newSystem = std::make_shared<T>(std::forward<TArgs>(args)...);
+	systems.insert(std::make_pair(std::type_index(typeid(T)), newSystem));
+}
+
+template<typename T>
+void Registry::RemoveSystem() {
+	auto system = systems.find(std::type_index(typeid(T)));
+	systems.erase(system);
+}
+
+template<typename T>
+bool Registry::HasSystem() const {
+	return systems.find(std::type_index(typeid(T))) != systems.end();
+}
+
+template<typename T>
+T& Registry::GetSystem() const {
+	auto system = systems.find(std::type_index(typeid(T)));
+	return *(std::static_pointer_cast<T>(system->second));
+}
+
+
 template <typename T, typename ...TArgs>
-void Registry::AddComponent(Entity entity, TArgs&&... args) {
+void Registry::AddComponent(Entity entity, TArgs&&...args) {
 	const auto componentId = Component<T>::GetId();
 	const auto entityId = entity.GetId();
 
@@ -182,17 +246,56 @@ void Registry::AddComponent(Entity entity, TArgs&&... args) {
 
 	// 컴포넌트 풀이 없으면 생성한다.
     if (componentPools[componentId] == nullptr) {
-		Pool<T>* newComponentPool = new Pool<T>();
+		std::shared_ptr<Pool<T>> newComponentPool = std::make_shared<Pool<T>>();
         componentPools[componentId] = newComponentPool;
 	}
 
-	Pool<T>* componentPool = componentPools[componentId];
+	std::shared_ptr<Pool<T>> componentPool = 
+		std::static_pointer_cast<Pool<T>>(componentPools[componentId]);
 
 	if(entityId >= componentPool->GetSize()) {
 		componentPool->Resize(entityId + 1);
 	}
 
-	T newComponent = T(std::forward<TArgs>(args));
+	T newComponent(std::forward<TArgs>(args)...);
 	componentPool->Set(entityId, newComponent);
 	entityComponentSignatures[entityId].set(componentId);
+
+	Logger::Log("Component id = " + std::to_string(componentId) + " was added to entity id " + std::to_string(entityId));
+}
+
+template <typename T>
+void Registry::RemoveComponent(Entity entity) {
+	const auto componentId = Component<T>::GetId();
+	const auto entityId = entity.GetId();
+
+	entityComponentSignatures[entityId].set(componentId, false);
+}
+
+template <typename T>
+bool Registry::HasComponent(Entity entity) {
+	const auto componentId = Component<T>::GetId();
+	const auto entityId = entity.GetId();
+
+	return entityComponentSignatures[entityId].test(componentId);
+}
+
+template <typename TComponent, typename ...TArgs>
+void Entity::AddComponent(TArgs&& ...args) {
+	registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
+}
+
+template <typename TComponent>
+void Entity::RemoveComponent() {
+	registry->RemoveComponent<TComponent>(*this);
+}
+
+template <typename TComponent>
+bool Entity::HasComponent() const {
+	return registry->HasComponent<TComponent>(*this);
+}
+
+template <typename TComponent>
+TComponent& Entity::GetComponent() const {
+	return registry->GetComponent<TComponent>(*this);
 }

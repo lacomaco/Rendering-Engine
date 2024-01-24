@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include "../Logger/Logger.h"
 #include "../ECS/ECS.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/RigidBodyComponent.h"
 
 void Game::ProcessInput()
 {
@@ -24,11 +26,13 @@ void Game::ProcessInput()
 }
 
 void Game::Setup() {
-	// TODO:
-	// Entity tank = registry.CreateEntity();
-	// tank.AddComponent<TransformComponent>();
-	// tank.AddComponent<SpriteComponent>();
-	// tank.AddComponent<BoxColliderComponent>();
+	Entity tank = registry->CreateEntity();
+	Entity truck = registry->CreateEntity();
+
+	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 0.0));
+
+	tank.RemoveComponent<TransformComponent>();
 }
 
 void Game::Update()
@@ -57,6 +61,7 @@ void Game::Render()
 Game::Game()
 {
 	isRunning = false;
+	registry = std::make_unique<Registry>();
 	Logger::Log("Game constructor called!");
 }
 

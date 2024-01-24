@@ -1,8 +1,9 @@
 #include "ECS.h"
 #include "../Logger/Logger.h"
+#include <iostream>
 
 // ---------- Component ----------
-
+int IComponent::nextId = 0;
 
 // ---------- Entity ----------
 
@@ -43,17 +44,42 @@ Entity Registry::CreateEntity()
 	}
 
 	Entity entity(entityId);
+	entity.registry = this;
 	entitiesToBeAdded.push_back(entity);
 
-	Logger::Log("Entity Created with id = " + entityId);
+	if (entityId >= entityComponentSignatures.size()) {
+		entityComponentSignatures.resize(entityId + 1);
+	}
+
+	Logger::Log("Entity Created with id = " + std::to_string(entityId));
 	return entity;
 }
 
 void Registry::Update()
 {
+	for (auto entity : entitiesToBeAdded) {
+		AddEntityToSystems(entity);
+	}
+	entitiesToBeAdded.clear();
 
 }
 
-void Registry::AddEntityToSystem(Entity entity)
+void Registry::AddEntityToSystems(Entity entity)
 {
+	const auto& entityId = entity.GetId();
+
+	const auto& entityComponentSignature = entityComponentSignatures[entityId];
+
+	for (auto& system : systems) {
+		const auto& systemComponentSignature = system.second->GetComponentSignature();
+
+		bool isInterested = (entityComponentSignature & systemComponentSignature) == systemComponentSignature;
+
+		if (isInterested) {
+			system.second->AddEntityToSystem(entity);
+		}
+
+
+	}
+
 }
