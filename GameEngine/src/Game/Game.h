@@ -1,7 +1,5 @@
 #pragma once
 #include "../ECS/ECS.h"
-#include "../AssetStore/AssetStore.h"
-#include "../EventBus/EventBus.h"
 #include <SDL.h>
 #include <sol/sol.hpp>
 
@@ -20,8 +18,6 @@ class Game {
         sol::state lua;
         
         std::unique_ptr<Registry> registry;
-        std::unique_ptr<AssetStore> assetStore;
-        std::unique_ptr<EventBus> eventBus;
 
     public:
         Game();
