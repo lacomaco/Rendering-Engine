@@ -1,52 +1,30 @@
 #include "Logger.h"
 #include <iostream>
-#include <iomanip>
+#include <string>
+#include <chrono>
 #include <ctime>
-#include <sstream>
 
-std::vector<LogEntry> Logger::messages = std::vector<LogEntry>();
+std::vector<LogEntry> Logger::messages;
 
-Logger::Logger()
-{
+std::string CurrentDateTimeToString() {
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::string output(30, '\0');
+    std::strftime(&output[0], output.size(), "%d-%b-%Y %H:%M:%S", std::localtime(&now));
+    return output;
 }
 
-
-Logger::~Logger()
-{
+void Logger::Log(const std::string& message) {
+    LogEntry logEntry;
+    logEntry.type = LOG_INFO;
+    logEntry.message = "LOG: [" + CurrentDateTimeToString() + "]: " + message;
+    std::cout << "\x1B[32m" << logEntry.message << "\033[0m" << std::endl;
+    messages.push_back(logEntry);
 }
 
-std::string CurrentDateTimeToString()
-{
-	std::time_t t = std::time(nullptr);
-	std::tm tm;
-	localtime_s(&tm, &t);
-	std::ostringstream oss;
-
-	oss << std::put_time(&tm, "%d-%b-%Y %H:%M:%S");
-
-	return oss.str();
-}
-
-void Logger::Log(const std::string& message)
-{
-
-	std::string oss = CurrentDateTimeToString();
-
-
-	std::cout << "[LOG] : " << oss << " - " << message << std::endl;
-	messages.push_back({
-		LOG_INFO,
-		oss
-	});
-}
-
-void Logger::Err(const std::string& message)
-{
-	std::string oss = CurrentDateTimeToString();
-	// 12-Oct-2020 09:34:10 - Message
-	std::cerr << "[ERR] : " << oss << " - " << message << std::endl;
-	messages.push_back({
-		LOG_ERROR,
-		oss
-	});
+void Logger::Err(const std::string& message) {
+    LogEntry logEntry;
+    logEntry.type = LOG_ERROR;
+    logEntry.message = "ERR: [" + CurrentDateTimeToString() + "]: " + message;
+    messages.push_back(logEntry);
+    std::cerr << "\x1B[91m"<< logEntry.message << "\033[0m" << std::endl;
 }
