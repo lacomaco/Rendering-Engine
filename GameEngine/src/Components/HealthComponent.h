@@ -1,5 +1,4 @@
-#ifndef HEALTHCOMPONENT_H
-#define HEALTHCOMPONENT_H
+#pragma once
 
 struct HealthComponent {
     int healthPercentage;
@@ -9,4 +8,3 @@ struct HealthComponent {
     }
 };
 
-#endif

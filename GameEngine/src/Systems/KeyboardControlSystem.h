@@ -1,6 +1,4 @@
-#ifndef KEYBOARDCONTROLSYSTEM_H
-#define KEYBOARDCONTROLSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../EventBus/EventBus.h"
 #include "../Events/KeyPressedEvent.h"
@@ -51,5 +49,3 @@ class KeyboardControlSystem: public System {
                 
         }
 };
-
-#endif

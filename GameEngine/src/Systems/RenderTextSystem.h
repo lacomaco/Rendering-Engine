@@ -1,6 +1,4 @@
-#ifndef RENDERTEXTSYSTEM_H
-#define RENDERTEXTSYSTEM_H
-
+#pragma once
 #include "../AssetStore/AssetStore.h"
 #include "../ECS/ECS.h"
 #include "../Components/TextLabelComponent.h"
@@ -43,4 +41,3 @@ class RenderTextSystem: public System {
         }
 };
 
-#endif

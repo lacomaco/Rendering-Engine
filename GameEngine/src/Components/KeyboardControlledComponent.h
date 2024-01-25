@@ -1,5 +1,4 @@
-#ifndef KEYBOARDCONTROLLEDCOMPONENT_H
-#define KEYBOARDCONTROLLEDCOMPONENT_H
+#pragma once
 
 #include <glm/glm.hpp>
 
@@ -16,5 +15,3 @@ struct KeyboardControlledComponent {
         this->leftVelocity = leftVelocity;
     }
 };
-
-#endif

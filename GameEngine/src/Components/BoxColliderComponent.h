@@ -1,6 +1,4 @@
-#ifndef BOXCOLLIDERCOMPONENT_H
-#define BOXCOLLIDERCOMPONENT_H
-
+#pragma once
 #include <glm/glm.hpp>
 
 struct BoxColliderComponent {
@@ -15,4 +13,3 @@ struct BoxColliderComponent {
     }
 };
 
-#endif

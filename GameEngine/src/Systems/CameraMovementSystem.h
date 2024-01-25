@@ -1,6 +1,4 @@
-#ifndef CAMERAMOVEMENTSYSTEM_H
-#define CAMERAMOVEMENTSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/CameraFollowComponent.h"
 #include "../Components/TransformComponent.h"
@@ -33,5 +31,3 @@ class CameraMovementSystem: public System {
             }
         }
 };
-
-#endif

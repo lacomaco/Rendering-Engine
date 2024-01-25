@@ -1,5 +1,4 @@
-#ifndef EVENTBUS_H
-#define EVENTBUS_H
+#pragma once
 
 #include "../Logger/Logger.h"
 #include "Event.h"
@@ -93,4 +92,3 @@ class EventBus {
         }
 };
 
-#endif

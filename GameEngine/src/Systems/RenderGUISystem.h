@@ -1,6 +1,4 @@
-#ifndef RENDERGUISYSTEM_H
-#define RENDERGUISYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
@@ -117,5 +115,4 @@ class RenderGUISystem: public System {
             ImGuiSDL::Render(ImGui::GetDrawData());
         }
 };
-
-#endif
+#pragma once

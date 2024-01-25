@@ -1,6 +1,4 @@
-#ifndef RENDERHEALTHBARSYSTEM_H
-#define RENDERHEALTHBARSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../AssetStore/AssetStore.h"
 #include "../Components/TransformComponent.h"
@@ -88,4 +86,3 @@ class RenderHealthBarSystem: public System {
         }
 };
 
-#endif

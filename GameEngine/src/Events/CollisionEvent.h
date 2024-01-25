@@ -1,5 +1,4 @@
-#ifndef COLLISIONEVENT_H
-#define COLLISIONEVENT_H
+#pragma once
 
 #include "../ECS/ECS.h"
 #include "../EventBus/Event.h"
@@ -11,4 +10,3 @@ class CollisionEvent: public Event {
         CollisionEvent(Entity a, Entity b): a(a), b(b) {}
 };
 
-#endif

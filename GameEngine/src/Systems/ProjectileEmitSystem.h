@@ -1,6 +1,4 @@
-#ifndef PROJECTILEEMITSYSTEM_H
-#define PROJECTILEEMITSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../EventBus/EventBus.h"
 #include "../Events/KeyPressedEvent.h"
@@ -99,4 +97,3 @@ class ProjectileEmitSystem: public System {
         }
 };
 
-#endif

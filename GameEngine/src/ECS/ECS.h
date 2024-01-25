@@ -1,5 +1,4 @@
-#ifndef ECS_H
-#define ECS_H
+#pragma once
 
 #include "../Logger/Logger.h"
 #include <vector>
@@ -371,5 +370,3 @@ template <typename TComponent>
 TComponent& Entity::GetComponent() const {
     return registry->GetComponent<TComponent>(*this);
 }
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef ANIMATIONSYSTEM_H
-#define ANIMATIONSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/SpriteComponent.h"
 #include "../Components/AnimationComponent.h"
@@ -23,5 +21,3 @@ class AnimationSystem: public System {
             }
         }
 };
-
-#endif

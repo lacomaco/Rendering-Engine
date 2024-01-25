@@ -1,6 +1,4 @@
-#ifndef PROJECTILELIFECYCLESYSTEM_H
-#define PROJECTILELIFECYCLESYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/ProjectileComponent.h"
 
@@ -21,5 +19,3 @@ class ProjectileLifecycleSystem: public System {
             }
         }
 };
-
-#endif

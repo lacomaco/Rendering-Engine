@@ -1,5 +1,4 @@
-#ifndef TEXTLABELCOMPONENT_H
-#define TEXTLABELCOMPONENT_H
+#pragma once
 
 #include <string>
 #include <glm/glm.hpp>
@@ -21,4 +20,3 @@ struct TextLabelComponent {
     }
 };
 
-#endif

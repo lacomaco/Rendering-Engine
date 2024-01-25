@@ -1,6 +1,4 @@
-#ifndef TRANSFORMCOMPONENT_H
-#define TRANSFORMCOMPONENT_H
-
+#pragma once
 #include <glm/glm.hpp>
 
 struct TransformComponent {
@@ -15,4 +13,3 @@ struct TransformComponent {
     }
 };
 
-#endif

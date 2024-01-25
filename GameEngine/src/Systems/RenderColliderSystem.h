@@ -1,6 +1,4 @@
-#ifndef RENDERCOLLIDERSYSTEM_H
-#define RENDERCOLLIDERSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/BoxColliderComponent.h"
@@ -42,4 +40,3 @@ class RenderColliderSystem: public System {
         }
 };
 
-#endif

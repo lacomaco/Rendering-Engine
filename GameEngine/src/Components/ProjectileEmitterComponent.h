@@ -1,6 +1,4 @@
-#ifndef PROJECTILEEMITTERCOMPONENT_H
-#define PROJECTILEEMITTERCOMPONENT_H
-
+#pragma once
 #include <SDL.h>
 #include <glm/glm.hpp>
 
@@ -21,5 +19,3 @@ struct ProjectileEmitterComponent {
         this->lastEmissionTime = SDL_GetTicks();
     }
 };
-
-#endif

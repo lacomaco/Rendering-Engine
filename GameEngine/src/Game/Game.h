@@ -1,6 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../AssetStore/AssetStore.h"
 #include "../EventBus/EventBus.h"
@@ -41,5 +39,3 @@ class Game {
         static int mapWidth;
         static int mapHeight;
 };
-
-#endif

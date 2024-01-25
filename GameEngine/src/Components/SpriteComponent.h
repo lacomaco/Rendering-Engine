@@ -1,6 +1,4 @@
-#ifndef SPRITECOMPONENT_H
-#define SPRITECOMPONENT_H
-
+#pragma once
 #include <string>
 #include <SDL.h>
 
@@ -23,5 +21,3 @@ struct SpriteComponent {
         this->srcRect = {srcRectX, srcRectY, width, height};
     }
 };
-
-#endif

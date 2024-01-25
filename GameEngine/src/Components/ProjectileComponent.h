@@ -1,5 +1,4 @@
-#ifndef PROJECTILECOMPONENT_H
-#define PROJECTILECOMPONENT_H
+#pragma once
 
 #include <SDL.h>
 
@@ -16,5 +15,3 @@ struct ProjectileComponent {
         this->startTime = SDL_GetTicks();
     }
 };
-
-#endif

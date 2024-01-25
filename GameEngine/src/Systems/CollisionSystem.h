@@ -1,6 +1,4 @@
-#ifndef COLLISIONSYSTEM_H
-#define COLLISIONSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../EventBus/EventBus.h"
 #include "../Events/CollisionEvent.h"
@@ -64,4 +62,3 @@ class CollisionSystem: public System {
         }
 };
 
-#endif

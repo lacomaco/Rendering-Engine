@@ -1,6 +1,4 @@
-#ifndef SCRIPTSYSTEM_H
-#define SCRIPTSYSTEM_H
-
+#pragma once
 #include "../ECS/ECS.h"
 #include "../Components/ScriptComponent.h"
 #include "../Components/TransformComponent.h"
@@ -112,4 +110,3 @@ class ScriptSystem: public System {
         }
 };
 
-#endif

@@ -1,6 +1,4 @@
-#ifndef MOVEMENTSYSTEM_H
-#define MOVEMENTSYSTEM_H
-
+#pragma once
 #include "../Game/Game.h"
 #include "../ECS/ECS.h"
 #include "../EventBus/EventBus.h"
@@ -89,4 +87,3 @@ class MovementSystem: public System {
         }
 };
 
-#endif
