@@ -9,6 +9,11 @@
 #include <imgui/imgui_sdl.h>
 #include <imgui/imgui_impl_sdl.h>
 #include "../Input/Input.h"
+#include "../Component/BoxComponent.h"
+#include "../System/BoxDrawSystem.h"
+#include "../Component/MoveComponent.h"
+#include "../Component/KeyboardControlledComponent.h"
+#include "../System/PaddleMoveSystem.h"
 
 int Game::windowWidth;
 int Game::windowHeight;
@@ -76,6 +81,24 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
+    registry->AddSystem<BoxDrawSystem>();
+    registry->AddSystem<PaddleMoveSystem>();
+
+    auto paddle = registry->CreateEntity();
+    const int thickness = 15;
+    const int paddleHeight = 100;
+    int screenWidth, screenHeight;
+    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+
+    paddle.AddComponent<BoxComponent>(thickness, paddleHeight);
+    paddle.AddComponent<MoveComponent>(20, screenHeight / 2 - paddleHeight / 2);
+    paddle.AddComponent<KeyboardControlledComponent>();
+    paddle.Tag("paddle");
+
+    auto ball = registry->CreateEntity();
+    ball.AddComponent<BoxComponent>(10, 10);
+    ball.AddComponent<MoveComponent>(screenWidth/2 - 5, screenHeight/2 - 5,glm::vec2(10.0f,10.0f));
+    ball.Tag("ball");
 }
 
 void Game::Update() {
@@ -84,12 +107,14 @@ void Game::Update() {
     millisecsPreviousFrame = SDL_GetTicks();
 
     registry->Update();
+    registry->GetSystem<PaddleMoveSystem>().Update(deltaTime);
+
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
-
+    registry->GetSystem<BoxDrawSystem>().Update(renderer);
     SDL_RenderPresent(renderer);
 }
 
@@ -100,7 +125,6 @@ void Game::Run() {
         ProcessInput();
         Update();
         Render();
-        Input::ClearPressedKeys();
     }
 }
 

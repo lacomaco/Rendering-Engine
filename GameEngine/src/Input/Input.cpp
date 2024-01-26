@@ -1,5 +1,5 @@
 #include "Input.h"
 
-std::vector<KeyCode> Input::pressedKeys;
 Input* Input::input = nullptr;
+const Uint8* Input::keyState = nullptr;  // Á¤ÀÇ
 

@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="src\Component\MoveComponent.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="libs\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="src\ECS\ECS.h" />
@@ -404,6 +405,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="src\Component\BoxComponent.h" />
+    <ClCompile Include="src\Component\KeyboardControlledComponent.h" />
     <ClCompile Include="src\ECS\ECS.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Logger\Logger.cpp" />
@@ -415,6 +418,9 @@
     <ClCompile Include="libs\imgui\imgui_sdl.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\System\BoxDrawSystem.h" />
+    <ClCompile Include="src\System\PaddleMoveSystem.cpp" />
+    <ClCompile Include="src\System\PaddleMoveSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />
