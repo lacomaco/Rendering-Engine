@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="src\Util\QuadTree.h" />
     <ClInclude Include="src\System\BallMoveSystem.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="src\Component\MoveComponent.h" />
@@ -406,7 +406,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="src\Util\QuadTree.cpp" />
     <ClCompile Include="src\System\BallMoveSystem.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="src\Component\BoxComponent.h" />

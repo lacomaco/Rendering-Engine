@@ -807,7 +807,7 @@
     <ClInclude Include="src\System\BallMoveSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="QuadTree.h">
+    <ClInclude Include="src\Util\QuadTree.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -866,7 +866,7 @@
     <ClCompile Include="src\System\BallMoveSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
+    <ClCompile Include="src\Util\QuadTree.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
