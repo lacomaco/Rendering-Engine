@@ -1,4 +1,7 @@
 #include "PaddleMoveSystem.h"
+#include "../Component/BoxComponent.h"
+#include <SDL.h>
+
 
 PaddleMoveSystem::PaddleMoveSystem()
 {
@@ -6,7 +9,7 @@ PaddleMoveSystem::PaddleMoveSystem()
 	RequireComponent<MoveComponent>();
 }
 
-void PaddleMoveSystem::Update(double deltaTime) {
+void PaddleMoveSystem::Update(double deltaTime, int windowHeight) {
 	for (auto entity : GetSystemEntities()) {
 		if (!entity.HasTag("paddle")) {
 			continue;
@@ -14,6 +17,7 @@ void PaddleMoveSystem::Update(double deltaTime) {
 
 		auto& keyInput = entity.GetComponent<KeyboardControlledComponent>();
 		auto& move = entity.GetComponent<MoveComponent>();
+		auto& box = entity.GetComponent<BoxComponent>();
 
 		move.velocity.y = 0.0f;
 		move.velocity.x = 0.0;
@@ -26,5 +30,12 @@ void PaddleMoveSystem::Update(double deltaTime) {
 		}
 
 		move.Update(deltaTime);
+
+		// 화면 넘어가는지 체크
+		if (move.y < 0) {
+			move.y = 0;
+		} else if (move.y + box.height > windowHeight) {
+			move.y = windowHeight - box.height;
+		}
 	}
 }

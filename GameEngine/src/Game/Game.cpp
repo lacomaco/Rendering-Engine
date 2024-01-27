@@ -14,6 +14,7 @@
 #include "../Component/MoveComponent.h"
 #include "../Component/KeyboardControlledComponent.h"
 #include "../System/PaddleMoveSystem.h"
+#include "../System/BallMoveSystem.h"
 
 int Game::windowWidth;
 int Game::windowHeight;
@@ -83,6 +84,7 @@ void Game::ProcessInput() {
 void Game::Setup() {
     registry->AddSystem<BoxDrawSystem>();
     registry->AddSystem<PaddleMoveSystem>();
+    registry->AddSystem<BallMoveSystem>();
 
     auto paddle = registry->CreateEntity();
     const int thickness = 15;
@@ -107,7 +109,7 @@ void Game::Update() {
     millisecsPreviousFrame = SDL_GetTicks();
 
     registry->Update();
-    registry->GetSystem<PaddleMoveSystem>().Update(deltaTime);
+    registry->GetSystem<PaddleMoveSystem>().Update(deltaTime, Game::windowHeight);
 
 }
 

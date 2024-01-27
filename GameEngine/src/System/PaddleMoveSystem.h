@@ -7,5 +7,5 @@
 class PaddleMoveSystem : public System {
 public:
 	PaddleMoveSystem();
-	void Update(double deltaTime);
+	void Update(double deltaTime, int windowHeight);
 };
