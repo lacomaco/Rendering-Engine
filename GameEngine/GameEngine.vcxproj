@@ -562,9 +562,6 @@
     <None Include="libs\glm\gtx\wrap.inl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Font Include="assets\fonts\arial.ttf" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

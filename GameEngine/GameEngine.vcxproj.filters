@@ -1272,7 +1272,4 @@
     </None>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Font Include="assets\fonts\arial.ttf" />
-  </ItemGroup>
 </Project>
