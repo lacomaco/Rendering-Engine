@@ -1,7 +1,7 @@
 #pragma once
 #include "../ECS/ECS.h"
 #include <SDL.h>
-#include <sol/sol.hpp>
+#include <SDL_ttf.h>
 
 const int FPS = 60;
 const int MILLISECS_PER_FRAME = 1000 / FPS;
@@ -14,10 +14,9 @@ class Game {
         SDL_Window* window;
         SDL_Renderer* renderer;
         SDL_Rect camera;
-
-        sol::state lua;
         
         std::unique_ptr<Registry> registry;
+        TTF_Font* font;
 
     public:
         Game();

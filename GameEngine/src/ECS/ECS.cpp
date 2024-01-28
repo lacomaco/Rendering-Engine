@@ -1,6 +1,7 @@
 #include "ECS.h"
 #include "../Logger/Logger.h"
 #include <algorithm>
+#include <iterator>
 
 int IComponent::nextId = 0;
 
@@ -29,25 +30,24 @@ bool Entity::BelongsToGroup(const std::string& group) const {
 }
 
 void System::AddEntityToSystem(Entity entity) {
-    entities.push_back(entity);
+    entities[entity.GetId()] = entity;
 }
 
 void System::RemoveEntityFromSystem(Entity entity) {
-    // https://en.cppreference.com/w/cpp/algorithm/remove
-    /*
-    * remove_if <- 언뜻보면 요소를 지우는것 처럼 보이지만
-    * 벡터 요소에서 지워야 할것들을 뒤로 밀어내는 역할을한다.
-    * return 값으로 지워야할것들의 시작점을 알려준다.
-    * 
-    * 그 시작점에서 부터 현재 벡터의 끝까지 erase 하면 삭제된다.
-    */
-    entities.erase(std::remove_if(entities.begin(), entities.end(), [&entity](Entity other) {
-        return entity == other;
-    }), entities.end());
+    entities.erase(entity.GetId());
 }
 
-std::vector<Entity> System::GetSystemEntities() const {
+std::unordered_map<int,Entity> System::GetSystemEntities() const{
     return entities;
+}
+
+Entity* System::getEntityById(int id) {
+    auto entityMap = entities.find(id);
+    if (entityMap != entities.end()) {
+		return &entityMap->second;
+	}
+
+    return nullptr;
 }
 
 const Signature& System::GetComponentSignature() const {

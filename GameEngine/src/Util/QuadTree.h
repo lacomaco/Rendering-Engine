@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <SDL.h>
 
 struct QuadTreeRectangle {
 	int x;
@@ -21,8 +22,8 @@ struct QuadTreeRectangle {
 class QuadTree
 {
 private:
-	const int MAX_OBJECTS = 10;
-	const int MAX_LEVELS = 7;
+	const int MAX_OBJECTS = 4;
+	const int MAX_LEVELS = 8;
 	QuadTreeRectangle bounds;
 	/*
 	* 0: top right
@@ -44,6 +45,6 @@ public:
 	void Insert(QuadTreeRectangle pRect);
 	std::vector<QuadTreeRectangle>& Retrieve(std::vector<QuadTreeRectangle>& returnObjects, QuadTreeRectangle pRect);
 
-
+	void DrawBounds(SDL_Renderer* renderer);
 };
 

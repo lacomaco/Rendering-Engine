@@ -10,6 +10,8 @@
 #include <memory>
 
 const unsigned int MAX_COMPONENTS = 32;
+const int notAllowedEntityId = -1;
+
 
 typedef std::bitset<MAX_COMPONENTS> Signature;
 
@@ -34,7 +36,7 @@ class Entity {
         int id;
 
     public:
-        Entity(int id): id(id) {};
+        Entity(int id = notAllowedEntityId): id(id) {};
         Entity(const Entity& entity) = default;
         void Kill();
         int GetId() const;
@@ -62,7 +64,7 @@ class Entity {
 class System {
     private:
         Signature componentSignature;
-        std::vector<Entity> entities;
+        std::unordered_map<int, Entity> entities;
 
     public:
         System() = default;
@@ -70,8 +72,9 @@ class System {
         
         void AddEntityToSystem(Entity entity);
         void RemoveEntityFromSystem(Entity entity);
-        std::vector<Entity> GetSystemEntities() const;
+        std::unordered_map<int, Entity> GetSystemEntities() const;
         const Signature& GetComponentSignature() const;
+        Entity* getEntityById(int id);
 
         template <typename TComponent> void RequireComponent();
 };

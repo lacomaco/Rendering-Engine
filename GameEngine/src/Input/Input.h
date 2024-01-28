@@ -70,8 +70,6 @@ public:
 		}
 	}
 
-	Input() {};
-
 	static Input* GetInstance() {
 		if (input == nullptr) {
 			input = new Input();

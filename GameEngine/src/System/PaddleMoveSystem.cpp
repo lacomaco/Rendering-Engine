@@ -10,7 +10,7 @@ PaddleMoveSystem::PaddleMoveSystem()
 }
 
 void PaddleMoveSystem::Update(double deltaTime, int windowHeight) {
-	for (auto entity : GetSystemEntities()) {
+	for (auto& [id, entity] : GetSystemEntities()) {
 		if (!entity.HasTag("paddle")) {
 			continue;
 		}

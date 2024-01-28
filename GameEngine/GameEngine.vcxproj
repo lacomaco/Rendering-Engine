@@ -406,6 +406,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\System\BoxDrawSystem.cpp" />
     <ClCompile Include="src\Util\QuadTree.cpp" />
     <ClCompile Include="src\System\BallMoveSystem.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_sdl.cpp" />
@@ -560,6 +561,9 @@
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\arial.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

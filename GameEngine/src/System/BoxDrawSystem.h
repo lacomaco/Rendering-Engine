@@ -4,30 +4,13 @@
 #include "../Component/MoveComponent.h"
 #include <SDL.h>
 #include <iostream>
+#include "../Util/QuadTree.h"
+#include <SDL_ttf.h>
 
 class BoxDrawSystem : public System {
 public:
-	BoxDrawSystem() {
-		RequireComponent<BoxComponent>();
-		RequireComponent<MoveComponent>();
-	}
+	BoxDrawSystem();
 
-	void Update(SDL_Renderer* renderer) {
-		for (auto entity : GetSystemEntities()) {
-			auto& boxComponent = entity.GetComponent<BoxComponent>();
-			auto& moveComponent = entity.GetComponent<MoveComponent>();
-			SDL_Rect rect = {
-				moveComponent.x,
-				moveComponent.y,
-				boxComponent.width,
-				boxComponent.height
-			};
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-			SDL_RenderFillRect(
-				renderer,
-				&rect
-			);
-		}
-	}
+	void Draw(SDL_Renderer* renderer, TTF_Font* font);
+	void DrawQuadTree(int windowHeight, int windowWidth, SDL_Renderer* renderer);
 };

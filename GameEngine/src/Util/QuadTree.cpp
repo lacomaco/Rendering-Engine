@@ -1,4 +1,6 @@
 #include "QuadTree.h"
+#include <SDL.h>
+#include "../Logger/Logger.h"
 QuadTree::QuadTree(QuadTreeRectangle pBounds, int pLevel)
 {
 	level = pLevel;
@@ -16,8 +18,10 @@ QuadTree::~QuadTree()
 void QuadTree::Clear() {
 	objects.clear();
 	for (auto& node : nodes) {
-		node->Clear();
-		node.reset();
+		if (node != nullptr) {
+			node->Clear();
+			node.reset();
+		}
 	}
 
 	nodes.clear();
@@ -37,6 +41,22 @@ void QuadTree::Split() {
 	nodes[1] = std::make_unique<QuadTree>(QuadTreeRectangle(x, y, subWidth, subHeight), level + 1);
 	nodes[2] = std::make_unique<QuadTree>(QuadTreeRectangle(x, y + subHeight, subWidth, subHeight), level + 1);
 	nodes[3] = std::make_unique<QuadTree>(QuadTreeRectangle(x + subWidth, y + subHeight, subWidth, subHeight), level + 1);
+}
+
+void QuadTree::DrawBounds(SDL_Renderer* renderer) {
+	Uint8 r, g, b, a;
+	SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderDrawLine(renderer, bounds.x, bounds.y, bounds.x + bounds.width, bounds.y); // 상단
+	SDL_RenderDrawLine(renderer, bounds.x, bounds.y, bounds.x, bounds.y + bounds.height); // 좌측
+	SDL_RenderDrawLine(renderer, bounds.x + bounds.width, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height); // 우측
+	SDL_RenderDrawLine(renderer, bounds.x, bounds.y + bounds.height, bounds.x + bounds.width, bounds.y + bounds.height); // 하단
+	for (auto& node: nodes) {
+		if (node != nullptr) {
+			node->DrawBounds(renderer);
+		}
+	}
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
 int QuadTree::GetIndex(QuadTreeRectangle pRect) {
@@ -129,3 +149,5 @@ std::vector<QuadTreeRectangle>& QuadTree::Retrieve(std::vector<QuadTreeRectangle
 
 	return returnObjects;
 }
+
+

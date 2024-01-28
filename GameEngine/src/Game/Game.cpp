@@ -8,6 +8,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_sdl.h>
 #include <imgui/imgui_impl_sdl.h>
+#include <random>
 #include "../Input/Input.h"
 #include "../Component/BoxComponent.h"
 #include "../System/BoxDrawSystem.h"
@@ -51,7 +52,7 @@ void Game::Initialize() {
         SDL_WINDOWPOS_CENTERED,
         windowWidth,
         windowHeight,
-        SDL_WINDOW_BORDERLESS
+        SDL_WINDOW_SHOWN
     );
     if (!window) {
         Logger::Err("Error creating SDL window.");
@@ -68,8 +69,10 @@ void Game::Initialize() {
     ImGuiSDL::Initialize(renderer, windowWidth, windowHeight);
 
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    font = TTF_OpenFont("assets/fonts/arial.ttf", 24);
     
     isRunning = true;
+    Logger::disableMode = true;
 }
 
 void Game::ProcessInput() {
@@ -92,15 +95,7 @@ void Game::Setup() {
     int screenWidth, screenHeight;
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
 
-    paddle.AddComponent<BoxComponent>(thickness, paddleHeight);
-    paddle.AddComponent<MoveComponent>(20, screenHeight / 2 - paddleHeight / 2);
-    paddle.AddComponent<KeyboardControlledComponent>();
-    paddle.Tag("paddle");
 
-    auto ball = registry->CreateEntity();
-    ball.AddComponent<BoxComponent>(10, 10);
-    ball.AddComponent<MoveComponent>(screenWidth/2 - 5, screenHeight/2 - 5,glm::vec2(10.0f,10.0f));
-    ball.Tag("ball");
 }
 
 void Game::Update() {
@@ -110,13 +105,14 @@ void Game::Update() {
 
     registry->Update();
     registry->GetSystem<PaddleMoveSystem>().Update(deltaTime, Game::windowHeight);
+    registry->GetSystem<BallMoveSystem>().Update(deltaTime, Game::windowHeight, Game::windowWidth);
 
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
-    registry->GetSystem<BoxDrawSystem>().Update(renderer);
+    registry->GetSystem<BoxDrawSystem>().Draw(renderer,font);
     SDL_RenderPresent(renderer);
 }
 

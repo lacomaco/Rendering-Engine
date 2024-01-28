@@ -869,6 +869,9 @@
     <ClCompile Include="src\Util\QuadTree.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\System\BoxDrawSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl">
@@ -1268,5 +1271,8 @@
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\arial.ttf" />
   </ItemGroup>
 </Project>

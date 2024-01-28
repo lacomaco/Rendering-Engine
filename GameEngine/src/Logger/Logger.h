@@ -15,8 +15,10 @@ struct LogEntry {
 
 class Logger {
     public:
+        static int disableMode;
         static std::vector<LogEntry> messages;
         static void Log(const std::string& message);
+        static void DebugOnlyLog(const std::string& message);
         static void Err(const std::string& message);
 };
 
