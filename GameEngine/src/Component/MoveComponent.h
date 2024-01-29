@@ -17,6 +17,7 @@ struct MoveComponent {
 		this->velocity = velocity;
 	}
 
+
 	void Update(double deltaTime) {
 		x += velocity.x * deltaTime;
 		y += velocity.y * deltaTime;

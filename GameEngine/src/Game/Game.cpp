@@ -14,8 +14,8 @@
 #include "../System/BoxDrawSystem.h"
 #include "../Component/MoveComponent.h"
 #include "../Component/KeyboardControlledComponent.h"
-#include "../System/PaddleMoveSystem.h"
 #include "../System/BallMoveSystem.h"
+#include "../Component/GlobalMapComponent.h"
 
 int Game::windowWidth;
 int Game::windowHeight;
@@ -69,6 +69,8 @@ void Game::Initialize() {
     ImGuiSDL::Initialize(renderer, windowWidth, windowHeight);
 
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    SDL_ShowCursor(SDL_ENABLE);
+
     font = TTF_OpenFont("assets/fonts/arial.ttf", 24);
     
     isRunning = true;
@@ -86,10 +88,9 @@ void Game::ProcessInput() {
 
 void Game::Setup() {
     registry->AddSystem<BoxDrawSystem>();
-    registry->AddSystem<PaddleMoveSystem>();
     registry->AddSystem<BallMoveSystem>();
+    GlobalMapComponent::GetInstance(20, 20);
 
-    auto paddle = registry->CreateEntity();
     const int thickness = 15;
     const int paddleHeight = 100;
     int screenWidth, screenHeight;
@@ -104,7 +105,6 @@ void Game::Update() {
     millisecsPreviousFrame = SDL_GetTicks();
 
     registry->Update();
-    registry->GetSystem<PaddleMoveSystem>().Update(deltaTime, Game::windowHeight);
     registry->GetSystem<BallMoveSystem>().Update(deltaTime, Game::windowHeight, Game::windowWidth);
 
 }
@@ -113,6 +113,7 @@ void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
     registry->GetSystem<BoxDrawSystem>().Draw(renderer,font);
+    GlobalMapComponent::GetInstance(20, 20)->RenderMaze(renderer);
     SDL_RenderPresent(renderer);
 }
 
