@@ -1,6 +1,21 @@
 #pragma once
 #include <vector>
 #include <SDL.h>
+#include <memory>
+
+/*
+* 보통 컴포넌트는 독립적이지만 Global 컴포넌트는 독립적이지 않다.
+* 따라서 register를 통해서 entity에 등록하는 과정도 필요하지 않다.
+* 그냥 싱글톤으로 이용한다.
+* 
+*/
+
+struct GraphNode {
+	int x;
+	int y;
+	int GraphNodeIndex;
+	std::vector<std::shared_ptr<GraphNode>> adjacentNodes;
+};
 
 class GlobalMapComponent {
 private:
@@ -25,11 +40,14 @@ public:
 	void RenderMaze(SDL_Renderer* renderer);
 
 	GlobalMapComponent(int width, int height);
+	~GlobalMapComponent();
 
 	// 3차원 자료구조
 	// map[x][y][0] : 왼쪽벽
 	// map[x][y][1] : 윗벽
-	// map[x][y][2] : 오른쪽벽
+	// map[x][y][2] : 오른쪽벽	std::vector<std::vector<GraphNode>> mapGraph;
+
 	// map[x][y][3] : 아래벽
 	std::vector<std::vector<std::vector<int>>> map;
+	std::vector<std::vector<std::shared_ptr<GraphNode>>> mapGraph;
 };

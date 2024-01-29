@@ -20,7 +20,51 @@ GlobalMapComponent::GlobalMapComponent(int width, int height) {
 	}
 
 	GenerateMazeByBinaryAlgorithm();
-	
+
+	mapGraph.resize(width);
+	for (int i = 0; i < width; i++) {
+		mapGraph[i].resize(height);
+		for (int j = 0; j < height; j++) {
+			GraphNode node = { i, j, i * width + j };
+			mapGraph[i][j] = std::make_shared<GraphNode>(node);
+		}
+	}
+
+	GenerateTreePathBasedMaze();
+}
+
+void GlobalMapComponent::GenerateTreePathBasedMaze() {
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			auto& node = mapGraph[i][j];
+
+			auto left = map[i][j][0];
+			auto up = map[i][j][1];
+			auto right = map[i][j][2];
+			auto down = map[i][j][3];
+
+			if (left == 0) {
+				node->adjacentNodes.push_back(mapGraph[i][j-1]);
+			}
+
+			if (up == 0) {
+				node->adjacentNodes.push_back(mapGraph[i-1][j]);
+			}
+
+			if (right == 0) {
+				node->adjacentNodes.push_back(mapGraph[i][j+1]);
+			}
+
+			if (down == 0) {
+				node->adjacentNodes.push_back(mapGraph[i+1][j]);
+			}
+		}
+	}
+}
+
+
+GlobalMapComponent::~GlobalMapComponent() {
+	delete globalMapComponent;
 }
 
 void GlobalMapComponent::GenerateMazeByBinaryAlgorithm() {
@@ -101,8 +145,4 @@ void GlobalMapComponent::RenderMaze(SDL_Renderer* renderer) {
 
 		SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	}
-}
-
-void GlobalMapComponent::GenerateTreePathBasedMaze() {
-
 }
