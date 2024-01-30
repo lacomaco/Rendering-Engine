@@ -89,7 +89,8 @@ void Game::ProcessInput() {
 void Game::Setup() {
     registry->AddSystem<BoxDrawSystem>();
     registry->AddSystem<BallMoveSystem>();
-    GlobalMapComponent::GetInstance(20, 20);
+    auto instance = GlobalMapComponent::GetInstance(20, 20);
+    instance->GetShortestPath(0, 0, 10, 10);
 
     const int thickness = 15;
     const int paddleHeight = 100;
@@ -107,13 +108,19 @@ void Game::Update() {
     registry->Update();
     registry->GetSystem<BallMoveSystem>().Update(deltaTime, Game::windowHeight, Game::windowWidth);
 
+
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
     registry->GetSystem<BoxDrawSystem>().Draw(renderer,font);
-    GlobalMapComponent::GetInstance(20, 20)->RenderMaze(renderer);
+    auto instance = GlobalMapComponent::GetInstance(20, 20);
+    instance->RenderMaze(renderer);
+    instance->RenderShortestPathStepByStep(renderer);
+    if (instance) {
+        SDL_Delay(500);
+    }
     SDL_RenderPresent(renderer);
 }
 

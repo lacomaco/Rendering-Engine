@@ -14,7 +14,25 @@ struct GraphNode {
 	int x;
 	int y;
 	int GraphNodeIndex;
+	int weight = 1;
 	std::vector<std::shared_ptr<GraphNode>> adjacentNodes;
+};
+
+struct TraceGraph {
+	std::shared_ptr<TraceGraph> parent;
+	std::shared_ptr<GraphNode> current;
+	std::shared_ptr<TraceGraph> childNode;
+};
+
+
+struct WeightedEdge {
+	struct WeightedGraphNode* from;
+	struct WeightedGraphNode* to;
+	float weight;
+};
+
+struct WeightedGraphNode {
+	std::vector<WeightedEdge*> mEdges;
 };
 
 class GlobalMapComponent {
@@ -50,4 +68,7 @@ public:
 	// map[x][y][3] : ¾Æ·¡º®
 	std::vector<std::vector<std::vector<int>>> map;
 	std::vector<std::vector<std::shared_ptr<GraphNode>>> mapGraph;
+	std::shared_ptr<TraceGraph> traceGraph;
+	void GetShortestPath(int startX, int startY, int endX, int endY);
+	void RenderShortestPathStepByStep(SDL_Renderer* renderer);
 };

@@ -1,5 +1,9 @@
 #include "GlobalMapComponent.h"
 #include <random>
+#include <unordered_set>
+#include <queue>
+#include <stack>
+#include <iostream>
 
 GlobalMapComponent* GlobalMapComponent::globalMapComponent = nullptr;
 
@@ -109,8 +113,80 @@ void GlobalMapComponent::GenerateMazeByBinaryAlgorithm() {
 	}
 }
 
+
+void GlobalMapComponent::GetShortestPath(int startX, int startY, int endX, int endY) {
+	std::unordered_set<std::shared_ptr<GraphNode>> checkNodeMap;
+
+	std::shared_ptr<GraphNode> startNode = mapGraph[startX][startY];
+	std::shared_ptr<GraphNode> endNode = mapGraph[endX][endY];
+
+	bool pathFound = false;
+	std::queue<std::shared_ptr<GraphNode>> q;
+	std::queue<std::shared_ptr<TraceGraph>> tq;
+
+	std::shared_ptr<TraceGraph> trace = std::make_shared<TraceGraph>();
+	trace->current = startNode;
+
+	q.push(startNode);
+	tq.push(trace);
+	checkNodeMap.insert(startNode);
+
+	while (!q.empty()) {
+		auto& current = q.front();
+		std::shared_ptr<TraceGraph> currentTrace = tq.front();
+
+		q.pop();
+		tq.pop();
+
+
+		if(endNode == current) {
+			pathFound = true;
+			// 스택사용 뒤로가기.
+			std::stack<std::shared_ptr<TraceGraph>> st;
+
+			std::shared_ptr<TraceGraph> shortestPath;
+
+			while (currentTrace != nullptr) {
+				st.push(currentTrace);
+				currentTrace = currentTrace->parent;
+			}
+
+			while (!st.empty()) {
+				auto& current = st.top();
+				st.pop();
+
+				if (!st.empty()) {
+					current->childNode = st.top();
+				}
+			}
+
+			traceGraph = trace;
+
+			break;
+		}
+
+		for (const auto& node : current->adjacentNodes) {
+			auto check = checkNodeMap.find(node);
+
+			if (check != checkNodeMap.end()) {
+				continue;
+			}
+
+			checkNodeMap.insert(node);
+
+			std::shared_ptr<TraceGraph> childTrace = std::make_shared<TraceGraph>();
+			childTrace->current = node;
+			childTrace->parent = currentTrace;
+
+
+			q.emplace(node);
+			tq.emplace(childTrace);
+		}
+
+	}
+}
+
 void GlobalMapComponent::RenderMaze(SDL_Renderer* renderer) {
-	{
 		Uint8 r, g, b, a;
 		SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -144,5 +220,34 @@ void GlobalMapComponent::RenderMaze(SDL_Renderer* renderer) {
 
 
 		SDL_SetRenderDrawColor(renderer, r, g, b, a);
+}
+
+void GlobalMapComponent::RenderShortestPathStepByStep(SDL_Renderer* renderer) {
+	if (!traceGraph) {
+		return;
+	}
+
+	auto& currentNode = traceGraph->current;
+
+	Uint8 r, g, b, a;
+	SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+	const int startX = currentNode->x * CELL_SIZE;
+	const int startY = currentNode->y * CELL_SIZE;
+	
+	SDL_Rect rect = {
+		startX,
+		startY,
+		CELL_SIZE,
+		CELL_SIZE
+	};
+
+	SDL_RenderFillRect(renderer, &rect);
+
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+
+	if (traceGraph->childNode) {
+		traceGraph = traceGraph->childNode;
 	}
 }
