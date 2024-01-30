@@ -2,6 +2,7 @@
 #include <vector>
 #include <SDL.h>
 #include <memory>
+#include <queue>
 
 /*
 * 보통 컴포넌트는 독립적이지만 Global 컴포넌트는 독립적이지 않다.
@@ -10,29 +11,31 @@
 * 
 */
 
+struct Edge;
+
 struct GraphNode {
 	int x;
 	int y;
 	int GraphNodeIndex;
-	int weight = 1;
-	std::vector<std::shared_ptr<GraphNode>> adjacentNodes;
+	std::vector<Edge> adjacentEdges;
+};
+
+struct Edge {
+	std::shared_ptr<GraphNode> from;
+	std::shared_ptr<GraphNode> to;
+	float weight;
+
+	Edge(std::shared_ptr<GraphNode> from, std::shared_ptr<GraphNode> to, float weight) {
+		this->from = from;
+		this->to = to;
+		this->weight = weight;
+	}
 };
 
 struct TraceGraph {
 	std::shared_ptr<TraceGraph> parent;
 	std::shared_ptr<GraphNode> current;
 	std::shared_ptr<TraceGraph> childNode;
-};
-
-
-struct WeightedEdge {
-	struct WeightedGraphNode* from;
-	struct WeightedGraphNode* to;
-	float weight;
-};
-
-struct WeightedGraphNode {
-	std::vector<WeightedEdge*> mEdges;
 };
 
 class GlobalMapComponent {
@@ -63,12 +66,13 @@ public:
 	// 3차원 자료구조
 	// map[x][y][0] : 왼쪽벽
 	// map[x][y][1] : 윗벽
-	// map[x][y][2] : 오른쪽벽	std::vector<std::vector<GraphNode>> mapGraph;
-
+	// map[x][y][2] : 오른쪽벽
 	// map[x][y][3] : 아래벽
 	std::vector<std::vector<std::vector<int>>> map;
 	std::vector<std::vector<std::shared_ptr<GraphNode>>> mapGraph;
-	std::shared_ptr<TraceGraph> traceGraph;
 	void GetShortestPath(int startX, int startY, int endX, int endY);
 	void RenderShortestPathStepByStep(SDL_Renderer* renderer);
+	void GreedyBestFirstSearch(int startX, int startY, int endX, int endY);
+
+	std::shared_ptr<TraceGraph> traceGraph;
 };

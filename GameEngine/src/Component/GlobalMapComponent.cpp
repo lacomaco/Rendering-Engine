@@ -1,9 +1,11 @@
 #include "GlobalMapComponent.h"
 #include <random>
 #include <unordered_set>
+#include <unordered_map>
 #include <queue>
 #include <stack>
 #include <iostream>
+#include <random>
 
 GlobalMapComponent* GlobalMapComponent::globalMapComponent = nullptr;
 
@@ -38,6 +40,9 @@ GlobalMapComponent::GlobalMapComponent(int width, int height) {
 }
 
 void GlobalMapComponent::GenerateTreePathBasedMaze() {
+	std::mt19937 rng(std::random_device{}());
+	std::uniform_real_distribution<float> dist(0.0f, 10.0f);
+
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			auto& node = mapGraph[i][j];
@@ -48,19 +53,23 @@ void GlobalMapComponent::GenerateTreePathBasedMaze() {
 			auto down = map[i][j][3];
 
 			if (left == 0) {
-				node->adjacentNodes.push_back(mapGraph[i][j-1]);
+				Edge edge = { mapGraph[i][j], mapGraph[i][j - 1], dist(rng)};
+				node->adjacentEdges.push_back(edge);
 			}
 
 			if (up == 0) {
-				node->adjacentNodes.push_back(mapGraph[i-1][j]);
+				Edge edge = { mapGraph[i][j], mapGraph[i - 1][j], dist(rng)};
+				node->adjacentEdges.push_back(edge);
 			}
 
 			if (right == 0) {
-				node->adjacentNodes.push_back(mapGraph[i][j+1]);
+				Edge edge = { mapGraph[i][j], mapGraph[i][j + 1], dist(rng)};
+				node->adjacentEdges.push_back(edge);
 			}
 
 			if (down == 0) {
-				node->adjacentNodes.push_back(mapGraph[i+1][j]);
+				Edge edge = { mapGraph[i][j], mapGraph[i + 1][j], dist(rng)};
+				node->adjacentEdges.push_back(edge);
 			}
 		}
 	}
@@ -113,7 +122,6 @@ void GlobalMapComponent::GenerateMazeByBinaryAlgorithm() {
 	}
 }
 
-
 void GlobalMapComponent::GetShortestPath(int startX, int startY, int endX, int endY) {
 	std::unordered_set<std::shared_ptr<GraphNode>> checkNodeMap;
 
@@ -123,12 +131,15 @@ void GlobalMapComponent::GetShortestPath(int startX, int startY, int endX, int e
 	bool pathFound = false;
 	std::queue<std::shared_ptr<GraphNode>> q;
 	std::queue<std::shared_ptr<TraceGraph>> tq;
-
 	std::shared_ptr<TraceGraph> trace = std::make_shared<TraceGraph>();
 	trace->current = startNode;
 
+
+
 	q.push(startNode);
 	tq.push(trace);
+
+
 	checkNodeMap.insert(startNode);
 
 	while (!q.empty()) {
@@ -139,7 +150,7 @@ void GlobalMapComponent::GetShortestPath(int startX, int startY, int endX, int e
 		tq.pop();
 
 
-		if(endNode == current) {
+		if (endNode == current) {
 			pathFound = true;
 			// 스택사용 뒤로가기.
 			std::stack<std::shared_ptr<TraceGraph>> st;
@@ -165,25 +176,30 @@ void GlobalMapComponent::GetShortestPath(int startX, int startY, int endX, int e
 			break;
 		}
 
-		for (const auto& node : current->adjacentNodes) {
-			auto check = checkNodeMap.find(node);
+		for (const auto& edge : current->adjacentEdges) {
+			auto check = checkNodeMap.find(edge.to);
 
 			if (check != checkNodeMap.end()) {
 				continue;
 			}
 
-			checkNodeMap.insert(node);
+			checkNodeMap.insert(edge.to);
+
 
 			std::shared_ptr<TraceGraph> childTrace = std::make_shared<TraceGraph>();
-			childTrace->current = node;
+			childTrace->current = edge.from;
 			childTrace->parent = currentTrace;
 
-
-			q.emplace(node);
+			q.emplace(edge.to);
 			tq.emplace(childTrace);
 		}
 
 	}
+}
+void GlobalMapComponent::GreedyBestFirstSearch(int startX, int startY, int endX, int endY) {
+	std::shared_ptr<GraphNode> startNode = mapGraph[startX][startY];
+	std::shared_ptr<GraphNode> endNode = mapGraph[endX][endY];
+
 }
 
 void GlobalMapComponent::RenderMaze(SDL_Renderer* renderer) {
