@@ -6,9 +6,6 @@ Game::Game() {
 	paddleH = 100;
 	thickness = 15;
 
-	mBallPos = { 1024 / 2, 768 / 2 };
-	mBallVel = {-200.0f, 235.0f};
-
 	paddles.push_back({
 		10,
 		768 / 2.0f - paddleH / 2.0f
@@ -23,6 +20,28 @@ Game::Game() {
 	mLeftPaddleKeys.push_back(SDL_SCANCODE_S);
 	mLeftPaddleKeys.push_back(SDL_SCANCODE_I);
 	mLeftPaddleKeys.push_back(SDL_SCANCODE_K);
+
+	balls.push_back({
+		1024/2.0f,
+		768/2.0f
+	});
+	balls.push_back({
+		1024 / 2.0f,
+		768 / 2.0f - 15.0f
+	});
+	balls.push_back({
+		1024 / 2.0f,
+		768 / 2.0f -40.0f
+	});
+	balls.push_back({
+		1024 / 2.0f,
+		768 / 2.0f - 22.0f
+	});
+	balls.push_back({
+		1024 / 2.0f,
+		768 / 2.0f + 55.0f
+	});
+
 }
 
 bool Game::Initialize() {
@@ -144,53 +163,57 @@ void Game::UpdateGame() {
 		}
 	}
 
-	mBallPos.x += mBallVel.x * deltaTime;
-	mBallPos.y += mBallVel.y * deltaTime;
+	for (auto& ball : balls) {
+		auto& mBallPos = ball.mBallPos;
+		auto& mBallVel = ball.mBallVel;
 
-	// 공이 벽에 부딪히면 반사
-	if (mBallPos.y <= thickness && mBallVel.y < 0.0f) {
-		mBallVel.y *= -1;
-	}
-	else if (mBallPos.y >= (768 - thickness) && mBallVel.y > 0.0f) {
-		mBallVel.y *= -1;
-	}
+		mBallPos.x += mBallVel.x * deltaTime;
+		mBallPos.y += mBallVel.y * deltaTime;
 
-	for (auto& paddle : paddles) {
-		auto& mPaddlePos = paddle.mPaddlePos;
-
-		glm::vec2 paddleLeftTop = glm::vec2(
-			mPaddlePos.x,
-			mPaddlePos.y
-		);
-
-		glm::vec2 paddleRightBottom = glm::vec2(
-			mPaddlePos.x + thickness,
-			mPaddlePos.y + paddleH
-		);
-
-		glm::vec2 ballLeftTop = glm::vec2(
-			mBallPos.x,
-			mBallPos.y
-		);
-
-		glm::vec2 ballRightBottom = glm::vec2(
-			mBallPos.x + thickness,
-			mBallPos.y + thickness
-		);
-
-		if (paddleLeftTop.x > ballLeftTop.x &&
-			paddleLeftTop.x < ballRightBottom.x &&
-			paddleLeftTop.y < ballRightBottom.y &&
-			paddleRightBottom.y > ballLeftTop.y
-			) {
-			mBallVel.x *= -1;
+		// 공이 벽에 부딪히면 반사
+		if (mBallPos.y <= thickness && mBallVel.y < 0.0f) {
+			mBallVel.y *= -1;
+		}
+		else if (mBallPos.y >= (768 - thickness) && mBallVel.y > 0.0f) {
+			mBallVel.y *= -1;
 		}
 
-		if (mBallPos.x <= 0) {
-			//mIsRunning = false;
+		for (auto& paddle : paddles) {
+			auto& mPaddlePos = paddle.mPaddlePos;
+
+			glm::vec2 paddleLeftTop = glm::vec2(
+				mPaddlePos.x,
+				mPaddlePos.y
+			);
+
+			glm::vec2 paddleRightBottom = glm::vec2(
+				mPaddlePos.x + thickness,
+				mPaddlePos.y + paddleH
+			);
+
+			glm::vec2 ballLeftTop = glm::vec2(
+				mBallPos.x,
+				mBallPos.y
+			);
+
+			glm::vec2 ballRightBottom = glm::vec2(
+				mBallPos.x + thickness,
+				mBallPos.y + thickness
+			);
+
+			if (paddleLeftTop.x > ballLeftTop.x &&
+				paddleLeftTop.x < ballRightBottom.x &&
+				paddleLeftTop.y < ballRightBottom.y &&
+				paddleRightBottom.y > ballLeftTop.y
+				) {
+				mBallVel.x *= -1;
+			}
+
+			if (mBallPos.x <= 0) {
+				//mIsRunning = false;
+			}
 		}
 	}
-
 }
 
 void Game::GenerateOutput() {
@@ -221,15 +244,19 @@ void Game::GenerateOutput() {
 	};
 	SDL_RenderFillRect(mRenderer, &bottomWall);
 
-	SDL_Rect ball
-	{
-		static_cast<int>(mBallPos.x - thickness / 2),
-		static_cast<int>(mBallPos.y - thickness / 2),
-		thickness,
-		thickness
-	};
+	for (auto& ball : balls) {
+		auto& mBallPos = ball.mBallPos;
 
-	SDL_RenderFillRect(mRenderer, &ball);
+		SDL_Rect ball
+		{
+			static_cast<int>(mBallPos.x - thickness / 2),
+			static_cast<int>(mBallPos.y - thickness / 2),
+			thickness,
+			thickness
+		};
+
+		SDL_RenderFillRect(mRenderer, &ball);
+	}
 
 	for (auto& paddle : paddles) {
 		auto& mPaddlePos = paddle.mPaddlePos;
