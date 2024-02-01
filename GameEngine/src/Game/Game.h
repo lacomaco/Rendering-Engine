@@ -1,36 +1,43 @@
 #pragma once
-#include "../ECS/ECS.h"
 #include <SDL.h>
-#include <SDL_ttf.h>
+#include <glm/glm.hpp>
+#include <vector>
 
-const int FPS = 60;
-const int MILLISECS_PER_FRAME = 1000 / FPS;
+struct Paddle {
+	glm::vec2 mPaddlePos;
+	int mPaddleDir;
 
-class Game {
-    private:
-        bool isRunning;
-        bool isDebug;
-        int millisecsPreviousFrame = 0;
-        SDL_Window* window;
-        SDL_Renderer* renderer;
-        SDL_Rect camera;
-        
-        std::unique_ptr<Registry> registry;
-        TTF_Font* font;
-
-    public:
-        Game();
-        ~Game();
-        void Initialize();
-        void Run();
-        void Setup();
-        void ProcessInput();
-        void Update();
-        void Render();
-        void Destroy();
-
-        static int windowWidth;
-        static int windowHeight;
-        static int mapWidth;
-        static int mapHeight;
+	Paddle(float x,float y) {
+		mPaddlePos = glm::vec2(x,y);
+		mPaddleDir = 0;
+	}
 };
+
+class Game
+{
+public:
+	Game();
+	bool Initialize();
+	void RunLoop();
+	void Shutdown();
+	SDL_Renderer* mRenderer;
+
+private:
+	void ProcessInput();
+	void UpdateGame();
+	void GenerateOutput();
+
+	SDL_Window* mWindow;
+	bool mIsRunning;
+	glm::vec2 mBallPos;
+	glm::vec2 mBallVel;
+	Uint32 mTicksCount;
+
+	std::vector<Paddle> paddles;
+	std::vector<SDL_Scancode> mLeftPaddleKeys;
+
+	int paddleH;
+	int thickness;
+
+};
+
