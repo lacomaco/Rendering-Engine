@@ -30,6 +30,9 @@ bool Game::Initialize() {
 		return false;
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
+
 	context = SDL_GL_CreateContext(mWindow);
 
 	if (!context) {
@@ -46,6 +49,8 @@ bool Game::Initialize() {
 	// 기본값 CW, 근데 우리는 윈도우에서 사용하기 때문에
 	// DirectX와 같은 CCW로 설정하였음.
 	glFrontFace(GL_CCW);
+
+	SetOpenGL();
 
 	return true;
 }
@@ -117,6 +122,34 @@ void Game::GenerateOutput() {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	SDL_GL_SwapWindow(mWindow);
+}
+
+void Game::SetOpenGL() {
+	/*
+	* void glGenBuffers(GLsizei n, GLuint *buffers);
+	* 
+	* 1 <- 버퍼 객체갯수.
+	*/
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	/*
+	* 이 코드의 의미.
+	* 
+	* GL_ARRAY_BUFFER에 바인딩된 Buffer OBJECT에
+	* vertices.size() * sizeof(float) 만큼의 메모리를 할당하고
+	* vertices.data()의 데이터를 복사한다.
+	* 또한 GL_STATIC_DRAW로 설정하여 데이터가 변하지 않음을 명시한다.
+	*/
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		vertices.size() * sizeof(float),
+		vertices.data(), 
+		GL_STATIC_DRAW
+	);
+
+
+
 }
 
 void Game::AddActor(Actor* actor)

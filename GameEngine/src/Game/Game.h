@@ -34,6 +34,16 @@ private:
 	std::vector<class Actor*> mActors;
 	std::vector<class Actor*> mPendingActors;
 
+	std::vector<float> vertices = {
+		-0.5f, -0.5f, 0.0f, // bottom left
+		0.5f, -0.5f, 0.0f, // bottom right
+		0.5f, 0.5f, 0.0f, // top right
+	};
+
+	// openGL ฐüทร
+	void SetOpenGL();
+	unsigned int VBO; // Vertex Buffer Object
+
 
 
 };
