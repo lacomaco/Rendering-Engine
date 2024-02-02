@@ -13,6 +13,13 @@ public:
 	GLuint compileShader(const char* shaderCode,GLenum shaderType);
 	GLuint getVertexShader(const char* filePath);
 	GLuint getFragmentShader(const char* filePath);
+	unsigned int loadShaderProgram(
+		const char* vertexShaderPath,
+		const char* fragmentShaderPath,
+		const char* shaderProgramName
+	);
+
+	unsigned int getShaderProgram(const char* shaderProgramName);
 
 	static Shader* getInstance() {
 		if (instance == nullptr) {
@@ -30,5 +37,6 @@ private:
 
 	static Shader* instance;
 	std::unordered_map<const char*, GLuint> shaderMap;
+	std::unordered_map<const char*, int> shaderProgramMap;
 };
 

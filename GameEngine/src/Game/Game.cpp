@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <SDL.h>
 #include <GL/glew.h>
+#include "../Util/Shader.h"
 
 Game::Game() {
 	mWindow = nullptr;
@@ -44,7 +45,7 @@ bool Game::Initialize() {
 		return false;
 	}
 
-	glViewport(100, 100, 1024, 768);
+	glViewport(0, 0, 1024, 768);
 	glCullFace(GL_BACK);
 	// 기본값 CW, 근데 우리는 윈도우에서 사용하기 때문에
 	// DirectX와 같은 CCW로 설정하였음.
@@ -117,20 +118,38 @@ void Game::UpdateGame() {
 }
 
 void Game::GenerateOutput() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	auto program = Shader::getInstance()->getShaderProgram("triangle");
+	glUseProgram(program);
+	glBindVertexArray(VAO);
 	// 하얀색으로 초기화.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	SDL_GL_SwapWindow(mWindow);
 }
 
 void Game::SetOpenGL() {
+	// 셰이더 로드
+
+	auto shader = Shader::getInstance();
+	// 초기 로드
+	auto program = shader->loadShaderProgram(
+		"./shader/triangle-vertex.glsl",
+		"./shader/triangle-fragment.glsl",
+		"triangle"
+	);
+
 	/*
 	* void glGenBuffers(GLsizei n, GLuint *buffers);
 	* 
 	* 1 <- 버퍼 객체갯수.
 	*/
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	/*
@@ -148,8 +167,8 @@ void Game::SetOpenGL() {
 		GL_STATIC_DRAW
 	);
 
-
-
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
+	glEnableVertexAttribArray(0);
 }
 
 void Game::AddActor(Actor* actor)
