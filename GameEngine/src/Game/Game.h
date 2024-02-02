@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <cstdlib>
+#include "../GameObject/Actor.h"
 
 class Game
 {
@@ -11,7 +12,11 @@ public:
 	bool Initialize();
 	void RunLoop();
 	void Shutdown();
-	SDL_Renderer* mRenderer;
+	SDL_Window* window;
+	SDL_GLContext context;
+
+	void AddActor(class Actor* actor);
+	void RemoveActor(class Actor* actor);
 
 private:
 	void ProcessInput();
@@ -23,6 +28,13 @@ private:
 	Uint32 mTicksCount;
 
 	std::vector<SDL_Scancode> mLeftPaddleKeys;
+
+	bool mUpdatingActors;
+
+	std::vector<class Actor*> mActors;
+	std::vector<class Actor*> mPendingActors;
+
+
 
 };
 

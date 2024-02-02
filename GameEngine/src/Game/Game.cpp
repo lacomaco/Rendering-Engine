@@ -1,4 +1,7 @@
 #include "Game.h"
+#include <SDL.h>
+#include <GL/glew.h>
+
 Game::Game() {
 	mWindow = nullptr;
 	mIsRunning = true;
@@ -19,7 +22,7 @@ bool Game::Initialize() {
 		100,
 		1024,
 		768,
-		0 // 추후 SDL_WINDOW_OPENGL 플래그로 변경할 예정
+		SDL_WINDOW_OPENGL
 	);
 
 	if (!mWindow) {
@@ -27,11 +30,22 @@ bool Game::Initialize() {
 		return false;
 	}
 
-	mRenderer = SDL_CreateRenderer(
-		mWindow,
-		-1,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-	);
+	context = SDL_GL_CreateContext(mWindow);
+
+	if (!context) {
+		SDL_Log("GL Context 생성 실패! %s", SDL_GetError());
+	}
+
+	if (glewInit() != GLEW_OK) {
+		SDL_Log("GLEW 초기화 실패!");
+		return false;
+	}
+
+	glViewport(100, 100, 1024, 768);
+	glCullFace(GL_BACK);
+	// 기본값 CW, 근데 우리는 윈도우에서 사용하기 때문에
+	// DirectX와 같은 CCW로 설정하였음.
+	glFrontFace(GL_CCW);
 
 	return true;
 }
@@ -39,7 +53,7 @@ bool Game::Initialize() {
 void Game::Shutdown() {
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
-	SDL_DestroyRenderer(mRenderer);
+	SDL_GL_DeleteContext(context);
 }
 
 void Game::RunLoop() {
@@ -98,15 +112,39 @@ void Game::UpdateGame() {
 }
 
 void Game::GenerateOutput() {
-	SDL_SetRenderDrawColor(
-		mRenderer,
-		0,
-		0,
-		255,
-		255
-	);
-	SDL_RenderClear(mRenderer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// 하얀색으로 초기화.
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+	SDL_GL_SwapWindow(mWindow);
+}
 
-	SDL_RenderPresent(mRenderer);
+void Game::AddActor(Actor* actor)
+{
+	if (mUpdatingActors)
+	{
+		mPendingActors.emplace_back(actor);
+	}
+	else
+	{
+		mActors.emplace_back(actor);
+	}
+
+}
+
+void Game::RemoveActor(Actor* actor)
+{
+	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
+	if (iter != mPendingActors.end())
+	{
+		std::iter_swap(iter, mPendingActors.end() - 1);
+		mPendingActors.pop_back();
+	}
+
+	iter = std::find(mActors.begin(), mActors.end(), actor);
+	if (iter != mActors.end())
+	{
+		std::iter_swap(iter, mActors.end() - 1);
+		mActors.pop_back();
+	}
 }
