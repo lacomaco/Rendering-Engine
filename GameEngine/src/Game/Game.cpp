@@ -125,8 +125,12 @@ void Game::GenerateOutput() {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	/*
+	* 6: ¿Œµ¶Ω∫ ∞πºˆ
+	* GL_UNSIGNED_INT: ¿Œµ¶Ω∫ ≈∏¿‘
+	* 0: ¿Œµ¶Ω∫ πËø≠ Ω√¿€ ¿ßƒ°
+	*/
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	SDL_GL_SwapWindow(mWindow);
 }
@@ -149,6 +153,7 @@ void Game::SetOpenGL() {
 	*/
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -169,6 +174,14 @@ void Game::SetOpenGL() {
 
 	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		indices.size() * sizeof(unsigned int),
+		indices.data(),
+		GL_STATIC_DRAW
+	);
 }
 
 void Game::AddActor(Actor* actor)
