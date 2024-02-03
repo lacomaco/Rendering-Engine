@@ -118,8 +118,15 @@ void Game::UpdateGame() {
 }
 
 void Game::GenerateOutput() {
+	float timeValue = SDL_GetTicks() / 1000.0f;
+	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+
 	auto program = Shader::getInstance()->getShaderProgram("triangle");
+	// 만약 찾지 못하면 -1이다.
+	int vertexColorLocation =
+		glGetUniformLocation(program,"ourColor");
 	glUseProgram(program);
+	glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 	glBindVertexArray(VAO);
 	// 하얀색으로 초기화.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -172,8 +179,23 @@ void Game::SetOpenGL() {
 		GL_STATIC_DRAW
 	);
 
-	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
+	// position
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
 	glEnableVertexAttribArray(0);
+
+	/*
+	* color
+	* 1: attribute location
+	* 3: size
+	* GL_FLOAT: type
+	* GL_FALSE: normalized
+	* 3 * sizeof(float): stride
+	* (void*)(3 * sizeof(float)): offset
+	*
+	*/
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(
