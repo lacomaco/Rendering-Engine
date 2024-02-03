@@ -38,5 +38,7 @@ private:
 	static Shader* instance;
 	std::unordered_map<const char*, GLuint> shaderMap;
 	std::unordered_map<const char*, int> shaderProgramMap;
+
+	std::string ProcessShaderIncludes(const std::string& source, const std::string& directoryPath);
 };
 

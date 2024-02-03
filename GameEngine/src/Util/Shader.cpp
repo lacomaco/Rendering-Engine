@@ -49,8 +49,9 @@ GLuint Shader::getVertexShader(const char* filePath) {
 
     if (vertexShader == shaderMap.end()) {
         std::string vertexShaderSource = readShaderSource(filePath);
+        std::string processedVertexShaderSource = ProcessShaderIncludes(vertexShaderSource, "./shader");
 
-        GLuint vertexShaderID = compileShader(vertexShaderSource.c_str(), GL_VERTEX_SHADER);
+        GLuint vertexShaderID = compileShader(processedVertexShaderSource.c_str(), GL_VERTEX_SHADER);
         shaderMap[filePath] = vertexShaderID;
         return vertexShaderID;
     }
@@ -63,7 +64,9 @@ GLuint Shader::getFragmentShader(const char* filePath) {
 
 	if (fragmentShader == shaderMap.end()) {
 		std::string fragmentShaderSource = readShaderSource(filePath);
-		GLuint fragmentShaderID = compileShader(fragmentShaderSource.c_str(), GL_FRAGMENT_SHADER);
+        std::string processedFragmentShaderSource = ProcessShaderIncludes(fragmentShaderSource, "./shader");
+
+		GLuint fragmentShaderID = compileShader(processedFragmentShaderSource.c_str(), GL_FRAGMENT_SHADER);
 		shaderMap[filePath] = fragmentShaderID;
 		return fragmentShaderID;
 	}
@@ -118,4 +121,24 @@ unsigned int Shader::getShaderProgram(const char* shaderProgramName) {
 	}
 
 	return shaderProgramId->second;
+}
+
+std::string Shader::ProcessShaderIncludes(const std::string& source, const std::string& directoryPath) {
+    std::istringstream stream(source);
+    std::string line;
+    std::string processedSource;
+    while (std::getline(stream, line)) {
+        if (line.substr(0, 8) == "#include") {
+            std::string includeFileName = line.substr(9).erase(0, line.find_first_not_of(" \t")); // 파일명 추출 및 앞쪽 공백 제거
+            std::string includeFilePath = directoryPath + "/" + includeFileName;
+            std::string includeContent = readShaderSource(includeFilePath.c_str());
+            if (!includeContent.empty()) {
+                processedSource += includeContent + "\n";
+            }
+        }
+        else {
+            processedSource += line + "\n";
+        }
+    }
+    return processedSource;
 }
