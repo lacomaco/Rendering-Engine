@@ -190,3 +190,5 @@ void Shader::setMat3(const char* shaderProgramName, const char* name, const glm:
 void Shader::setMat4(const char* shaderProgramName, const char* name, const glm::mat4& mat) {
 	glUniformMatrix4fv(glGetUniformLocation(getShaderProgram(shaderProgramName), name), 1, GL_FALSE, &mat[0][0]);
 }
+
+
