@@ -1,4 +1,5 @@
 #include "ImguiController.h"
+#include <iostream>
 
 ImguiController* ImguiController::instance = nullptr;
 /*
@@ -32,16 +33,36 @@ void ImguiController::Update() {
 
 	// 임구이 세팅
 	ImGui::Begin("Game Engine Controller");
-	ImGui::Text("This is example");
-
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+	ImGui::Checkbox("useTexture", &useTexture);
+	// slider -2.0f ~ 2.0f
+	ImGui::SliderFloat3("modelTranslation", &modelTranslation.x, -2.0f, 2.0f);
+	ImGui::SliderFloat3("modelRotation", &modelRotation.x, -3.14f, 3.14f);
+	ImGui::SliderFloat3("modelScale", &modelScale.x, 0.1f, 2.0f);
+	ImGui::SliderFloat("viewRoot", &viewRoot, -3.14f, 3.14f);
+	ImGui::SliderFloat("materialShininess", &materialShininess, 0.0f, 256.0f);
+	if (ImGui::RadioButton("Directional Light", selectLightType == 0)) {
+			selectLightType = 0;
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Point Light", selectLightType == 1)) {
+		selectLightType = 1;
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Spot Light", selectLightType == 2)) {
+		selectLightType = 2;
+	}
+	ImGui::SliderFloat("materialDiffuse", &materialDiffuse, 0.0f, 1.0f);
+	ImGui::SliderFloat("materialSpecular", &materialSpecular, 0.0f, 1.0f);
+	ImGui::SliderFloat3("lightPosition", &lightPosition.x, -2.0f, 2.0f);
+	ImGui::SliderFloat("lightFallOffStart", &lightFallOffStart, 0.0f, 5.0f);
+	ImGui::SliderFloat("lightFallOffEnd", &lightFallOffEnd, 0.0f, 10.0f);
+	ImGui::SliderFloat("lightSpotPower", &lightSpotPower, 0.0f, 512.0f);
+
 	ImGui::End();
+
 }
 
 
