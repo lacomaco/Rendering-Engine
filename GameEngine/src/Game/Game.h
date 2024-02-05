@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include "../GameObject/Actor.h"
+#include "./ImguiController.h"
 
 class Game
 {
@@ -26,6 +27,9 @@ private:
 	SDL_Window* mWindow;
 	bool mIsRunning;
 	Uint32 mTicksCount;
+
+	ImguiController* imguiController;
+
 
 	std::vector<SDL_Scancode> mLeftPaddleKeys;
 

@@ -3,6 +3,10 @@
 #include <GL/glew.h>
 #include "../Util/Shader.h"
 #include "../Util/stb_image.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl2.h>
+#include <imgui/imgui_impl_opengl3.h>
+#include "./ImguiController.h"
 
 Game::Game() {
 	mWindow = nullptr;
@@ -55,6 +59,9 @@ bool Game::Initialize() {
 
 	SetOpenGL();
 
+	ImguiController::CreateInstance(mWindow, context);
+	imguiController = ImguiController::getInstance();
+
 	return true;
 }
 
@@ -62,6 +69,7 @@ void Game::Shutdown() {
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
 	SDL_GL_DeleteContext(context);
+	delete imguiController;
 }
 
 void Game::RunLoop() {
@@ -75,6 +83,8 @@ void Game::RunLoop() {
 void Game::ProcessInput() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
+		ImGui_ImplSDL2_ProcessEvent(&event);
+
 		switch (event.type) {
 			//  윈도우의 x 버튼을 누르면 게임 종료
 		case SDL_QUIT:
@@ -120,6 +130,8 @@ void Game::UpdateGame() {
 }
 
 void Game::GenerateOutput() {
+	imguiController->Update();
+
 	float timeValue = SDL_GetTicks() / 1000.0f;
 	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 
@@ -139,6 +151,7 @@ void Game::GenerateOutput() {
 	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(program, "texture2"), 1);
 
+
 	// 하얀색으로 초기화.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -150,6 +163,7 @@ void Game::GenerateOutput() {
 	*/
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);
 }
 

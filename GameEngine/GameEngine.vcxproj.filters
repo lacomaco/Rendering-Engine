@@ -768,9 +768,6 @@
     <ClInclude Include="libs\imgui\imstb_truetype.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="libs\imgui\imgui_impl_sdl.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Game.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -787,6 +784,21 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Camera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\ImguiController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_impl_opengl3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\imgui\imgui_impl_sdl2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -812,9 +824,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="libs\imgui\imgui_impl_sdl.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\Game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -834,6 +843,21 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\stb_image.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\ImguiController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_tables.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_impl_sdl2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1236,5 +1260,7 @@
     </None>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
     <None Include="shader\triangle-vertex.glsl" />
+    <None Include="libs\imgui\LICENSE" />
+    <None Include="libs\glm\LICENSE" />
   </ItemGroup>
 </Project>
