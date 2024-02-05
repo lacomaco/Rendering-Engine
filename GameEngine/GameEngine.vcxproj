@@ -142,6 +142,7 @@
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_impl_sdl2.h" />
+    <ClInclude Include="src\GameObject\VertexType.h" />
     <ClInclude Include="src\Game\ImguiController.h" />
     <ClInclude Include="src\Game\Camera.h" />
     <ClInclude Include="src\Util\Shader.h" />
