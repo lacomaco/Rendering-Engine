@@ -17,6 +17,25 @@ struct Vertex {
 	};
 };
 
+/*
+* 텍스처이름들.
+* albedoTexture; <- diffuseTexture일 경우 albedo로 이동시킴.
+* emissiveTexture;
+* normalTexture; <- bumTexture일 경우 이곳으로 이동
+* heightTexture;
+* metallicTexture;
+* aoTexture;
+* roughnessTexture;
+* specularTexture
+* 
+* 
+* 텍스처가 중복되는 경우 +1로 숫자를 붙여서 처리한다.
+* 
+* example)
+* albedoTexture0
+* albedoTexture1 ...
+*/
+
 struct Texture {
 	unsigned int id;
 	std::string type;
@@ -29,13 +48,27 @@ public:
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures = {});
+	/*
+	Mesh(std::vector<Vertex>&& vertices,
+		std::vector<unsigned int>&& indices);
+	*/
+	Mesh(std::vector<Vertex>&& _vertices, 
+		std::vector<unsigned int>&& _indices,
+		std::vector<Texture>&& _textures = {});
+	~Mesh();
 
-	void Draw(Shader &shader);
+	void Draw();
+	/*
+	* assimp 사용해서 모델 긁어올 경우엔 사용하지 말고
+	* Plane, Box, Sphere 같이 내가 생성하는 vertex의 Tangents를 사용하는
+	* 경우에만 쓴다.
+	*/
+	void CalculateTangents();
+	void setupMesh();
+
 
 private:
 	unsigned int VAO, VBO, EBO;
-	void setupMesh();
 };
 
 /*

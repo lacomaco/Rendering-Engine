@@ -52,10 +52,7 @@ bool Game::Initialize() {
 
 	glViewport(0, 0, 1024, 768);
 	glCullFace(GL_BACK);
-	// 기본값 CW, 근데 우리는 윈도우에서 사용하기 때문에
-	// DirectX와 같은 CCW로 설정하였음.
 	glFrontFace(GL_CCW);
-	stbi_set_flip_vertically_on_load(true);
 
 	SetOpenGL();
 

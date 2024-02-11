@@ -1,5 +1,5 @@
 #include "Primitive.h"
-#include "../Util/Constants.h"
+#include "../Constants.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -40,7 +40,8 @@ shared_ptr<Mesh> Primitive::Plane() {
 		0, 1, 2, 0, 2, 3,
 	};
     Primitive::CalculateTangents(vertices, indices);
-    return shared_ptr<Mesh>(new Mesh(vertices, indices));
+
+    return make_shared<Mesh>(std::move(vertices), std::move(indices));
 }
 
 // 하드코딩 나중에 블렌더로 아예 Plane 사각형 만들어서 로드하는 방식으로 바꿔도 나쁘지 않을듯
@@ -165,7 +166,7 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
 
     Primitive::CalculateTangents(vertices, indices);
 
-    return shared_ptr<Mesh>(new Mesh(vertices, indices));
+    return make_shared<Mesh>(std::move(vertices), std::move(indices));
 }
 
 // https://www.songho.ca/opengl/gl_sphere.html#example_sphere
@@ -234,9 +235,10 @@ shared_ptr<Mesh> Primitive::Sphere(
 
     Primitive::CalculateTangents(vertices, indices);
 
-    return make_shared<Mesh>(vertices, indices);
+    return make_shared<Mesh>(std::move(vertices), std::move(indices));
 }
 
+// 지울거임.
 void Primitive::CalculateTangents(
     std::vector<Vertex>& vertices,
     std::vector<unsigned int>& indices

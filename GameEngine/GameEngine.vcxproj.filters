@@ -804,7 +804,10 @@
     <ClInclude Include="src\GameObject\Primitive.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\Constants.h">
+    <ClInclude Include="src\Constants.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Plane.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -867,6 +870,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\VertexType.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Plane.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
