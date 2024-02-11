@@ -54,10 +54,21 @@ bool Game::Initialize() {
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
-	SetOpenGL();
-
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
+
+	stbi_set_flip_vertically_on_load(true);
+
+	// 쉐이더 생성
+
+	auto shader = Shader::getInstance();
+	shader->loadShaderProgram(
+		"./shader/triangle-vertex.glsl",
+		"./shader/triangle-fragment.glsl",
+		"triangle"
+	);
+
+	plane = new Plane();
 
 	return true;
 }
@@ -130,160 +141,19 @@ void Game::GenerateOutput() {
 	imguiController->Update();
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
-	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 
 	auto program = Shader::getInstance()->getShaderProgram("triangle");
 	// 만약 찾지 못하면 -1이다.
-	int vertexColorLocation =
-		glGetUniformLocation(program,"ourColor");
 	glUseProgram(program);
-	glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-	glBindVertexArray(VAO);
-	// 텍스처 바인딩
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(program, "texture2"), 1);
-
 
 	// 하얀색으로 초기화.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*
-	* 6: 인덱스 갯수
-	* GL_UNSIGNED_INT: 인덱스 타입
-	* 0: 인덱스 배열 시작 위치
-	*/
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	plane->Draw();
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);
-}
-
-void Game::SetOpenGL() {
-	// 텍스처 로드
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("./assets/images/wall.jpg", &width, &height, &nrChannels, 0);
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	/*
-	* S: 수평축 (x축)
-	* T: 수직축 (y축)
-	* 특별한 약어가 있는것은 아니다. 그냥 전통적인 명명법이라한다.
-	*/
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	/*
-	* 
-	*/
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(
-		GL_TEXTURE_2D, // 텍스처 바인딩 대상 지정, 큐브맵은 GL_TEXTURE_3D이다.
-		0, // mipmap 레벨
-		GL_RGB, // internal formap
-		width, 
-		height,
-		0, // border 크기
-		GL_RGB, // 입력 데이터 형식
-		GL_UNSIGNED_BYTE, // 픽셀 데이터 타입
-		data // 픽셀 데이터 포인터.
-		);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-	unsigned char* data2 = stbi_load("./assets/images/awesomeface.png", &width, &height, &nrChannels, 0);
-	if (data2)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	/*
-	* mipmap? : 텍스처 매핑 기법.
-	* GPU에서 텍스처를 미리 절반으로 줄인 작은 사이즈의 텍스처를 만들어둔다.
-	* ex) 256* 256 -> 128 * 128 -> 64 * 64 -> 32 * 32 -> 16 * 16 -> 8 * 8 -> 4 * 4 -> 2 * 2 -> 1 * 1
-	* mipmap level 역시 이에 매칭된다.
-	* mipmap 0 -> 256 * 256
-	* mipmap 1 -> 128 * 128
-	* 
-	* 만약 거리가 먼 물체를 렌더링할때 굳이 해상도가 높은 텍스처를 쓸 필요가 없으니
-	mipmap을 적절히 조절하면 최적화와 시각적 품질을 얻을 수 있다.
-	*/
-	stbi_image_free(data);
-	stbi_image_free(data2);
-
-
-	// 셰이더 로드
-	auto shader = Shader::getInstance();
-	auto program = shader->loadShaderProgram(
-		"./shader/triangle-vertex.glsl",
-		"./shader/triangle-fragment.glsl",
-		"triangle"
-	);
-
-	// VAO, VBO, EBO 생성
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	/*
-	* 이 코드의 의미.
-	* 
-	* GL_ARRAY_BUFFER에 바인딩된 Buffer OBJECT에
-	* vertices.size() * sizeof(float) 만큼의 메모리를 할당하고
-	* vertices.data()의 데이터를 복사한다.
-	* 또한 GL_STATIC_DRAW로 설정하여 데이터가 변하지 않음을 명시한다.
-	*/
-	glBufferData(
-		GL_ARRAY_BUFFER, 
-		vertices.size() * sizeof(float),
-		vertices.data(), 
-		GL_STATIC_DRAW
-	);
-
-	// position
-	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)0);
-	glEnableVertexAttribArray(0);
-
-	/*
-	* color
-	* 1: attribute location
-	* 3: size
-	* GL_FLOAT: type
-	* GL_FALSE: normalized
-	* 3 * sizeof(float): stride
-	* (void*)(3 * sizeof(float)): offset
-	*
-	*/
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// texCoords
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(
-		GL_ELEMENT_ARRAY_BUFFER,
-		indices.size() * sizeof(unsigned int),
-		indices.data(),
-		GL_STATIC_DRAW
-	);
 }
 
 void Game::AddActor(Actor* actor)

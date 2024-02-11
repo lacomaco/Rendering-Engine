@@ -31,6 +31,10 @@ Mesh::~Mesh() {
 
 void Mesh::Draw() {
 	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram("triangle");
+
+	glUseProgram(program);
+
 	unsigned int albedoNr = 1;
 	unsigned int emissiveNr = 1;
 	unsigned int normalNr = 1;
@@ -73,7 +77,7 @@ void Mesh::Draw() {
 		}
 
 
-		shader->setInt("DefaultShader",("material." + name + number).c_str(), i);
+		shader->setInt("triangle",("material." + name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
@@ -94,7 +98,7 @@ void Mesh::setupMesh() {
 
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		vertices.size() * sizeof(float),
+		vertices.size() * sizeof(Vertex),
 		vertices.data(),
 		GL_STATIC_DRAW
 	);

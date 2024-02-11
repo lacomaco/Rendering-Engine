@@ -14,5 +14,7 @@ public:
 	std::vector<Texture> textures;
 	std::shared_ptr<Mesh> mesh;
 	void Draw();
+	void SetTexture();
+
 };
 
