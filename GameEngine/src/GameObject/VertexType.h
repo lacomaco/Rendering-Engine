@@ -1,11 +1,41 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
+#include <string>
+#include "../Util/Shader.h"
+#include "assimp/aabb.h"
 
 struct Vertex {
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 texcoord;
-	// glm::vec3 color;
+	glm::vec3 tangentModel;
+
+	// 값이 없을때 곱하기 연산시 이상이 없도록 1.0으로 초기화.
+	glm::vec3 color = {
+		1.0f, 1.0f, 1.0f 
+	};
+};
+
+struct Texture {
+	unsigned int id;
+	std::string type;
+	std::string path;
+};
+
+class Mesh {
+public:
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+	std::vector<Texture> textures;
+
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures = {});
+
+	void Draw(Shader &shader);
+
+private:
+	unsigned int VAO, VBO, EBO;
+	void setupMesh();
 };
 
 /*

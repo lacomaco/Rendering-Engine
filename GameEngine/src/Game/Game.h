@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "../GameObject/Actor.h"
 #include "./ImguiController.h"
+#include "../GameObject/Primitive.h"
 
 class Game
 {

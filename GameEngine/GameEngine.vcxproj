@@ -142,9 +142,11 @@
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_impl_sdl2.h" />
+    <ClInclude Include="src\GameObject\Primitive.h" />
     <ClInclude Include="src\GameObject\VertexType.h" />
     <ClInclude Include="src\Game\ImguiController.h" />
     <ClInclude Include="src\Game\Camera.h" />
+    <ClInclude Include="src\Util\Constants.h" />
     <ClInclude Include="src\Util\Shader.h" />
     <ClInclude Include="src\Component\Component.h" />
     <ClInclude Include="src\GameObject\Actor.h" />
@@ -401,12 +403,13 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="src\Util\stb_image.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="src\Util\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_sdl2.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\GameObject\Primitive.cpp" />
+    <ClCompile Include="src\GameObject\VertexType.cpp" />
     <ClCompile Include="src\Game\ImguiController.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />
@@ -424,7 +427,6 @@
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Util\stb_image.cpp" />
-    <ClCompile Include="src\Util\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />
