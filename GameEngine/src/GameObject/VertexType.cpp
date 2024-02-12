@@ -35,14 +35,14 @@ void Mesh::Draw() {
 
 	glUseProgram(program);
 
-	unsigned int albedoNr = 1;
-	unsigned int emissiveNr = 1;
-	unsigned int normalNr = 1;
-	unsigned int heightNr = 1;
-	unsigned int metallicNr = 1;
-	unsigned int aoNr = 1;
-	unsigned int roughnessNr = 1;
-	unsigned int specularNr = 1;
+	unsigned int albedoNr = 0;
+	unsigned int emissiveNr = 0;
+	unsigned int normalNr = 0;
+	unsigned int heightNr = 0;
+	unsigned int metallicNr = 0;
+	unsigned int aoNr = 0;
+	unsigned int roughnessNr = 0;
+	unsigned int specularNr = 0;
 
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
@@ -77,7 +77,7 @@ void Mesh::Draw() {
 		}
 
 
-		shader->setInt("triangle",("material." + name + number).c_str(), i);
+		shader->setInt("triangle",(name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 

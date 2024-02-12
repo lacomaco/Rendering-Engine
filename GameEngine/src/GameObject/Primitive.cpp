@@ -6,45 +6,6 @@
 using namespace std;
 
 // 하드코딩 나중에 블렌더로 아예 Plane 사각형 만들어서 로드하는 방식으로 바꿔도 나쁘지 않을듯
-shared_ptr<Mesh> Primitive::Plane() {
-	std::vector<glm::vec3> positions;
-	std::vector<glm::vec3> colors;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> texcoords;
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
-    positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
-    positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 1.0f));
-    vector<Vertex>  vertices;
-    for (size_t i = 0; i < positions.size(); i++) {
-        Vertex v;
-        v.position = positions[i];
-        v.color = colors[i];
-        v.normal = normals[i];
-        v.texcoord = texcoords[i];
-        vertices.push_back(v);
-    }
-    vector<unsigned int> indices = {
-		0, 1, 2, 0, 2, 3,
-	};
-    Primitive::CalculateTangents(vertices, indices);
-
-    return make_shared<Mesh>(std::move(vertices), std::move(indices));
-}
-
-// 하드코딩 나중에 블렌더로 아예 Plane 사각형 만들어서 로드하는 방식으로 바꿔도 나쁘지 않을듯
 shared_ptr<Mesh> Primitive::Box(const float scale) {
     vector<glm::vec3> positions;
     vector<glm::vec3> colors;
@@ -54,6 +15,8 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
@@ -62,11 +25,13 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
@@ -78,11 +43,13 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
@@ -94,11 +61,13 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
@@ -110,11 +79,13 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
@@ -126,11 +97,13 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
@@ -142,10 +115,10 @@ shared_ptr<Mesh> Primitive::Box(const float scale) {
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(0.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 0.0f));
-    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
     vector<Vertex>  vertices;
     for (size_t i = 0; i < positions.size(); i++) {
         Vertex v;

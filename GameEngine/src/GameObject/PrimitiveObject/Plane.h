@@ -7,7 +7,7 @@
 class Plane
 {
 public:
-	Plane();
+	Plane(float scale = 1.0f);
 	~Plane();
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;

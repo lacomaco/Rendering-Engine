@@ -68,7 +68,7 @@ bool Game::Initialize() {
 		"triangle"
 	);
 
-	plane = new Plane();
+	plane = new Plane(0.2);
 
 	return true;
 }
