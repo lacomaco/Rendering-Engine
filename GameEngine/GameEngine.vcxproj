@@ -565,6 +565,7 @@
     <None Include="libs\glm\gtx\wrap.inl" />
     <None Include="libs\glm\LICENSE" />
     <None Include="libs\imgui\LICENSE" />
+    <None Include="shader\common.glsl" />
     <None Include="shader\triangle-vertex.glsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>

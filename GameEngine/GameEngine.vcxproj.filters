@@ -1277,5 +1277,6 @@
     <None Include="shader\triangle-vertex.glsl" />
     <None Include="libs\imgui\LICENSE" />
     <None Include="libs\glm\LICENSE" />
+    <None Include="shader\common.glsl" />
   </ItemGroup>
 </Project>
