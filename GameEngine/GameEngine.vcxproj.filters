@@ -801,13 +801,19 @@
     <ClInclude Include="src\GameObject\VertexType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject\Primitive.h">
+    <ClInclude Include="src\GameObject\PrimitiveObject\Primitive.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Constants.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject\PrimitiveObject\Plane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Box.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -866,13 +872,19 @@
     <ClCompile Include="libs\imgui\imgui_impl_sdl2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject\Primitive.cpp">
+    <ClCompile Include="src\GameObject\PrimitiveObject\Primitive.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\VertexType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\Plane.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Box.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Circle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

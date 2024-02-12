@@ -5,8 +5,9 @@
 #include <cstdlib>
 #include "../GameObject/Actor.h"
 #include "./ImguiController.h"
-#include "../GameObject/Primitive.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
+#include "../GameObject/PrimitiveObject/Box.h"
+#include "../GameObject/PrimitiveObject/Circle.h"
 
 class Game
 {
@@ -41,5 +42,7 @@ private:
 	std::vector<class Actor*> mPendingActors;
 
 	Plane* plane;
+	Box* box;
+	Circle* circle;
 };
 

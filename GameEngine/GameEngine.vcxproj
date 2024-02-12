@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h" />
+    <ClInclude Include="src\GameObject\PrimitiveObject\Box.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_impl_sdl2.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Plane.h" />
-    <ClInclude Include="src\GameObject\Primitive.h" />
+    <ClInclude Include="src\GameObject\PrimitiveObject\Primitive.h" />
     <ClInclude Include="src\GameObject\VertexType.h" />
     <ClInclude Include="src\Game\ImguiController.h" />
     <ClInclude Include="src\Game\Camera.h" />
@@ -406,11 +408,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Circle.cpp" />
+    <ClCompile Include="src\GameObject\PrimitiveObject\Box.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_sdl2.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Plane.cpp" />
-    <ClCompile Include="src\GameObject\Primitive.cpp" />
+    <ClCompile Include="src\GameObject\PrimitiveObject\Primitive.cpp" />
     <ClCompile Include="src\GameObject\VertexType.cpp" />
     <ClCompile Include="src\Game\ImguiController.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />

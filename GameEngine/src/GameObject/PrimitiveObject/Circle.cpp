@@ -1,63 +1,96 @@
-#include "Plane.h"
-#include "glm/glm.hpp"
-#include <memory>
-#include <SDL.h>
+#include "Circle.h"
 #include "../../Util/stb_image.h"
+#include "../../Constants.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <memory>
+#include "Primitive.h"
+
+// hong lab의 그래픽스 수업에서 배운 내용을 바탕으로 작성하엿습니다.
+Circle::Circle(float radius,
+    int numSlices,
+    int numStacks) {
+    const float dTheta = -M_PI * 2 / float(numStacks);
+    const float dPhi = -M_PI / float(numSlices);
+
+    for (int i = 0; i <= numStacks; i++) {
+        glm::vec3 stackStartPoint = glm::vec3(
+            0.0f,
+            -radius,
+            0.0f
+        );
+
+        // Z 축 방향으로 회전 행렬
+        glm::mat4 zRotationMatrix = glm::rotate(
+            glm::mat4(1.0f),
+            dPhi * i,
+            glm::vec3(0.0f, 0.0f, 1.0f)
+        );
+
+        stackStartPoint = glm::vec3(
+            zRotationMatrix * glm::vec4(stackStartPoint, 1.0f)
+        );
 
 
-using namespace std;
+        for (int j = 0; j <= numSlices; j++) {
+            Vertex v;
+            glm::mat4 yRotationMatrix = glm::rotate(
+                glm::mat4(1.0f),
+                dTheta * j,
+                glm::vec3(0.0f, 1.0f, 0.0f)
+            );
+            v.position = glm::vec3(yRotationMatrix * glm::vec4(stackStartPoint, 1.0f));
+            v.normal = glm::normalize(v.position);
+            v.texcoord = glm::vec2(float(j) / numSlices, float(i) / numStacks);
 
-// hong lab의 그래픽스 수업에서 배운 내용을 바탕으로 작성하였습니다.
-Plane::Plane(float scale) {
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> colors;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texcoords;
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f) * scale);
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 1.0f)); // 좌하단
-    texcoords.push_back(glm::vec2(1.0f, 1.0f)); // 우하단
-    texcoords.push_back(glm::vec2(1.0f, 0.0f)); // 우상단
-    texcoords.push_back(glm::vec2(0.0f, 0.0f)); // 좌상단
-    for (size_t i = 0; i < positions.size(); i++) {
-        Vertex v;
-        v.position = positions[i];
-        v.color = colors[i];
-        v.normal = normals[i];
-        v.texcoord = texcoords[i];
-        vertices.push_back(v);
+            vertices.push_back(v);
+
+        }
     }
 
-    indices = {
-        0, 1, 2, 0, 2, 3,
-    };
+    for (int j = 0; j < numStacks; j++) {
+
+        const int offset = (numSlices + 1) * j;
+
+        for (int i = 0; i < numSlices; i++) {
+
+            indices.push_back(offset + i);
+            indices.push_back(offset + i + numSlices + 1);
+            indices.push_back(offset + i + 1 + numSlices + 1);
+
+            indices.push_back(offset + i);
+            indices.push_back(offset + i + 1 + numSlices + 1);
+            indices.push_back(offset + i + 1);
+        }
+    }
+
     SetTexture();
+
     CalculateTangents();
-    mesh = make_shared<Mesh>(std::move(vertices), std::move(indices),std::move(textures));
+
+    mesh = make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(textures));
+    mesh->CalculateTangents();
     mesh->setupMesh();
 }
 
-void Plane::Draw() {
+Circle::~Circle() {
+    vertices.clear();
+    indices.clear();
+    textures.clear();
+    mesh.reset();
+}
+
+void Circle::Draw() {
     this->mesh->Draw();
 }
 
-void Plane::SetTexture() {
+void Circle::SetTexture() {
     int width, height, nrChannels;
 
-	Texture texture;
-	texture.id = 0;
-	texture.type = "albedo";
-	texture.path = "./assets/images/wall.jpg";
+    Texture texture;
+    texture.id = 0;
+    texture.type = "albedo";
+    texture.path = "./assets/images/wall.jpg";
 
     unsigned char* data = stbi_load(texture.path.c_str(), &width, &height, &nrChannels, 0);
 
@@ -119,17 +152,6 @@ void Plane::SetTexture() {
     stbi_image_free(data);
     stbi_image_free(data2);
 
-
-
-	textures.push_back(texture);
+    textures.push_back(texture);
     textures.push_back(texture2);
 }
-
-Plane::~Plane() {
-    vertices.clear();
-	indices.clear();
-	textures.clear();
-	mesh.reset();
-}
-
-

@@ -1,14 +1,14 @@
 #pragma once
 #include "../VertexType.h"
+#include "Primitive.h"
 #include <vector>
 #include <memory>
-#include "Primitive.h"
 
-class Plane : public Primitive
+class Box : public Primitive
 {
 public:
-	Plane(float scale = 1.0f);
-	~Plane();
+	Box(float scale = 1.0f);
+	~Box();
 	void Draw();
 	void SetTexture();
 };

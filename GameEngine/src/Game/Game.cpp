@@ -7,6 +7,7 @@
 #include <imgui/imgui_impl_sdl2.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include "./ImguiController.h"
+#include "../GameObject/PrimitiveObject/Plane.h"
 
 Game::Game() {
 	mWindow = nullptr;
@@ -68,7 +69,9 @@ bool Game::Initialize() {
 		"triangle"
 	);
 
-	plane = new Plane(0.2);
+	plane = new Plane(0.2f);
+	box = new Box(0.5f);
+	circle = new Circle();
 
 	return true;
 }
@@ -150,7 +153,7 @@ void Game::GenerateOutput() {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	plane->Draw();
+	box->Draw();
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);

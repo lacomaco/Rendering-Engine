@@ -4,11 +4,13 @@
 #include <memory>
 #include "Primitive.h"
 
-class Plane : public Primitive
+class Circle : public Primitive
 {
 public:
-	Plane(float scale = 1.0f);
-	~Plane();
+	Circle(float radius = 0.3f,
+		int numSlices = 100,
+		int numStacks = 100);
+	~Circle();
 	void Draw();
 	void SetTexture();
 };
