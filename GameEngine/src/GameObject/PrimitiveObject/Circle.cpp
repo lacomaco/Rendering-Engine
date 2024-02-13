@@ -80,7 +80,8 @@ Circle::~Circle() {
     mesh.reset();
 }
 
-void Circle::Draw() {
+void Circle::Draw(const char* shaderProgramName) {
+    PutModelUniform(shaderProgramName);
     this->mesh->Draw();
 }
 

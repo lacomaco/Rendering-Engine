@@ -11,7 +11,7 @@ public:
 		int numSlices = 100,
 		int numStacks = 100);
 	~Circle();
-	void Draw();
+	void Draw(const char* shaderProgramName);
 	void SetTexture();
 };
 

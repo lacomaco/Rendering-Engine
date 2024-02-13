@@ -8,15 +8,15 @@
 using namespace std;
 
 // hong lab의 그래픽스 수업에서 배운 내용을 바탕으로 작성하였습니다.
-Plane::Plane(float scale) {
+Plane::Plane() {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> colors;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texcoords;
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -47,7 +47,8 @@ Plane::Plane(float scale) {
     mesh->setupMesh();
 }
 
-void Plane::Draw() {
+void Plane::Draw(const char* shaderProgramName) {
+    PutModelUniform(shaderProgramName);
     this->mesh->Draw();
 }
 

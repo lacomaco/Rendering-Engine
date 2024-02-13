@@ -8,6 +8,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include "./ImguiController.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
+#include "../Constants.h"
 
 Game::Game() {
 	mWindow = nullptr;
@@ -27,8 +28,8 @@ bool Game::Initialize() {
 		"My Game Practices",
 		100,
 		100,
-		1024,
-		768,
+		WINDOW_WIDTH,
+		WINDOW_HEIGHT,
 		SDL_WINDOW_OPENGL
 	);
 
@@ -51,9 +52,11 @@ bool Game::Initialize() {
 		return false;
 	}
 
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
 
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
@@ -69,9 +72,30 @@ bool Game::Initialize() {
 		"triangle"
 	);
 
-	plane = new Plane(0.2f);
-	box = new Box(0.5f);
+	plane = new Plane();
+	box = new Box();
 	circle = new Circle();
+	camera = new Camera(
+		75.0f,
+		WINDOW_WIDTH,
+		WINDOW_HEIGHT
+	);
+
+	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.3씩 이동
+	{
+		plane->position = glm::vec3(-0.5f, 0.0f, 0.0f);
+		box->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		circle->position = glm::vec3(0.5f, 0.0f, 0.0f);
+	}
+
+	// 스케일이 조정
+
+	{
+		plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
+		box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
+	}
+
+
 
 	return true;
 }
@@ -138,6 +162,13 @@ void Game::UpdateGame() {
 	if (deltaTime > 0.05f) {
 		deltaTime = 0.05f;
 	}
+
+	// 3개 업데이트.
+	{
+		plane->rotation += glm::vec3(30.0f,0.0f,0.0f) * deltaTime;
+		box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+		circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+	}
 }
 
 void Game::GenerateOutput() {
@@ -152,8 +183,12 @@ void Game::GenerateOutput() {
 	// 하얀색으로 초기화.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	box->Draw();
+	glPolygonMode(GL_FRONT, GL_LINE);
+	
+	camera->putCameraUniform("triangle");
+	plane->Draw("triangle");
+	box->Draw("triangle");
+	circle->Draw("triangle");
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);

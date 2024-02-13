@@ -7,9 +7,9 @@
 class Box : public Primitive
 {
 public:
-	Box(float scale = 1.0f);
+	Box();
 	~Box();
-	void Draw();
+	void Draw(const char* shaderProgramName);
 	void SetTexture();
 };
 

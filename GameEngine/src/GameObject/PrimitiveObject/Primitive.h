@@ -13,7 +13,7 @@ protected:
 	std::vector<Texture> textures;
 	std::shared_ptr<Mesh> mesh;
 
-	virtual void Draw() {
+	virtual void Draw(const char* shaderProgramName) {
 		std::cout << "이거 오버라이딩 해주세요" << std::endl;
 	}
 
@@ -25,5 +25,11 @@ protected:
 
 public:
 	~Primitive();
+
+	void PutModelUniform(const char* shaderProgramName);
+
+	glm::vec3 position = glm::vec3(0.0f);
+	glm::vec3 rotation = glm::vec3(0.0f);
+	glm::vec3 scale = glm::vec3(1.0f);
 };
 

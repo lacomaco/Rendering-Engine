@@ -6,16 +6,16 @@
 using namespace std;
 
 // hong lab의 그래픽스 수업에서 배운 내용을 바탕으로 작성하엿습니다.
-Box::Box(float scale) {
+Box::Box() {
     vector<glm::vec3> positions;
     vector<glm::vec3> colors;
     vector<glm::vec3> normals;
     vector<glm::vec2> texcoords;
     // 윗면
-    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
@@ -30,10 +30,10 @@ Box::Box(float scale) {
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
     // 아랫면
-    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -48,10 +48,10 @@ Box::Box(float scale) {
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
     // 앞면
-    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -66,10 +66,10 @@ Box::Box(float scale) {
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
     // 뒷면
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 1.0f));
@@ -84,10 +84,10 @@ Box::Box(float scale) {
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
     // 왼쪽
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f));
+    positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f));
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -102,10 +102,10 @@ Box::Box(float scale) {
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
     // 오른쪽
-    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f) * scale);
-    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+    positions.push_back(glm::vec3(1.0f, -1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f));
+    positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
@@ -144,7 +144,8 @@ Box::Box(float scale) {
     mesh->setupMesh();
 }
 
-void Box::Draw() {
+void Box::Draw(const char* shaderProgramName) {
+    PutModelUniform(shaderProgramName);
 	this->mesh->Draw();
 }
 

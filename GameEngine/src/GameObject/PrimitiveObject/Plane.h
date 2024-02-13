@@ -7,9 +7,9 @@
 class Plane : public Primitive
 {
 public:
-	Plane(float scale = 1.0f);
+	Plane();
 	~Plane();
-	void Draw();
+	void Draw(const char* shaderProgramName);
 	void SetTexture();
 };
 
