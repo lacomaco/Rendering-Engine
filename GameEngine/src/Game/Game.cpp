@@ -76,12 +76,12 @@ bool Game::Initialize() {
 	box = new Box();
 	circle = new Circle();
 	camera = new Camera(
-		75.0f,
+		45.0f,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT
 	);
 
-	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.3씩 이동
+	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
 	{
 		plane->position = glm::vec3(-0.5f, 0.0f, 0.0f);
 		box->position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -163,9 +163,10 @@ void Game::UpdateGame() {
 		deltaTime = 0.05f;
 	}
 
+
 	// 3개 업데이트.
 	{
-		plane->rotation += glm::vec3(30.0f,0.0f,0.0f) * deltaTime;
+		plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
 		box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 		circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 	}
@@ -181,7 +182,7 @@ void Game::GenerateOutput() {
 	glUseProgram(program);
 
 	// 하얀색으로 초기화.
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT, GL_LINE);
 	
