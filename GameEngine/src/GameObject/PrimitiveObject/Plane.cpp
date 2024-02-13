@@ -13,8 +13,8 @@ Plane::Plane() {
     std::vector<glm::vec3> colors;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> texcoords;
-    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
-    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
+    positions.push_back(glm::vec3(-1.0f, 1.0f, 0.0f)); //0 
+    positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f)); // 1
     positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
     positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -25,10 +25,10 @@ Plane::Plane() {
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    texcoords.push_back(glm::vec2(0.0f, 1.0f)); // 좌하단
-    texcoords.push_back(glm::vec2(1.0f, 1.0f)); // 우하단
-    texcoords.push_back(glm::vec2(1.0f, 0.0f)); // 우상단
-    texcoords.push_back(glm::vec2(0.0f, 0.0f)); // 좌상단
+    texcoords.push_back(glm::vec2(0.0f, 1.0f));
+    texcoords.push_back(glm::vec2(0.0f, 0.0f));
+    texcoords.push_back(glm::vec2(1.0f, 0.0f));
+    texcoords.push_back(glm::vec2(1.0f, 1.0f));
     for (size_t i = 0; i < positions.size(); i++) {
         Vertex v;
         v.position = positions[i];
