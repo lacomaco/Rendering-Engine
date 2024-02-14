@@ -33,8 +33,7 @@ public:
 	* 편의상 Input 클래스에서 마우스 좌표계는 NDC와 동일하다.
 	*/
 	glm::vec2 mousePos;
-	glm::vec2 ScreenNormalize(Sint32 x,Sint32 y);
-	void CameraLookAround(Sint32 x,Sint32 y, Camera* camera);
-	void SetMouse(Sint32 x, Sint32 y);
+	glm::vec2 ScreenNormalize(int x, int y);
+	void SetMouse();
 };
 

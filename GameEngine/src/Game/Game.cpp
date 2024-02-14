@@ -128,16 +128,11 @@ void Game::ProcessInput() {
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_RIGHT) {
 				input->rightMouseButtonDown = true;
-				input->SetMouse(event.motion.x, event.motion.y);
 			}
 			break;
 
 		case SDL_MOUSEBUTTONUP:
 			input->rightMouseButtonDown = false;
-			break;
-
-		case SDL_MOUSEMOTION:
-			input->CameraLookAround(event.motion.x, event.motion.y, camera);
 			break;
 		}
 	}
@@ -146,6 +141,10 @@ void Game::ProcessInput() {
 	const Uint8* state = input->state;
 	if (state[SDL_SCANCODE_ESCAPE]) {
 		mIsRunning = false;
+	}
+
+	if (state[SDL_SCANCODE_F]) {
+		camera->ResetPitch();
 	}
 }
 
@@ -178,6 +177,8 @@ void Game::UpdateGame() {
 	}
 
 	camera->Update(deltaTime);
+
+	input->SetMouse();
 
 
 	// 3개 업데이트.

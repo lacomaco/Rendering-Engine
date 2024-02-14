@@ -2,6 +2,8 @@
 #include "../Util/Shader.h"
 #include <SDL.h>
 #include "Input.h"
+#include "../Util/CommonMath.h"
+#include <math.h>
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(fov, float(width) / height, near, far);
@@ -30,21 +32,78 @@ Camera::Camera(float fov, int width, int height) {
 	);
 }
 
-void Camera::CameraLookAround(float x, float y) {
-	yaw += x * sensitive;
-	pitch += y * sensitive;
+void Camera::ResetPitch() {
+	currentYaw = glm::radians(-90.0f);
+	currentPitch = 0.0f;
+
+	targetPitch = 0.0f;
+	targetYaw = glm::radians(-90.0f);
 
 	cameraDirection = glm::vec3(
-		cos(yaw * cos(pitch)),
-		sin(pitch),
-		sin(yaw * cos(pitch))
+		cos(currentYaw) * cos(currentPitch),
+		sin(currentPitch),
+		sin(currentYaw) * cos(currentPitch)
 	);
+
 	cameraFront = glm::normalize(cameraDirection);
+}
+
+void Camera::CameraLookAround(float deltaTime) {
+	auto rightMouseButtonDown = Input::GetInstance()->rightMouseButtonDown;
+	const auto& state = Input::GetInstance()->state;
+
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	glm::vec2 point = Input::GetInstance()->ScreenNormalize(x, y);
+	glm::vec2 prev = Input::GetInstance()->mousePos;
+
+	auto diffX = point.x - prev.x;
+	auto diffY = point.y - prev.y;
+
+	if (rightMouseButtonDown && (state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT])) {
+		targetYaw += diffX * xSensitive;
+		targetPitch += diffY * ySensitive;
+	}
+
+	float lerpFactor = 10.0f * deltaTime;
+
+	bool valueChange = false;
+
+	if (std::abs(currentYaw - targetYaw) > 0.0001f ) {
+		currentYaw = CommonMath::Lerp(currentYaw, targetYaw, lerpFactor);
+		valueChange = true;
+	}
+
+	if (std::abs(targetYaw - currentYaw) < 0.0001) {
+		currentYaw = targetYaw;
+		valueChange = true;
+	}
+
+	if (std::abs(currentPitch - targetPitch) > 0.0001f) {
+		currentPitch = CommonMath::Lerp(currentPitch, targetPitch, lerpFactor);
+		valueChange = true;
+	}
+
+	if (std::abs(targetPitch - currentPitch) < 0.0001) {
+		currentPitch = targetPitch;
+		valueChange = true;
+	}
+
+	if (valueChange) {
+		cameraDirection = glm::vec3(
+			cos(currentYaw * cos(currentPitch)),
+			sin(currentPitch),
+			sin(currentYaw * cos(currentPitch))
+		);
+		cameraFront = glm::normalize(cameraDirection);
+	}
 }
 
 void Camera::Update(float deltaTime) {
 	const auto& Input = Input::GetInstance();
 	const float cameraSpeed = 2.5f * deltaTime;
+
+	CameraLookAround(deltaTime);
 
 	if (Input->IsKeyPressed(SDL_SCANCODE_W)) {
 		cameraPos += cameraSpeed * cameraFront;
@@ -59,7 +118,6 @@ void Camera::Update(float deltaTime) {
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 
-	cameraDirection = glm::normalize(cameraPos - cameraTarget);
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 	cameraUp = glm::cross(cameraDirection, cameraRight);
