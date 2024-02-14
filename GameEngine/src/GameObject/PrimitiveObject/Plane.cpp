@@ -87,6 +87,7 @@ void Plane::SetTexture() {
     );
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    /*
     Texture texture2;
     texture2.id = 0;
     texture2.type = "albedo";
@@ -106,6 +107,7 @@ void Plane::SetTexture() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
+    */
     /*
     * mipmap? : 텍스처 매핑 기법.
     * GPU에서 텍스처를 미리 절반으로 줄인 작은 사이즈의 텍스처를 만들어둔다.
@@ -118,12 +120,12 @@ void Plane::SetTexture() {
     mipmap을 적절히 조절하면 최적화와 시각적 품질을 얻을 수 있다.
     */
     stbi_image_free(data);
-    stbi_image_free(data2);
+    //stbi_image_free(data2);
 
 
 
 	textures.push_back(texture);
-    textures.push_back(texture2);
+    //textures.push_back(texture2);
 }
 
 Plane::~Plane() {

@@ -163,12 +163,14 @@ void Game::UpdateGame() {
 		deltaTime = 0.05f;
 	}
 
+	camera->Update();
+
 
 	// 3개 업데이트.
 	{
-		plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
-		box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
-		circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+		//plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
+		//box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+		//circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 	}
 }
 

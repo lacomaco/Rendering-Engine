@@ -81,12 +81,15 @@ void Mesh::Draw() {
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
-	glActiveTexture(GL_TEXTURE0);
-
 	// draw mesh
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);	
+
+	for (unsigned int i = 0; i < textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 
 void Mesh::setupMesh() {

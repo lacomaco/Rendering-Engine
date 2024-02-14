@@ -4,6 +4,8 @@
 
 class Camera
 {
+private:
+	float radius = 3.0f;
 public:
 	// 45보다 작은값 권장.
 	Camera(float fov, int width, int height);
@@ -19,6 +21,7 @@ public:
 
 	glm::mat4 view;
 
+	void Update();
 	void putCameraUniform(const char* shaderProgramName);
 };
 
