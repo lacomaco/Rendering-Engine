@@ -1,11 +1,13 @@
 #include "Camera.h"
 #include "../Util/Shader.h"
 #include <SDL.h>
+#include "Input.h"
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(fov, float(width) / height, near, far);
 	cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	/*
 	* 주의.
 	* 카메라 -> 타겟 벡터가 아닌
@@ -23,17 +25,28 @@ Camera::Camera(float fov, int width, int height) {
 
 	view = glm::lookAt(
 		cameraPos,
-		cameraTarget,
+		cameraPos + cameraFront,
 		cameraUp
 	);
 }
 
 void Camera::Update() {
-	auto time = SDL_GetTicks() / 5000.0f;
-	float camX = sin(time * 3.0f) * radius;
-	float camZ = cos(time * 3.0f) * radius;
+	const auto& Input = Input::GetInstance();
+	const float cameraSpeed = 0.05f;
 
-	cameraPos = glm::vec3(camX, 0.0f, camZ);
+	if (Input->IsKeyPressed(SDL_SCANCODE_W)) {
+		cameraPos += cameraSpeed * cameraFront;
+	}
+	if (Input->IsKeyPressed(SDL_SCANCODE_S)) {
+		cameraPos -= cameraSpeed * cameraFront;
+	}
+	if (Input->IsKeyPressed(SDL_SCANCODE_A)) {
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	}
+	if (Input->IsKeyPressed(SDL_SCANCODE_D)) {
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	}
+
 	cameraDirection = glm::normalize(cameraPos - cameraTarget);
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
@@ -41,7 +54,7 @@ void Camera::Update() {
 
 	view = glm::lookAt(
 		cameraPos,
-		cameraTarget,
+		cameraPos + cameraFront,
 		cameraUp
 	);
 }

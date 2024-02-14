@@ -15,6 +15,7 @@ public:
 
 	// 여기는 아직 카메라 미구현이라. 상수처리.
 	glm::vec3 cameraPos;
+	glm::vec3 cameraFront;
 	glm::vec3 cameraTarget;
 	glm::vec3 cameraDirection;
 	glm::vec3 cameraUp;

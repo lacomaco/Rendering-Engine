@@ -9,6 +9,7 @@
 #include "../GameObject/PrimitiveObject/Box.h"
 #include "../GameObject/PrimitiveObject/Circle.h"
 #include "../Game/Camera.h"
+#include "../Game/Input.h"
 
 class Game
 {
@@ -46,5 +47,6 @@ private:
 	Box* box;
 	Circle* circle;
 	Camera* camera;
+	Input* input;
 };
 

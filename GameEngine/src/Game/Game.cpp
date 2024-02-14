@@ -95,7 +95,7 @@ bool Game::Initialize() {
 		box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
 	}
 
-
+	input = Input::GetInstance();
 
 	return true;
 }
@@ -129,7 +129,7 @@ void Game::ProcessInput() {
 	}
 
 	// 키보드 키가 눌렸는지 감지
-	const Uint8* state = SDL_GetKeyboardState(NULL);
+	const Uint8* state = input->state;
 	if (state[SDL_SCANCODE_ESCAPE]) {
 		mIsRunning = false;
 	}

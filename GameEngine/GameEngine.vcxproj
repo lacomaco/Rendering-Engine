@@ -144,6 +144,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\Input.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Box.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
@@ -413,6 +414,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\Input.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Circle.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Box.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp" />
