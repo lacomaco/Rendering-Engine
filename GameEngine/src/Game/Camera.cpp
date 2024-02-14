@@ -30,9 +30,21 @@ Camera::Camera(float fov, int width, int height) {
 	);
 }
 
-void Camera::Update() {
+void Camera::CameraLookAround(float x, float y) {
+	yaw += x * sensitive;
+	pitch += y * sensitive;
+
+	cameraDirection = glm::vec3(
+		cos(yaw * cos(pitch)),
+		sin(pitch),
+		sin(yaw * cos(pitch))
+	);
+	cameraFront = glm::normalize(cameraDirection);
+}
+
+void Camera::Update(float deltaTime) {
 	const auto& Input = Input::GetInstance();
-	const float cameraSpeed = 0.05f;
+	const float cameraSpeed = 2.5f * deltaTime;
 
 	if (Input->IsKeyPressed(SDL_SCANCODE_W)) {
 		cameraPos += cameraSpeed * cameraFront;

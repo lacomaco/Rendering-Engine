@@ -6,6 +6,10 @@ class Camera
 {
 private:
 	float radius = 3.0f;
+	float yaw = glm::radians(-90.0f);
+	float pitch = 0.0f;
+	float sensitive = 1.0;
+
 public:
 	// 45보다 작은값 권장.
 	Camera(float fov, int width, int height);
@@ -22,7 +26,9 @@ public:
 
 	glm::mat4 view;
 
-	void Update();
+	void Update(float deltaTime);
+	void CameraLookAround(float x, float y);
+
 	void putCameraUniform(const char* shaderProgramName);
 };
 

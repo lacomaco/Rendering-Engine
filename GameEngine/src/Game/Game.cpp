@@ -121,9 +121,23 @@ void Game::ProcessInput() {
 		ImGui_ImplSDL2_ProcessEvent(&event);
 
 		switch (event.type) {
-			//  윈도우의 x 버튼을 누르면 게임 종료
 		case SDL_QUIT:
 			mIsRunning = false;
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_RIGHT) {
+				input->rightMouseButtonDown = true;
+				input->SetMouse(event.motion.x, event.motion.y);
+			}
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			input->rightMouseButtonDown = false;
+			break;
+
+		case SDL_MOUSEMOTION:
+			input->CameraLookAround(event.motion.x, event.motion.y, camera);
 			break;
 		}
 	}
@@ -163,7 +177,7 @@ void Game::UpdateGame() {
 		deltaTime = 0.05f;
 	}
 
-	camera->Update();
+	camera->Update(deltaTime);
 
 
 	// 3개 업데이트.
