@@ -37,6 +37,7 @@ void ImguiController::Update() {
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
 	ImGui::Checkbox("useTexture", &useTexture);
+	ImGui::Checkbox("showNormal", &showNormal);
 	// slider -2.0f ~ 2.0f
 	ImGui::SliderFloat3("modelTranslation", &modelTranslation.x, -2.0f, 2.0f);
 	ImGui::SliderFloat3("modelRotation", &modelRotation.x, -3.14f, 3.14f);

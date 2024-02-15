@@ -44,6 +44,8 @@ public:
 	float lightFallOffEnd = 0.0f;
 	float lightSpotPower = 0.0f;
 
+	bool showNormal = false;
+
 
 };
 

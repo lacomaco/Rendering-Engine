@@ -82,7 +82,7 @@ Circle::~Circle() {
 
 void Circle::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
-    this->mesh->Draw();
+    this->mesh->Draw(shaderProgramName);
 }
 
 void Circle::SetTexture() {
