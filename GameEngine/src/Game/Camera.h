@@ -6,14 +6,16 @@ class Camera
 {
 private:
 	float radius = 3.0f;
-	float currentYaw = glm::radians(-90.0f);
+	float currentYaw = 0.0f;
 	float currentPitch = 0.0f;
 
-	float targetYaw = glm::radians(-90.0f);
+	float targetYaw = 0.0f;
 	float targetPitch = 0.0f;
 
 	float xSensitive = 1.0;
 	float ySensitive = 0.5;
+
+	void CalculateCameraDirection();
 
 public:
 	// 45보다 작은값 권장.

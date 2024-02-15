@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "../Util/CommonMath.h"
 #include <math.h>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(fov, float(width) / height, near, far);
@@ -32,20 +34,25 @@ Camera::Camera(float fov, int width, int height) {
 	);
 }
 
+void Camera::CalculateCameraDirection() {
+	glm::quat pitchQuat = glm::angleAxis(currentPitch, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::quat yawQuat = glm::angleAxis(-currentYaw, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::quat finalQuat = yawQuat * pitchQuat;
+
+	cameraDirection = finalQuat * glm::vec3(0.0f, 0.0f, -1.0f); // 기본 전방 벡터에 회전 적용
+
+	cameraFront = glm::normalize(cameraDirection);
+}
+
 void Camera::ResetPitch() {
-	currentYaw = glm::radians(-90.0f);
+	currentYaw = 0.0f;
 	currentPitch = 0.0f;
 
 	targetPitch = 0.0f;
-	targetYaw = glm::radians(-90.0f);
+	targetYaw = 0.0f;
 
-	cameraDirection = glm::vec3(
-		cos(currentYaw) * cos(currentPitch),
-		sin(currentPitch),
-		sin(currentYaw) * cos(currentPitch)
-	);
-
-	cameraFront = glm::normalize(cameraDirection);
+	CalculateCameraDirection();
 }
 
 void Camera::CameraLookAround(float deltaTime) {
@@ -89,12 +96,7 @@ void Camera::CameraLookAround(float deltaTime) {
 	}
 
 	if (valueChange) {
-		cameraDirection = glm::vec3(
-			cos(currentYaw * cos(currentPitch)),
-			sin(currentPitch),
-			sin(currentYaw * cos(currentPitch))
-		);
-		cameraFront = glm::normalize(cameraDirection);
+		CalculateCameraDirection();
 	}
 }
 
