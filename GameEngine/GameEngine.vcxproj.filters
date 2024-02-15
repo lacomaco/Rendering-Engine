@@ -1300,6 +1300,7 @@
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-vertex.glsl" />
+    <None Include="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
