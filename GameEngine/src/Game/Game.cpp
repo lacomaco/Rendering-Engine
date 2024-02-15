@@ -210,9 +210,18 @@ void Game::GenerateOutput() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	camera->putCameraUniform("triangle");
-	plane->Draw("triangle");
+	//plane->Draw("triangle");
 	box->Draw("triangle");
-	circle->Draw("triangle");
+	//circle->Draw("triangle");
+
+	auto normalProgram = Shader::getInstance()->getShaderProgram("normal");
+	glUseProgram(normalProgram);
+
+	camera->putCameraUniform("normal");
+
+	//plane->Draw("normal");
+	box->Draw("normal");
+	//circle->Draw("normal");
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);

@@ -20,6 +20,7 @@ Box::Box() {
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -38,6 +39,7 @@ Box::Box() {
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
     normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
@@ -47,7 +49,7 @@ Box::Box() {
     texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
-    // ¾Õ¸é
+    // µÞ¸é
     positions.push_back(glm::vec3(-1.0f, -1.0f, -1.0f));
     positions.push_back(glm::vec3(-1.0f, 1.0f, -1.0f));
     positions.push_back(glm::vec3(1.0f, 1.0f, -1.0f));
@@ -65,7 +67,7 @@ Box::Box() {
     texcoords.push_back(glm::vec2(1.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
 
-    // µÞ¸é
+    // ¾Õ¸é
     positions.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
     positions.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
     positions.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -92,6 +94,8 @@ Box::Box() {
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
     colors.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+
+
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -110,10 +114,12 @@ Box::Box() {
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
+    
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+    
     texcoords.push_back(glm::vec2(0.0f, 0.0f));
     texcoords.push_back(glm::vec2(1.0f, 0.0f));
     texcoords.push_back(glm::vec2(1.0f, 1.0f));
@@ -146,7 +152,7 @@ Box::Box() {
 
 void Box::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
-	this->mesh->Draw();
+	this->mesh->Draw(shaderProgramName);
 }
 
 void Box::SetTexture() {

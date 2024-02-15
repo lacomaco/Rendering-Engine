@@ -12,15 +12,15 @@ const float MAGNITUDE = 0.02;
 
 void GenerateLine(int index)
 {
-    vec4 pointPosition = view * model * gl_in[index].gl_Position;
+    vec4 pointPosition = model * gl_in[index].gl_Position;
     vec4 pointNormal = normalize(
         (invTranspose * vec4(gs_in[index].normal, 0.0))
     );
     // 원본 포지션
-    gl_Position = projection * pointPosition;
+    gl_Position = projection * view * pointPosition;
     EmitVertex();
 
-    gl_Position = projection * (gl_in[index].gl_Position + pointNormal * MAGNITUDE);
+    gl_Position = projection * view * (pointPosition + pointNormal * MAGNITUDE);
     EmitVertex();
     EndPrimitive();
 }

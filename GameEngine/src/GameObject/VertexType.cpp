@@ -29,9 +29,9 @@ Mesh::~Mesh() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::Draw() {
+void Mesh::Draw(const char* shaderProgramName) {
 	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram("triangle");
+	auto program = shader->getShaderProgram(shaderProgramName);
 
 	glUseProgram(program);
 
@@ -77,7 +77,7 @@ void Mesh::Draw() {
 		}
 
 
-		shader->setInt("triangle",(name + number).c_str(), i);
+		shader->setInt(shaderProgramName, (name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 

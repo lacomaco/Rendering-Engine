@@ -21,10 +21,10 @@ Plane::Plane() {
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-    normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+    normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+    normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+    normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+    normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 1.0f));
     texcoords.push_back(glm::vec2(0.0f, 0.0f));
     texcoords.push_back(glm::vec2(1.0f, 0.0f));
@@ -49,7 +49,7 @@ Plane::Plane() {
 
 void Plane::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
-    this->mesh->Draw();
+    this->mesh->Draw(shaderProgramName);
 }
 
 void Plane::SetTexture() {

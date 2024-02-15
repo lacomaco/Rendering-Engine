@@ -57,7 +57,7 @@ public:
 		std::vector<Texture>&& _textures = {});
 	~Mesh();
 
-	void Draw();
+	void Draw(const char* shaderProgramName);
 	/*
 	* assimp 사용해서 모델 긁어올 경우엔 사용하지 말고
 	* Plane, Box, Sphere 같이 내가 생성하는 vertex의 Tangents를 사용하는

@@ -76,6 +76,7 @@ void Primitive::PutModelUniform(const char* shaderProgramName) {
 	shader->setMat4(shaderProgramName, "model", model);
 
 	glm::mat4 invTranspose = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	shader->setMat4(shaderProgramName,"invTranspose", invTranspose);
 
 }
 
