@@ -66,9 +66,9 @@ public:
 	Mesh(std::vector<Vertex>&& vertices,
 		std::vector<unsigned int>&& indices);
 	*/
-	Mesh(std::vector<Vertex>&& _vertices, 
-		std::vector<unsigned int>&& _indices,
-		std::vector<Texture>&& _textures = {});
+	Mesh(std::vector<Vertex> _vertices,
+		std::vector<unsigned int> _indices,
+		std::vector<Texture>_textures = {});
 	~Mesh();
 
 	void Draw(const char* shaderProgramName);

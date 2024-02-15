@@ -17,8 +17,9 @@ Model::~Model()
 
 void Model::Draw(const char* shaderProgramName)
 {
+	PutModelUniform(shaderProgramName);
 	for (auto& mesh : meshes) {
-		mesh.Draw(shaderProgramName);
+		mesh->Draw(shaderProgramName);
 	}
 }
 
@@ -26,20 +27,22 @@ void Model::Draw(const char* shaderProgramName)
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
-
-	if (!scene || scene->mFlags && AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		std::cout<<"ERROR::ASSIMP::"<<importer.GetErrorString()<<std::endl;
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+	{
+		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
 		return;
 	}
+	directory = path.substr(0, path.find_last_of('/'));
 
+	processNode(scene->mRootNode, scene);
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		processMesh(mesh, scene);
+		meshes.push_back(processMesh(mesh, scene));
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -47,7 +50,7 @@ void Model::processNode(aiNode* node, const aiScene* scene)
 	}
 }
 
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -78,24 +81,19 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			std::cout << path << " has no normals" << std::endl;
 		}
 
-		if (mesh->HasTangentsAndBitangents()) {
-			glm::vec3 tangent;
-			tangent.x = mesh->mTangents[i].x;
-			tangent.y = mesh->mTangents[i].y;
-			tangent.z = mesh->mTangents[i].z;
-
-			vertex.tangentModel = tangent;
-		}
-		else {
-			std::cout << path << " has no tangents " << std::endl;
-		}
-
 		if (mesh->mTextureCoords[0]) {
 			glm::vec2 texcoord;
 			texcoord.x = mesh->mTextureCoords[0][i].x;
 			texcoord.y = mesh->mTextureCoords[0][i].y;
 
 			vertex.texcoord = texcoord;
+
+			glm::vec3 tangent;
+			tangent.x = mesh->mTangents[i].x;
+			tangent.y = mesh->mTangents[i].y;
+			tangent.z = mesh->mTangents[i].z;
+
+			vertex.tangentModel = tangent;
 		}
 		else {
 			std::cout << path << " has no texture coordinates" << std::endl;
@@ -108,62 +106,56 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	// process indices
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 		aiFace face = mesh->mFaces[i];
-		for (unsigned int j = 0; j < face.mNumIndices; j++) {
+		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
-		}
 	}
 
 	// process material
-	if (mesh->mMaterialIndex >= 0)
-	{
-		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-		/*
-		* diffuse == albedo == baseColor
-		* 
-		* 이름이 혼재되어있지만 같은 역할임.
-		*/
-		std::vector<Texture> albedoMaps = loadMaterialTextures(material,
-						aiTextureType_DIFFUSE, "albedo");
-		textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
+	/*
+	* diffuse == albedo == baseColor
+	*
+	* 이름이 혼재되어있지만 같은 역할임.
+	*/
+	std::vector<Texture> albedoMaps = loadMaterialTextures(material,
+		aiTextureType_DIFFUSE, "albedo");
+	textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
 
-		albedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, "albedo");
-		textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
+	albedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, "albedo");
+	textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
 
-		std::vector<Texture> specularMaps = loadMaterialTextures(material,
-			aiTextureType_SPECULAR, "specular");
-		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+	std::vector<Texture> specularMaps = loadMaterialTextures(material,
+		aiTextureType_SPECULAR, "specular");
+	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-		std::vector<Texture> normalMaps = loadMaterialTextures(material,
-						aiTextureType_NORMALS, "normal");
-		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+	std::vector<Texture> normalMaps = loadMaterialTextures(material,
+		aiTextureType_NORMALS, "normal");
+	textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-		std::vector<Texture> heightMaps = loadMaterialTextures(material,
-									aiTextureType_HEIGHT, "height");
-		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+	std::vector<Texture> heightMaps = loadMaterialTextures(material,
+		aiTextureType_HEIGHT, "height");
+	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-		std::vector<Texture> emissiveMaps = loadMaterialTextures(material,
-												aiTextureType_EMISSIVE, "emissive");
-		textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
+	std::vector<Texture> emissiveMaps = loadMaterialTextures(material,
+		aiTextureType_EMISSIVE, "emissive");
+	textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
-		std::vector<Texture> metallicMaps = loadMaterialTextures(material,
-															aiTextureType_METALNESS, "metallic");
-		textures.insert(textures.end(), metallicMaps.begin(), metallicMaps.end());
+	std::vector<Texture> metallicMaps = loadMaterialTextures(material,
+		aiTextureType_METALNESS, "metallic");
+	textures.insert(textures.end(), metallicMaps.begin(), metallicMaps.end());
 
-		std::vector<Texture> aoMaps = loadMaterialTextures(material,
-															aiTextureType_AMBIENT_OCCLUSION, "ao");
-		textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
+	std::vector<Texture> aoMaps = loadMaterialTextures(material,
+		aiTextureType_AMBIENT_OCCLUSION, "ao");
+	textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
 
-		std::vector<Texture> roughnessMaps = loadMaterialTextures(material,
-																		aiTextureType_DIFFUSE_ROUGHNESS, "roughness");
-		textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
+	std::vector<Texture> roughnessMaps = loadMaterialTextures(material,
+		aiTextureType_DIFFUSE_ROUGHNESS, "roughness");
+	textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
 
 
-
-	}
-
-	auto ourMesh = Mesh(std::move(vertices), std::move(indices), std::move(textures));
-	ourMesh.setupMesh();
+	auto ourMesh = std::make_shared<Mesh>(vertices, indices, textures);
+	ourMesh->setupMesh();
 
 	return ourMesh;
 }

@@ -10,6 +10,7 @@
 #include "../GameObject/PrimitiveObject/Circle.h"
 #include "../Game/Camera.h"
 #include "../Game/Input.h"
+#include "../GameObject/PrimitiveObject/Model.h"
 
 class Game
 {
@@ -48,5 +49,7 @@ private:
 	Circle* circle;
 	Camera* camera;
 	Input* input;
+
+	Model* backPack;
 };
 

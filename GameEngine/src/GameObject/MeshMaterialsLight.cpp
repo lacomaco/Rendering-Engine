@@ -5,12 +5,12 @@ using namespace std;
 
 std::vector<Texture> textures_loaded;
 
-Mesh::Mesh(std::vector<Vertex>&& _vertices,
-	std::vector<unsigned int>&& _indices,
-	std::vector<Texture>&& _textures) :
-	vertices(std::move(_vertices)),
-	indices(std::move(_indices)),
-	textures(std::move(_textures))
+Mesh::Mesh(std::vector<Vertex> _vertices,
+	std::vector<unsigned int> _indices,
+	std::vector<Texture>_textures) :
+	vertices(_vertices),
+	indices(_indices),
+	textures(_textures)
 {
 	setupMesh();
 }
@@ -85,7 +85,6 @@ void Mesh::Draw(const char* shaderProgramName) {
 	// draw mesh
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);	
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);

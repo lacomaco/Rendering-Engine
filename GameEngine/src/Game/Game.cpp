@@ -3,9 +3,9 @@
 #include <GL/glew.h>
 #include "../Util/Shader.h"
 #include "../Util/stb_image.h"
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_sdl2.h>
-#include <imgui/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 #include "./ImguiController.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../Constants.h"
@@ -79,9 +79,14 @@ bool Game::Initialize() {
 		"./shader/normal-geometry.glsl"
 	);
 
-	plane = new Plane();
-	box = new Box();
-	circle = new Circle();
+	// 화면에 그릴 오브젝트들 생성
+	//plane = new Plane();
+	//box = new Box();
+	//circle = new Circle();
+	backPack = new Model("./assets/backpack/backpack.obj");
+
+
+
 	camera = new Camera(
 		45.0f,
 		WINDOW_WIDTH,
@@ -90,16 +95,16 @@ bool Game::Initialize() {
 
 	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
 	{
-		plane->position = glm::vec3(-0.5f, 0.0f, 0.0f);
-		box->position = glm::vec3(0.0f, 0.0f, 0.0f);
-		circle->position = glm::vec3(0.5f, 0.0f, 0.0f);
+		//plane->position = glm::vec3(-0.5f, 0.0f, 0.0f);
+		//box->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		//circle->position = glm::vec3(0.5f, 0.0f, 0.0f);
 	}
 
 	// 스케일이 조정
 
 	{
-		plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
-		box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
+		//plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
+		//box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
 	}
 
 	input = Input::GetInstance();
@@ -191,7 +196,7 @@ void Game::UpdateGame() {
 	// 3개 업데이트.
 	{
 		//plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
-		box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+		//box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 		//circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 	}
 }
@@ -210,9 +215,8 @@ void Game::GenerateOutput() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	camera->putCameraUniform("triangle");
-	plane->Draw("triangle");
-	box->Draw("triangle");
-	circle->Draw("triangle");
+
+	backPack->Draw("triangle");
 
 	auto showNormal = imguiController->showNormal;
 
@@ -222,9 +226,7 @@ void Game::GenerateOutput() {
 
 		camera->putCameraUniform("normal");
 
-		plane->Draw("normal");
-		box->Draw("normal");
-		circle->Draw("normal");
+		backPack->Draw("normal");
 	}
 
 	imguiController->Render();
