@@ -74,19 +74,42 @@ GLuint Shader::getFragmentShader(const char* filePath) {
 	return fragmentShader->second;
 }
 
+GLuint Shader::getGeometryShader(const char* filePath) {
+    auto geometryShader = shaderMap.find(filePath);
+
+    if (geometryShader == shaderMap.end()) {
+		std::string geometryShaderSource = readShaderSource(filePath);
+		std::string processedGeometryShaderSource = ProcessShaderIncludes(geometryShaderSource, "./shader");
+
+		GLuint geometryShaderID = compileShader(processedGeometryShaderSource.c_str(), GL_GEOMETRY_SHADER);
+		shaderMap[filePath] = geometryShaderID;
+		return geometryShaderID;
+	}
+
+	return geometryShader->second;
+}
+
 unsigned int Shader::loadShaderProgram(
     const char* vertexShaderPath,
     const char* fragmentShaderPath,
-    const char* shaderProgramName
+    const char* shaderProgramName,
+    const char* geometryShaderPath
 ) {
     auto shaderProgramId = shaderProgramMap.find(shaderProgramName);
-    auto vertexShaderId = getVertexShader(vertexShaderPath);
-    auto fragmentShaderId = getFragmentShader(fragmentShaderPath);
 
     if(shaderProgramId == shaderProgramMap.end()) {
 		GLuint shaderProgram = glCreateProgram();
+        auto vertexShaderId = getVertexShader(vertexShaderPath);
+        auto fragmentShaderId = getFragmentShader(fragmentShaderPath);
+
 		glAttachShader(shaderProgram, vertexShaderId);
 		glAttachShader(shaderProgram, fragmentShaderId);
+
+        if (geometryShaderPath != nullptr) {
+			GLuint geometryShaderId = getGeometryShader(geometryShaderPath);
+			glAttachShader(shaderProgram, geometryShaderId);
+		}
+
 		glLinkProgram(shaderProgram);
 
 		// 링크 오류 확인

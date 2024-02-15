@@ -50,7 +50,6 @@ void Camera::ResetPitch() {
 
 void Camera::CameraLookAround(float deltaTime) {
 	auto rightMouseButtonDown = Input::GetInstance()->rightMouseButtonDown;
-	const auto& state = Input::GetInstance()->state;
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
@@ -60,12 +59,12 @@ void Camera::CameraLookAround(float deltaTime) {
 	auto diffX = point.x - prev.x;
 	auto diffY = point.y - prev.y;
 
-	if (rightMouseButtonDown && (state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT])) {
+	if (rightMouseButtonDown) {
 		targetYaw += diffX * xSensitive;
 		targetPitch += diffY * ySensitive;
 	}
 
-	float lerpFactor = 10.0f * deltaTime;
+	float lerpFactor = 30.0f * deltaTime;
 
 	bool valueChange = false;
 

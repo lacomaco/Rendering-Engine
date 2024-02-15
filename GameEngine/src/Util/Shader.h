@@ -14,10 +14,12 @@ public:
 	GLuint compileShader(const char* shaderCode,GLenum shaderType);
 	GLuint getVertexShader(const char* filePath);
 	GLuint getFragmentShader(const char* filePath);
+	GLuint getGeometryShader(const char* filePath);
 	unsigned int loadShaderProgram(
 		const char* vertexShaderPath,
 		const char* fragmentShaderPath,
-		const char* shaderProgramName
+		const char* shaderProgramName,
+		const char* geometryShaderPath = nullptr
 	);
 
 	unsigned int getShaderProgram(const char* shaderProgramName);

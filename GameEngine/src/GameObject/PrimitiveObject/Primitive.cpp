@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// Assimp 사용하여 모델 로드한 경우엔 쓰지말것.
 void Primitive::CalculateTangents(
 ) {
     for (size_t i = 0; i < indices.size(); i += 3) {
@@ -73,5 +74,8 @@ void Primitive::PutModelUniform(const char* shaderProgramName) {
 	model = translationMatrix * rotationMatrix * scaleMatrix;
 
 	shader->setMat4(shaderProgramName, "model", model);
+
+	glm::mat4 invTranspose = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+
 }
 

@@ -72,6 +72,13 @@ bool Game::Initialize() {
 		"triangle"
 	);
 
+	shader->loadShaderProgram(
+		"./shader/normal-vertex.glsl",
+		"./shader/normal-fragment.glsl",
+		"normal",
+		"./shader/normal-geometry.glsl"
+	);
+
 	plane = new Plane();
 	box = new Box();
 	circle = new Circle();
@@ -201,7 +208,6 @@ void Game::GenerateOutput() {
 	// 하얀색으로 초기화.
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(GL_FRONT, GL_LINE);
 	
 	camera->putCameraUniform("triangle");
 	plane->Draw("triangle");
