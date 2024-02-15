@@ -1,17 +1,9 @@
-#include "./VertexType.h"
+#include "./MeshMaterialsLight.h"
 #include <GL/glew.h>
 
 using namespace std;
 
-/*
-Mesh::Mesh(std::vector<Vertex>&& vertices,
-	std::vector<unsigned int>&& indices) : 
-	vertices(std::move(vertices)),
-	indices(std::move(indices)) 
-{
-	setupMesh();
-}
-*/
+std::vector<Texture> textures_loaded;
 
 Mesh::Mesh(std::vector<Vertex>&& _vertices,
 	std::vector<unsigned int>&& _indices,
@@ -34,7 +26,11 @@ void Mesh::Draw(const char* shaderProgramName) {
 	auto program = shader->getShaderProgram(shaderProgramName);
 
 	glUseProgram(program);
+	
+	// Phong
+	unsigned int specularNr = 0;
 
+	// PBR
 	unsigned int albedoNr = 0;
 	unsigned int emissiveNr = 0;
 	unsigned int normalNr = 0;
@@ -42,40 +38,45 @@ void Mesh::Draw(const char* shaderProgramName) {
 	unsigned int metallicNr = 0;
 	unsigned int aoNr = 0;
 	unsigned int roughnessNr = 0;
-	unsigned int specularNr = 0;
 
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
 
 		std::string number;
-		std::string name = textures[i].type;
+		auto name = textures[i].type;
 
-		if (name == "albedo") {
+		if (name == "specular") {
+			number = std::to_string(specularNr++);
+		} 
+
+		else if (name == "albedo") {
 			number = std::to_string(albedoNr++);
 		}
-		else if ("emissive") {
+
+		else if (name == "emissive") {
 			number = std::to_string(emissiveNr++);
 		}
+
 		else if (name == "normal") {
 			number = std::to_string(normalNr++);
 		}
+
 		else if (name == "height") {
 			number = std::to_string(heightNr++);
 		}
+
 		else if (name == "metallic") {
 			number = std::to_string(metallicNr++);
 		}
+
 		else if (name == "ao") {
 			number = std::to_string(aoNr++);
 		}
+
 		else if (name == "roughness") {
 			number = std::to_string(roughnessNr++);
 		}
-		else if (name == "specular") {
-			number = std::to_string(specularNr++);
-		}
-
 
 		shader->setInt(shaderProgramName, (name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);

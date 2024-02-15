@@ -19,6 +19,12 @@ struct Vertex {
 
 /*
 * 텍스처이름들.
+* 
+* Phong
+* diffuseTexture;
+* specularTexture;
+* 
+* PBR
 * albedoTexture; <- diffuseTexture일 경우 albedo로 이동시킴.
 * emissiveTexture;
 * normalTexture; <- bumTexture일 경우 이곳으로 이동
@@ -34,6 +40,12 @@ struct Vertex {
 * example)
 * albedoTexture0
 * albedoTexture1 ...
+* 
+* 최종적으로 PBR만 지원하는 형태로 만들것이다.
+* 하지만 그전엔 우선 간단한 퐁모델을 띄어서 이것저것 기능을 추가해야하기 때문에
+* 퐁모델 먼저 지원한다.
+* 
+* 텍스처의 이름도 분리한다.
 */
 
 struct Texture {
@@ -41,6 +53,8 @@ struct Texture {
 	std::string type;
 	std::string path;
 };
+
+extern std::vector<Texture> textures_loaded;
 
 class Mesh {
 public:

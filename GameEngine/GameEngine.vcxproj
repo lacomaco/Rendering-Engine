@@ -144,6 +144,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Model.h" />
     <ClInclude Include="src\Util\CommonMath.h" />
     <ClInclude Include="src\Game\Input.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h" />
@@ -153,7 +154,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClInclude Include="libs\imgui\imgui_impl_sdl2.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Plane.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Primitive.h" />
-    <ClInclude Include="src\GameObject\VertexType.h" />
+    <ClInclude Include="src\GameObject\MeshMaterialsLight.h" />
     <ClInclude Include="src\Game\ImguiController.h" />
     <ClInclude Include="src\Game\Camera.h" />
     <ClInclude Include="src\Constants.h" />
@@ -415,6 +416,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Model.cpp" />
     <ClCompile Include="src\Game\Input.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Circle.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Box.cpp" />
@@ -423,7 +425,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Plane.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Primitive.cpp" />
-    <ClCompile Include="src\GameObject\VertexType.cpp" />
+    <ClCompile Include="src\GameObject\MeshMaterialsLight.cpp" />
     <ClCompile Include="src\Game\ImguiController.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />

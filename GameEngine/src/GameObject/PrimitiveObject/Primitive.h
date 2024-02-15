@@ -1,5 +1,5 @@
 #pragma once
-#include "../VertexType.h"
+#include "../MeshMaterialsLight.h"
 #include <memory>
 #include <vector>
 
