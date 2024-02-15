@@ -825,6 +825,9 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\Model.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -897,6 +900,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\Model.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

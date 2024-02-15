@@ -5,8 +5,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include "../MeshMaterialsLight.h"
+#include "BaseObject.h"
 
-class Model
+class Model : public BaseObject
 {
 private:
 	std::vector<Mesh> meshes;

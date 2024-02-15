@@ -144,6 +144,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Model.h" />
     <ClInclude Include="src\Util\CommonMath.h" />
     <ClInclude Include="src\Game\Input.h" />
@@ -416,6 +417,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Model.cpp" />
     <ClCompile Include="src\Game\Input.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Circle.cpp" />
