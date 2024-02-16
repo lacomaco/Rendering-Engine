@@ -17,6 +17,6 @@ void main() {
 
 	// normal은 법선벡터이기 때문에 0.0으로 설정.
 	// 4차원이 0이면 이동 변환이 적용되지 않기 때문에 법선벡터는 0.0이다.
-	normalWorld = (invTranspose * vec4(aNormal,0.0f)).xyz;
+	normalWorld = normalize((invTranspose * vec4(aNormal,0.0f)).xyz);
 	TexCoord = aTexCoord;
 }

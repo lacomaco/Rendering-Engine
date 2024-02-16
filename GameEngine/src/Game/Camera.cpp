@@ -5,7 +5,6 @@
 #include "../Util/CommonMath.h"
 #include <math.h>
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(fov, float(width) / height, near, far);
@@ -135,4 +134,5 @@ void Camera::putCameraUniform(const char* shaderProgramName) {
 
 	shader->setMat4(shaderProgramName,"projection", projection);
 	shader->setMat4(shaderProgramName,"view", view);
+	shader->setVec3(shaderProgramName,"cameraPos", cameraPos);
 }

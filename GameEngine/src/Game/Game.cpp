@@ -9,6 +9,7 @@
 #include "./ImguiController.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../Constants.h"
+#include <glm/gtc/quaternion.hpp>
 
 Game::Game() {
 	mWindow = nullptr;
@@ -64,24 +65,15 @@ bool Game::Initialize() {
 	stbi_set_flip_vertically_on_load(true);
 
 	// 쉐이더 생성
-
-	auto shader = Shader::getInstance();
-	shader->loadShaderProgram(
-		"./shader/default-vertex.glsl",
-		"./shader/default-fragment.glsl",
-		"default"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/normal-vertex.glsl",
-		"./shader/normal-fragment.glsl",
-		"normal",
-		"./shader/normal-geometry.glsl"
-	);
+	CreateShaderProgram();
 
 	// 화면에 그릴 오브젝트들 생성
 	//plane = new Plane();
-	//box = new Box();
+	box = new Box();
+	box->SetTexture("./assets/white.png", "albedo");
+	box->SetupMesh();
+	box->scale = glm::vec3(0.2f, 0.2f, 0.2f);
+
 	circle = new Circle();
 
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
@@ -197,8 +189,14 @@ void Game::UpdateGame() {
 	}
 
 	camera->Update(deltaTime);
+	light->Update(deltaTime);
 
 	input->SetMouse();
+
+	// 빛 움직임.
+	{
+		
+	}
 
 
 	// 3개 업데이트.
@@ -223,10 +221,21 @@ void Game::GenerateOutput() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	camera->putCameraUniform("default");
+	light->PutLightUniform("default");
 
 	//backPack->Draw("default");
 	circle->Draw("default");
-	light->Draw("default");
+	//box->Draw("default");
+
+
+	// 빛 위치 시각화.
+	{
+		program = Shader::getInstance()->getShaderProgram("light");
+		glUseProgram(program);
+		camera->putCameraUniform("light");
+		light->PutLightUniform("light");
+		light->Draw("light");
+	}
 
 	auto showNormal = imguiController->showNormal;
 
@@ -236,7 +245,7 @@ void Game::GenerateOutput() {
 
 		camera->putCameraUniform("normal");
 
-		circle->Draw("normal");
+		//circle->Draw("normal");
 		light->Draw("normal");
 
 
@@ -275,4 +284,26 @@ void Game::RemoveActor(Actor* actor)
 		std::iter_swap(iter, mActors.end() - 1);
 		mActors.pop_back();
 	}
+}
+
+void Game::CreateShaderProgram() {
+	auto shader = Shader::getInstance();
+	shader->loadShaderProgram(
+		"./shader/default-vertex.glsl",
+		"./shader/default-fragment.glsl",
+		"default"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/normal-vertex.glsl",
+		"./shader/normal-fragment.glsl",
+		"normal",
+		"./shader/normal-geometry.glsl"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/light-vertex.glsl",
+		"./shader/light-fragment.glsl",
+		"light"
+	);
 }

@@ -1320,6 +1320,8 @@
     <None Include="shader\normal-vertex.glsl" />
     <None Include="LICENSE.md" />
     <None Include="glew32.dll" />
+    <None Include="shader\light-vertex.glsl" />
+    <None Include="shader\light-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

@@ -24,6 +24,9 @@ struct Light {
     vec3 position;
     float spotPower;
     int lightType;
+    float specularStrength;
 };
 
 uniform Light light;
+
+uniform vec3 cameraPos;

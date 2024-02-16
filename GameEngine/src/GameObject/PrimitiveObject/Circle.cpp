@@ -82,6 +82,7 @@ Circle::~Circle() {
 
 void Circle::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
+    material.PutMaterialUniforms(shaderProgramName);
     this->mesh->Draw(shaderProgramName);
 }
 

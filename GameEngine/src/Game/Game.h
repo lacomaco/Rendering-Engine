@@ -30,6 +30,7 @@ private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
+	void CreateShaderProgram();
 
 	SDL_Window* mWindow;
 	bool mIsRunning;

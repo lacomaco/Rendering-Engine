@@ -155,7 +155,7 @@ void Box::SetupMesh() {
 void Box::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
     material.PutMaterialUniforms(shaderProgramName);
-	this->mesh->Draw(shaderProgramName);
+    this->mesh->Draw(shaderProgramName);
 }
 
 void Box::SetTexture(std::string path, std::string type) {

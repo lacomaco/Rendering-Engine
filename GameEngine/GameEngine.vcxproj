@@ -592,6 +592,8 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
     <None Include="LICENSE.md" />
+    <None Include="shader\light-fragment.glsl" />
+    <None Include="shader\light-vertex.glsl" />
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-vertex.glsl" />
