@@ -170,3 +170,17 @@ void Mesh::CalculateTangents() {
 		vertices[i].tangentModel = glm::normalize(vertices[i].tangentModel);
 	}
 }
+
+
+void Material::PutMaterialUniforms(const char* shaderProgramName) {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram(shaderProgramName);
+
+	glUseProgram(program);
+
+	glUniform3fv(glGetUniformLocation(program, "material.ambient"), 1, &ambient[0]);
+	glUniform3fv(glGetUniformLocation(program, "material.diffuse"), 1, &diffuse[0]);
+	glUniform3fv(glGetUniformLocation(program, "material.specular"), 1, &specular[0]);
+	glUniform1f(glGetUniformLocation(program, "material.shininess"), shininess);
+
+}

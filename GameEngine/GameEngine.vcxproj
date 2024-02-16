@@ -151,6 +151,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\Light.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Model.h" />
     <ClInclude Include="src\Util\CommonMath.h" />
@@ -424,6 +425,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\Light.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Model.cpp" />
     <ClCompile Include="src\Game\Input.cpp" />
@@ -593,10 +595,10 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-vertex.glsl" />
-    <None Include="shader\triangle-fragment.glsl">
+    <None Include="shader\default-fragment.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
-    <None Include="shader\triangle-vertex.glsl">
+    <None Include="shader\default-vertex.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />

@@ -67,9 +67,9 @@ bool Game::Initialize() {
 
 	auto shader = Shader::getInstance();
 	shader->loadShaderProgram(
-		"./shader/triangle-vertex.glsl",
-		"./shader/triangle-fragment.glsl",
-		"triangle"
+		"./shader/default-vertex.glsl",
+		"./shader/default-fragment.glsl",
+		"default"
 	);
 
 	shader->loadShaderProgram(
@@ -82,9 +82,13 @@ bool Game::Initialize() {
 	// 화면에 그릴 오브젝트들 생성
 	//plane = new Plane();
 	//box = new Box();
-	//circle = new Circle();
-	backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	// backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	circle = new Circle();
+
+	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
+	 //backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+
+	light = new Light();
+	light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
 
 
 
@@ -108,7 +112,7 @@ bool Game::Initialize() {
 	{
 		//plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
 		//box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
-		backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
+		// backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 	}
 
 	input = Input::GetInstance();
@@ -210,7 +214,7 @@ void Game::GenerateOutput() {
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
 
-	auto program = Shader::getInstance()->getShaderProgram("triangle");
+	auto program = Shader::getInstance()->getShaderProgram("default");
 	// 만약 찾지 못하면 -1이다.
 	glUseProgram(program);
 
@@ -218,9 +222,11 @@ void Game::GenerateOutput() {
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	camera->putCameraUniform("triangle");
+	camera->putCameraUniform("default");
 
-	backPack->Draw("triangle");
+	//backPack->Draw("default");
+	circle->Draw("default");
+	light->Draw("default");
 
 	auto showNormal = imguiController->showNormal;
 
@@ -230,7 +236,11 @@ void Game::GenerateOutput() {
 
 		camera->putCameraUniform("normal");
 
-		backPack->Draw("normal");
+		circle->Draw("normal");
+		light->Draw("normal");
+
+
+		//backPack->Draw("normal");
 	}
 
 	imguiController->Render();

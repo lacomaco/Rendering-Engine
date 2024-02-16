@@ -1,6 +1,7 @@
 #include "Box.h"
 #include "glm/glm.hpp"
 #include "../../Util/stb_image.h"
+#include "../MeshMaterialsLight.h"
 
 
 using namespace std;
@@ -141,27 +142,29 @@ Box::Box() {
         16, 17, 18, 16, 18, 19, // 왼쪽
         20, 21, 22, 20, 22, 23  // 오른쪽
     };
-    SetTexture();
+}
 
+void Box::SetupMesh() {
     CalculateTangents();
 
-    mesh = make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(textures));
-    mesh->CalculateTangents();
-    mesh->setupMesh();
+	mesh = make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(textures));
+	mesh->CalculateTangents();
+	mesh->setupMesh();
 }
 
 void Box::Draw(const char* shaderProgramName) {
     PutModelUniform(shaderProgramName);
+    material.PutMaterialUniforms(shaderProgramName);
 	this->mesh->Draw(shaderProgramName);
 }
 
-void Box::SetTexture() {
+void Box::SetTexture(std::string path, std::string type) {
     int width, height, nrChannels;
 
     Texture texture;
     texture.id = 0;
-    texture.type = "albedo";
-    texture.path = "./assets/images/wall.jpg";
+    texture.type = type;
+    texture.path = path;
 
     unsigned char* data = stbi_load(texture.path.c_str(), &width, &height, &nrChannels, 0);
 
@@ -189,42 +192,8 @@ void Box::SetTexture() {
         data // 픽셀 데이터 포인터.
     );
     glGenerateMipmap(GL_TEXTURE_2D);
-
-    Texture texture2;
-    texture2.id = 0;
-    texture2.type = "albedo";
-    texture2.path = "./assets/images/awesomeface.png";
-
-    glGenTextures(1, &texture2.id);
-    glBindTexture(GL_TEXTURE_2D, texture2.id);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-    unsigned char* data2 = stbi_load(texture2.path.c_str(), &width, &height, &nrChannels, 0);
-    if (data2)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    /*
-    * mipmap? : 텍스처 매핑 기법.
-    * GPU에서 텍스처를 미리 절반으로 줄인 작은 사이즈의 텍스처를 만들어둔다.
-    * ex) 256* 256 -> 128 * 128 -> 64 * 64 -> 32 * 32 -> 16 * 16 -> 8 * 8 -> 4 * 4 -> 2 * 2 -> 1 * 1
-    * mipmap level 역시 이에 매칭된다.
-    * mipmap 0 -> 256 * 256
-    * mipmap 1 -> 128 * 128
-    *
-    * 만약 거리가 먼 물체를 렌더링할때 굳이 해상도가 높은 텍스처를 쓸 필요가 없으니
-    mipmap을 적절히 조절하면 최적화와 시각적 품질을 얻을 수 있다.
-    */
     stbi_image_free(data);
-    stbi_image_free(data2);
-
     textures.push_back(texture);
-    textures.push_back(texture2);
 }
 
 Box::~Box() {

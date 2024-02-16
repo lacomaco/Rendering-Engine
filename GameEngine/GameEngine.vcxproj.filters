@@ -828,6 +828,9 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameObject\Light.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -903,6 +906,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Light.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1307,8 +1313,8 @@
     <None Include="libs\imgui\LICENSE" />
     <None Include="libs\glm\LICENSE" />
     <None Include="shader\common.glsl" />
-    <None Include="shader\triangle-fragment.glsl" />
-    <None Include="shader\triangle-vertex.glsl" />
+    <None Include="shader\default-fragment.glsl" />
+    <None Include="shader\default-vertex.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-vertex.glsl" />

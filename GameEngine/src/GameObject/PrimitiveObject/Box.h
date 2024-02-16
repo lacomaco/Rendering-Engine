@@ -10,6 +10,8 @@ public:
 	Box();
 	~Box();
 	void Draw(const char* shaderProgramName);
-	void SetTexture();
+	void SetTexture(std::string path, std::string type);
+	// SetupMesh 호출 후 Draw 해주세요.
+	void SetupMesh();
 };
 

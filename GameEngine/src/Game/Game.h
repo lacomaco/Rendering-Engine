@@ -11,6 +11,7 @@
 #include "../Game/Camera.h"
 #include "../Game/Input.h"
 #include "../GameObject/PrimitiveObject/Model.h"
+#include "../GameObject/Light.h"
 
 class Game
 {
@@ -51,5 +52,6 @@ private:
 	Input* input;
 
 	Model* backPack;
+	Light* light;
 };
 
