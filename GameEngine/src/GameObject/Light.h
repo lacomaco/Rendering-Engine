@@ -21,7 +21,10 @@ public:
 	// 0 : directional , 1 : point, 2 : spot
 	int lightType = 1;
 
-	float specularStrength = 0.5f;
+
+	glm::vec3 ambient = glm::vec3(0.2f);
+	glm::vec3 diffuse = glm::vec3(0.5f);
+	glm::vec3 specular = glm::vec3(1.0f);
 
 	void PutLightUniform(const char* shaderProgramName);
 

@@ -5,11 +5,10 @@ uniform mat4 invTranspose;
 
 
 uniform sampler2D albedo0;
-uniform sampler2D albedo1;
+uniform sampler2D specular0;
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
+	vec3 diffuse;
     vec3 specular;
     float shininess;
 };
@@ -24,7 +23,11 @@ struct Light {
     vec3 position;
     float spotPower;
     int lightType;
-    float specularStrength;
+
+    // phong shading 전용 PBR에서 지울거임.
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 uniform Light light;

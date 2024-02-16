@@ -70,9 +70,10 @@ bool Game::Initialize() {
 	// 화면에 그릴 오브젝트들 생성
 	//plane = new Plane();
 	box = new Box();
-	box->SetTexture("./assets/white.png", "albedo");
+	box->SetTexture("./assets/container2.png", "albedo");
+	box->SetTexture("./assets/container2_specular.png", "specular");
 	box->SetupMesh();
-	box->scale = glm::vec3(0.2f, 0.2f, 0.2f);
+	box->scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	circle = new Circle();
 
@@ -224,8 +225,8 @@ void Game::GenerateOutput() {
 	light->PutLightUniform("default");
 
 	//backPack->Draw("default");
-	circle->Draw("default");
-	//box->Draw("default");
+	//circle->Draw("default");
+	box->Draw("default");
 
 
 	// 빛 위치 시각화.

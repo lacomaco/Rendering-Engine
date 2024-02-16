@@ -167,9 +167,37 @@ void Box::SetTexture(std::string path, std::string type) {
     texture.path = path;
 
     unsigned char* data = stbi_load(texture.path.c_str(), &width, &height, &nrChannels, 0);
+    if (!data) {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+
+    GLenum format;
+
+    if (nrChannels == 1) {
+		format = GL_RED;
+	}
+    else if (nrChannels == 3) {
+		format = GL_RGB;
+	}
+    else if (nrChannels == 4) {
+		format = GL_RGBA;
+	}
 
     glGenTextures(1, &texture.id);
     glBindTexture(GL_TEXTURE_2D, texture.id);
+    glTexImage2D(
+        GL_TEXTURE_2D, // 텍스처 바인딩 대상 지정, 큐브맵은 GL_TEXTURE_3D이다.
+        0, // mipmap 레벨
+        format, // internal formap
+        width,
+        height,
+        0, // border 크기
+        format, // 입력 데이터 형식
+        GL_UNSIGNED_BYTE, // 픽셀 데이터 타입
+        data // 픽셀 데이터 포인터.
+    );
+    glGenerateMipmap(GL_TEXTURE_2D);
+
     /*
     * S: 수평축 (x축)
     * T: 수직축 (y축)
@@ -178,21 +206,11 @@ void Box::SetTexture(std::string path, std::string type) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(
-        GL_TEXTURE_2D, // 텍스처 바인딩 대상 지정, 큐브맵은 GL_TEXTURE_3D이다.
-        0, // mipmap 레벨
-        GL_RGB, // internal formap
-        width,
-        height,
-        0, // border 크기
-        GL_RGB, // 입력 데이터 형식
-        GL_UNSIGNED_BYTE, // 픽셀 데이터 타입
-        data // 픽셀 데이터 포인터.
-    );
-    glGenerateMipmap(GL_TEXTURE_2D);
+
     stbi_image_free(data);
+
     textures.push_back(texture);
 }
 

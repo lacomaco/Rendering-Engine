@@ -132,6 +132,10 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\lib\Release\x64;C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /Y "$(ProjectDir)assets" "$(OutDir)assets"
+xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

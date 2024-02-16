@@ -78,8 +78,8 @@ void Mesh::Draw(const char* shaderProgramName) {
 			number = std::to_string(roughnessNr++);
 		}
 
-		shader->setInt(shaderProgramName, (name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		shader->setInt(shaderProgramName, (name + number).c_str(), i);
 	}
 
 	// draw mesh
@@ -178,9 +178,7 @@ void Material::PutMaterialUniforms(const char* shaderProgramName) {
 
 	glUseProgram(program);
 
-	glUniform3fv(glGetUniformLocation(program, "material.ambient"), 1, &ambient[0]);
-	glUniform3fv(glGetUniformLocation(program, "material.diffuse"), 1, &diffuse[0]);
-	glUniform3fv(glGetUniformLocation(program, "material.specular"), 1, &specular[0]);
-	glUniform1f(glGetUniformLocation(program, "material.shininess"), shininess);
-
+	shader->setVec3(shaderProgramName, "material.ambient", ambient);
+	shader->setVec3(shaderProgramName, "material.specular", specular);
+	shader->setFloat(shaderProgramName, "material.shininess", shininess);
 }
