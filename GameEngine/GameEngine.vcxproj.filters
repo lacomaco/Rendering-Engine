@@ -1313,6 +1313,7 @@
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-vertex.glsl" />
     <None Include="LICENSE.md" />
+    <None Include="glew32.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
@@ -1321,5 +1322,8 @@
     <Image Include="assets\images\wall.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="glew32.lib" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include "./MeshMaterialsLight.h"
-#include <GL/glew.h>
+#include <glew.h>
 
 using namespace std;
 

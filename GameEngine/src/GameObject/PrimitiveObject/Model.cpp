@@ -1,11 +1,14 @@
 #include "Model.h"
 #include "../../Util/stb_image.h";
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 Model::Model(const char* path)
 {
 	this->path = path;
 	loadModel(path);
+	count = 0;
 }
 
 Model::~Model()
@@ -21,13 +24,14 @@ void Model::Draw(const char* shaderProgramName)
 	for (auto& mesh : meshes) {
 		mesh->Draw(shaderProgramName);
 	}
+	//meshes[0]->Draw(shaderProgramName);
 }
 
 // see: https://learnopengl.com/Model-Loading/Model
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
 		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
@@ -35,18 +39,35 @@ void Model::loadModel(std::string path)
 	}
 	directory = path.substr(0, path.find_last_of('/'));
 
-	processNode(scene->mRootNode, scene);
+	glm::mat4 tr = glm::mat4(1.0f);
+
+	processNode(scene->mRootNode, scene, tr);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+void Model::processNode(aiNode* node, const aiScene* scene, glm::mat4 tr)
 {
+	glm::mat4 m = AiMatrix4x4ToGlmMat4(node->mTransformation);
+
+	m = tr * m;
+
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
+		auto newMesh = processMesh(mesh, scene);
+
+		for (auto& v : newMesh->vertices) {
+			// 정점 위치를 변환
+			glm::vec4 pos = glm::vec4(v.position.x, v.position.y, v.position.z, 1.0);
+			pos = m * pos;
+			v.position.x = pos.x;
+			v.position.y = pos.y;
+			v.position.z = pos.z;
+		}
+
+		meshes.push_back(newMesh);
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-		processNode(node->mChildren[i], scene);
+		processNode(node->mChildren[i], scene,m);
 	}
 }
 
@@ -232,3 +253,20 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	return textureID;
 }
 
+
+// aiMatrix4x4에서 glm::mat4로 변환하는 헬퍼 함수
+glm::mat4 Model::AiMatrix4x4ToGlmMat4(const aiMatrix4x4& from) {
+	glm::mat4 to;
+
+	// aiMatrix4x4는 row-major, glm::mat4는 column-major
+	to[0][0] = from.a1; to[1][0] = from.a2;
+	to[2][0] = from.a3; to[3][0] = from.a4;
+	to[0][1] = from.b1; to[1][1] = from.b2;
+	to[2][1] = from.b3; to[3][1] = from.b4;
+	to[0][2] = from.c1; to[1][2] = from.c2;
+	to[2][2] = from.c3; to[3][2] = from.c4;
+	to[0][3] = from.d1; to[1][3] = from.d2;
+	to[2][3] = from.d3; to[3][3] = from.d4;
+
+	return to;
+}

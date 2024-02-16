@@ -15,10 +15,13 @@ private:
 	std::string directory;
 	std::string path;
 	bool gammaCorrection;
+	int count = 0;
+
+	glm::mat4 AiMatrix4x4ToGlmMat4(const aiMatrix4x4& from);
 
 
 	void loadModel(std::string path);
-	void processNode(aiNode* node, const aiScene* scene);
+	void processNode(aiNode* node, const aiScene* scene, glm::mat4 tr);
 	std::shared_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string textureType);
 	unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);

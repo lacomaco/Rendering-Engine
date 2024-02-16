@@ -3,9 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <GL/glew.h>
+#include <glew.h>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include <glew.h>
 
 class Shader
 {

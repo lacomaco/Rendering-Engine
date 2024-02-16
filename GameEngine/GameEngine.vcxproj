@@ -122,13 +122,15 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;%(AdditionalIncludeDirectories);C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\lib\Release\x64;C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,6 +141,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -448,6 +451,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClCompile Include="src\Util\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="glew32.dll" />
     <None Include="libs\glm\detail\func_common.inl" />
     <None Include="libs\glm\detail\func_common_simd.inl" />
     <None Include="libs\glm\detail\func_exponential.inl" />
@@ -604,6 +608,9 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <Image Include="assets\images\wall.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="glew32.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

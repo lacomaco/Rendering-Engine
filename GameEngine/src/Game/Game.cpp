@@ -1,6 +1,6 @@
 #include "Game.h"
 #include <SDL.h>
-#include <GL/glew.h>
+#include <glew.h>
 #include "../Util/Shader.h"
 #include "../Util/stb_image.h"
 #include <imgui.h>
@@ -83,7 +83,8 @@ bool Game::Initialize() {
 	//plane = new Plane();
 	//box = new Box();
 	//circle = new Circle();
-	backPack = new Model("./assets/backpack/backpack.obj");
+	backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
+	// backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
 
 
 
@@ -92,6 +93,8 @@ bool Game::Initialize() {
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT
 	);
+
+	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
 
 	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
 	{
@@ -105,6 +108,7 @@ bool Game::Initialize() {
 	{
 		//plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
 		//box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
+		backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 	}
 
 	input = Input::GetInstance();
