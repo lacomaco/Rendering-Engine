@@ -18,8 +18,12 @@ uniform Material material;
 struct Light {
 	vec3 direction; // Directional Light 에서만 사용함.
     vec3 position;
-    float spotPower;
     int lightType; // 0: directional, 1: point, 2: spot
+
+    // 빛감쇠
+    float constant;
+    float linear;
+    float quadratic;
 
     // phong shading 전용 PBR에서 지울거임.
     vec3 ambient;
@@ -30,6 +34,10 @@ struct Light {
 uniform Light light;
 
 uniform vec3 cameraPos;
+
+float calcAttenuation(float distance) {
+	return 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+}
 
 vec3 phongShading(
     float lightStrength,
@@ -85,7 +93,25 @@ vec3 pointLight(
     vec3 diffuseColor,
     vec3 specularColor
 ) {
-    return vec3(0.0);
+	vec3 lightVec = normalize(l.position - posWorld);
+    float lightStrength = max(dot(normal, lightVec), 0.0);
+    float distance = length(l.position - posWorld);
+    float attenuation = calcAttenuation(distance);
+
+    ambientColor *= attenuation;
+    diffuseColor *= attenuation;
+    specularColor *= attenuation;
+
+
+    return phongShading(
+        lightStrength,
+        lightVec,normal,
+        toEye,
+        mat,
+        ambientColor,
+        diffuseColor,
+        specularColor
+    );
 }
 
 vec3 spotLight() {

@@ -13,12 +13,13 @@ public:
 	shared_ptr<Box> box;
 	Light();
 	void Draw(const char* shaderProgramName);
-	glm::vec3 strength = glm::vec3(1.0f);
-	float fallOffStart = 0.0f;
-	float fallOffEnd = 10.0f;
 	float spotPower = 0.0f; // 스포트라이트 빛에 사용.
 	// 0 : directional , 1 : point, 2 : spot
 	int lightType = 1;
+
+	float constant = 1.0f;
+	float linear = 0.09f;
+	float quadratic = 0.032f;
 
 
 	glm::vec3 ambient = glm::vec3(0.2f);

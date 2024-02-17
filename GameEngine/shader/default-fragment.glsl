@@ -13,7 +13,7 @@ void main() {
 	vec3 diffuseColor = texture(albedo0,TexCoord).rgb;
 	vec3 specularColor = texture(specular0,TexCoord).rgb;
 
-	vec3 color = directionalLight(
+	vec3 color = pointLight(
 	    light,
 		material,
 		posWorld,
