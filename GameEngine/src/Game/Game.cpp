@@ -68,7 +68,13 @@ bool Game::Initialize() {
 	CreateShaderProgram();
 
 	// 화면에 그릴 오브젝트들 생성
-	//plane = new Plane();
+	plane = new Plane();
+	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
+	plane->position = glm::vec3(0.0f, 0.0f, -5.0f);
+	plane->SetTexture("./assets/images/wall.jpg", "albedo");
+	plane->SetTexture("./assets/container2_specular.png", "specular");
+	plane->SetupMesh();
+
 	glm::vec3 cubePositions[] = {
 	glm::vec3(0.0f,  0.0f,  0.0f),
 	glm::vec3(2.0f,  5.0f, -15.0f),
@@ -97,10 +103,6 @@ bool Game::Initialize() {
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
 	 //backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
 
-	light = new Light();
-	light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-	light->direction = glm::vec3(-0.2f, -1.0f, -0.3f);
-
 	camera = new Camera(
 		45.0f,
 		WINDOW_WIDTH,
@@ -108,6 +110,17 @@ bool Game::Initialize() {
 	);
 
 	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
+
+	light = new Light();
+	light->lightType = 2;
+	light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
+	light->direction = camera->cameraFront;
+	light->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+
+	std::cout << light->direction.x << " " 
+		<< light->direction.y << " " 
+		<< light->direction.z << std::endl;
+
 
 	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
 	{
@@ -206,13 +219,14 @@ void Game::UpdateGame() {
 	}
 
 	camera->Update(deltaTime);
-	light->Update(deltaTime);
+
+	accTime += deltaTime;
 
 	input->SetMouse();
 
 	// 빛 움직임.
 	{
-		
+		light->Update(deltaTime);
 	}
 
 
@@ -221,6 +235,7 @@ void Game::UpdateGame() {
 		//plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
 		//box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
 		//circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
+		//plane->position += cos(accTime) * 0.8f * glm::vec3(0.0f, 0.0f, 0.1f);
 	}
 }
 
@@ -239,6 +254,7 @@ void Game::GenerateOutput() {
 	
 	camera->putCameraUniform("default");
 	light->PutLightUniform("default");
+	//plane->Draw("default");
 
 	//backPack->Draw("default");
 	//circle->Draw("default");
@@ -266,6 +282,7 @@ void Game::GenerateOutput() {
 
 		//circle->Draw("normal");
 		light->Draw("normal");
+		plane->Draw("normal");
 
 
 		//backPack->Draw("normal");

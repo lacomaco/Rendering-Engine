@@ -13,7 +13,7 @@ void main() {
 	vec3 diffuseColor = texture(albedo0,TexCoord).rgb;
 	vec3 specularColor = texture(specular0,TexCoord).rgb;
 
-	vec3 color = pointLight(
+	vec3 color = spotLight(
 	    light,
 		material,
 		posWorld,
@@ -23,6 +23,7 @@ void main() {
 		diffuseColor,
 		specularColor
 	);
+
 
 	FragColor = vec4(color, 1.0);
 }

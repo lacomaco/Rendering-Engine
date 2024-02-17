@@ -54,5 +54,7 @@ private:
 
 	Model* backPack;
 	Light* light;
+
+	float accTime;
 };
 

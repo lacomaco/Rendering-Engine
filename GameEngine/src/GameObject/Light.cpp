@@ -20,7 +20,6 @@ void Light::PutLightUniform(const char* shaderProgramName) {
 	shader->setFloat(shaderProgramName, "light.linear", linear);
 	shader->setFloat(shaderProgramName, "light.quadratic", quadratic);
 	shader->setVec3(shaderProgramName, "light.direction", direction);
-	shader->setFloat(shaderProgramName, "light.spotPower", spotPower);
 	shader->setInt(shaderProgramName, "light.lightType", lightType);
 
 	shader->setVec3(shaderProgramName, "light.ambient", ambient);
@@ -28,5 +27,10 @@ void Light::PutLightUniform(const char* shaderProgramName) {
 	shader->setVec3(shaderProgramName, "light.specular", specular);
 	if (lightType == 0) {
 		shader->setVec3(shaderProgramName, "light.direction", direction);
+	}
+	else if (lightType == 2) {
+		shader->setVec3(shaderProgramName, "light.direction", direction);
+		shader->setFloat(shaderProgramName, "light.cutOff", cutOff);
+		shader->setFloat(shaderProgramName, "light.cutOuter", cutOuter);
 	}
 }	

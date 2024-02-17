@@ -26,6 +26,9 @@ protected:
 	}
 
 public:
+	void SetTexture(std::string path, std::string type);
+	void SetupMesh();
+
 	~Primitive();
 };
 

@@ -13,7 +13,6 @@ public:
 	shared_ptr<Box> box;
 	Light();
 	void Draw(const char* shaderProgramName);
-	float spotPower = 0.0f; // 스포트라이트 빛에 사용.
 	// 0 : directional , 1 : point, 2 : spot
 	int lightType = 1;
 
@@ -23,11 +22,14 @@ public:
 
 
 	glm::vec3 ambient = glm::vec3(0.2f);
-	glm::vec3 diffuse = glm::vec3(0.5f);
+	glm::vec3 diffuse = glm::vec3(0.8f);
 	glm::vec3 specular = glm::vec3(1.0f);
 
-	// directional light에서만 사용함.
+	// directional light, spot light 에 사용.
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);
+
+	float cutOff = glm::cos(glm::radians(12.5f));
+	float cutOuter = glm::cos(glm::radians(17.5f));
 
 	void PutLightUniform(const char* shaderProgramName);
 

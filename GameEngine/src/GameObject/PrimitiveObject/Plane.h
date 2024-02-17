@@ -10,6 +10,5 @@ public:
 	Plane();
 	~Plane();
 	void Draw(const char* shaderProgramName);
-	void SetTexture();
 };
 
