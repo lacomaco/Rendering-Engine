@@ -16,13 +16,10 @@ struct Material {
 uniform Material material;
 
 struct Light {
-	vec3 strength;
-	float fallOffStart;
-	vec3 direction;
-    float fallOffEnd;
+	vec3 direction; // Directional Light 에서만 사용함.
     vec3 position;
     float spotPower;
-    int lightType;
+    int lightType; // 0: directional, 1: point, 2: spot
 
     // phong shading 전용 PBR에서 지울거임.
     vec3 ambient;
@@ -33,3 +30,64 @@ struct Light {
 uniform Light light;
 
 uniform vec3 cameraPos;
+
+vec3 phongShading(
+    float lightStrength,
+    vec3 lightDirection,
+    vec3 normal,
+    vec3 toEye,
+    Material mat,
+    vec3 ambientColor,
+    vec3 diffuseColor,
+    vec3 specularColor
+    ) {
+	vec3 ambient = light.ambient * ambientColor;
+    vec3 diffuse = lightStrength * light.diffuse * diffuseColor;
+
+    vec3 reflectDir = reflect(lightDirection, normal);
+    float spec = pow(max(dot(toEye, reflectDir), 0.0), material.shininess);
+	vec3 specular = spec * specularColor * light.specular;
+
+	return ambient + diffuse + specular;
+}
+
+vec3 directionalLight(
+    Light l, 
+    Material mat,
+    vec3 posWorld,
+    vec3 normal,
+    vec3 toEye,
+    vec3 ambientColor,
+    vec3 diffuseColor,
+    vec3 specularColor) {
+
+    vec3 lightVec = normalize(-l.direction);
+    float lightStrength = max(dot(normal, lightVec), 0.0);
+
+    return phongShading(
+        lightStrength,
+        lightVec,normal,
+        toEye,
+        mat,
+        ambientColor,
+        diffuseColor,
+        specularColor
+    );
+}
+
+vec3 pointLight(
+    Light l, 
+    Material mat,
+    vec3 posWorld,
+    vec3 normal,
+    vec3 toEye,
+    vec3 ambientColor,
+    vec3 diffuseColor,
+    vec3 specularColor
+) {
+    return vec3(0.0);
+}
+
+vec3 spotLight() {
+    return vec3(0.0);
+}

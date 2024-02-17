@@ -69,11 +69,28 @@ bool Game::Initialize() {
 
 	// 화면에 그릴 오브젝트들 생성
 	//plane = new Plane();
-	box = new Box();
-	box->SetTexture("./assets/container2.png", "albedo");
-	box->SetTexture("./assets/container2_specular.png", "specular");
-	box->SetupMesh();
-	box->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
+	for (int i = 0; i < 10; i++) {
+		box[i] = new Box();
+		box[i]->SetTexture("./assets/container2.png", "albedo");
+		box[i]->SetTexture("./assets/container2_specular.png", "specular");
+		box[i]->SetupMesh();
+		box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		box[i]->position = cubePositions[i];
+		box[i]->rotation = glm::vec3(20.0f * i, 20.0f * i, 20.0f * i);
+	}
 
 	circle = new Circle();
 
@@ -82,8 +99,7 @@ bool Game::Initialize() {
 
 	light = new Light();
 	light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-
-
+	light->direction = glm::vec3(-0.2f, -1.0f, -0.3f);
 
 	camera = new Camera(
 		45.0f,
@@ -226,7 +242,9 @@ void Game::GenerateOutput() {
 
 	//backPack->Draw("default");
 	//circle->Draw("default");
-	box->Draw("default");
+	for (int i = 0; i < 10; i++) {
+		box[i]->Draw("default");
+	}
 
 
 	// 빛 위치 시각화.

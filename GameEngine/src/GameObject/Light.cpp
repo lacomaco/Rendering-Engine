@@ -26,4 +26,7 @@ void Light::PutLightUniform(const char* shaderProgramName) {
 	shader->setVec3(shaderProgramName, "light.ambient", ambient);
 	shader->setVec3(shaderProgramName, "light.diffuse", diffuse);
 	shader->setVec3(shaderProgramName, "light.specular", specular);
+	if (lightType == 0) {
+		shader->setVec3(shaderProgramName, "light.direction", direction);
+	}
 }	

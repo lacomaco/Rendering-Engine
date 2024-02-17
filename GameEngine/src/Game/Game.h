@@ -47,7 +47,7 @@ private:
 	std::vector<class Actor*> mPendingActors;
 
 	Plane* plane;
-	Box* box;
+	Box* box[10];
 	Circle* circle;
 	Camera* camera;
 	Input* input;

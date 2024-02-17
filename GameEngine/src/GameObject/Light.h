@@ -15,7 +15,6 @@ public:
 	void Draw(const char* shaderProgramName);
 	glm::vec3 strength = glm::vec3(1.0f);
 	float fallOffStart = 0.0f;
-	glm::vec3 direction = glm::vec3(0.0f, 0.0f, -1.0f);
 	float fallOffEnd = 10.0f;
 	float spotPower = 0.0f; // 스포트라이트 빛에 사용.
 	// 0 : directional , 1 : point, 2 : spot
@@ -25,6 +24,9 @@ public:
 	glm::vec3 ambient = glm::vec3(0.2f);
 	glm::vec3 diffuse = glm::vec3(0.5f);
 	glm::vec3 specular = glm::vec3(1.0f);
+
+	// directional light에서만 사용함.
+	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);
 
 	void PutLightUniform(const char* shaderProgramName);
 
