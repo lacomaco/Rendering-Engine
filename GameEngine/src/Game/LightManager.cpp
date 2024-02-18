@@ -7,6 +7,32 @@ LightManager::LightManager(int _activeLight)
 	activeLight = _activeLight;
 }
 
+void LightManager::CreateLight(
+	int lightType,
+	glm::vec3 position,
+	float constant,
+	float linear,
+	float quadratic,
+	float cutOff,
+	float outerCutOff
+) {
+	if (lights.size() == activeLight) {
+		std::cout << "라이트 갯수 초과" << std::endl;
+		return;
+	}
+
+	auto light = make_shared<Light>();
+	light->lightType = lightType;
+	light->setPosition(position);
+	light->constant = constant;
+	light->linear = linear;
+	light->quadratic = quadratic;
+	light->cutOff = cutOff;
+	light->cutOuter = outerCutOff;
+
+	lights.push_back(light);
+}
+
 void LightManager::PutLightUniform(const char* programName) {
 	for(int i = 0; i < activeLight; i++) {
 		auto light = lights[i];
@@ -55,7 +81,7 @@ void LightManager::SetRandomLight(Camera* camera) {
 
 		light->setPosition(glm::vec3(randomX, randomY, randomZ));
 
-		lights[i] = light;
+		lights.push_back(light);
 	}
 }
 
