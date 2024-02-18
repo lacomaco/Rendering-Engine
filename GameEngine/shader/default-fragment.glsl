@@ -1,5 +1,6 @@
 #version 330 core
 #include common.glsl
+#include linearize-depth.glsl
 
 out vec4 FragColor;
 in vec2 TexCoord;

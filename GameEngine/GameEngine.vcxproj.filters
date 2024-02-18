@@ -1328,6 +1328,7 @@
     <None Include="glew32.dll" />
     <None Include="shader\light-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />
+    <None Include="shader\linearize-depth.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

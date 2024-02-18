@@ -600,6 +600,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="LICENSE.md" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\light-vertex.glsl" />
+    <None Include="shader\linearize-depth.glsl" />
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-vertex.glsl" />
