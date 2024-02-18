@@ -828,7 +828,10 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject\Light.h">
+    <ClInclude Include="src\Game\Light.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\LightManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -908,7 +911,10 @@
     <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject\Light.cpp">
+    <ClCompile Include="src\Game\Light.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\LightManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

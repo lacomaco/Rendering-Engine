@@ -11,7 +11,8 @@
 #include "../Game/Camera.h"
 #include "../Game/Input.h"
 #include "../GameObject/PrimitiveObject/Model.h"
-#include "../GameObject/Light.h"
+#include "./Light.h"
+#include "./LightManager.h"
 
 class Game
 {
@@ -55,6 +56,7 @@ private:
 	Model* backPack;
 	Light* lights[10];
 	int activeLight = 3;
+	LightManager* lightManager;
 
 	float accTime;
 };

@@ -78,16 +78,16 @@ bool Game::Initialize() {
 	plane->SetupMesh();
 
 	glm::vec3 cubePositions[] = {
-	glm::vec3(0.0f,  0.0f,  0.0f),
-	glm::vec3(2.0f,  5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3(2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f,  3.0f, -7.5f),
-	glm::vec3(1.3f, -2.0f, -2.5f),
-	glm::vec3(1.5f,  2.0f, -2.5f),
-	glm::vec3(1.5f,  0.2f, -1.5f),
-	glm::vec3(-1.3f,  1.0f, -1.5f)
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
 	for (int i = 0; i < 10; i++) {
@@ -103,7 +103,8 @@ bool Game::Initialize() {
 	circle = new Circle();
 
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	 //backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 
 	camera = new Camera(
 		45.0f,
@@ -113,44 +114,8 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
 
-	// 0 ~ 2 사이의 int 랜덤
-	std::mt19937 mt{std::random_device{}()};
-	std::uniform_int_distribution<int> dist(0, 2);
-
-	for (int i = 0; i < activeLight; i++) {
-		int random = dist(mt);
-
-		std::cout << "light 생성 타입 : " << random << std::endl;
-		auto light = new Light();
-		light->lightType = random;
-		light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-		light->direction = camera->cameraFront;
-
-		// random 포지션 x : 0 ~ 2, y : 0 ~ 2, z : 0 ~ 2
-		int randomX = dist(mt);
-		int randomY = dist(mt);
-		int randomZ = dist(mt);
-
-		light->setPosition(glm::vec3(randomX, randomY, randomZ));
-
-		lights[i] = light;
-	}
-
-
-	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
-	{
-		//plane->position = glm::vec3(-0.5f, 0.0f, 0.0f);
-		//box->position = glm::vec3(0.0f, 0.0f, 0.0f);
-		//circle->position = glm::vec3(0.5f, 0.0f, 0.0f);
-	}
-
-	// 스케일이 조정
-
-	{
-		//plane->scale = glm::vec3(0.2f, 0.2f, 0.2f);
-		//box->scale = glm::vec3(0.2f, 0.2f, 0.2f); 
-		// backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
-	}
+	lightManager = new LightManager(3);
+	lightManager->SetRandomLight(camera);
 
 	input = Input::GetInstance();
 
@@ -239,24 +204,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	// 빛 움직임.
-	{
-		for (int i = 0; i < activeLight; i++) {
-			auto light = lights[i];
-			if (light->lightType == 1) {
-				light->Update(deltaTime);
-			}
-		}
-	}
-
-
-	// 3개 업데이트.
-	{
-		//plane->rotation += glm::vec3(0.0f,90.0f,30.0f) * deltaTime;
-		//box->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
-		//circle->rotation += glm::vec3(3.0f, 3.0f, 3.0f) * deltaTime;
-		//plane->position += cos(accTime) * 0.8f * glm::vec3(0.0f, 0.0f, 0.1f);
-	}
+	lightManager->UpdateLight(deltaTime);
 }
 
 void Game::GenerateOutput() {
@@ -277,31 +225,17 @@ void Game::GenerateOutput() {
 
 	shader->setInt("default", "activeLight", activeLight);
 
-	for(int i = 0; i < activeLight; i++) {
-		auto light = lights[i];
-		light->PutLightUniform("default",i);
-	}
-	//light->PutLightUniform("default");
+	lightManager->PutLightUniform("default");
+
 	//plane->Draw("default");
 
-	//backPack->Draw("default");
+	backPack->Draw("default");
 	//circle->Draw("default");
 	for (int i = 0; i < 10; i++) {
-		box[i]->Draw("default");
+		//box[i]->Draw("default");
 	}
 
-
-	// 빛 위치 시각화.
-	{
-		program = Shader::getInstance()->getShaderProgram("light");
-		glUseProgram(program);
-		camera->putCameraUniform("light");
-		for (int i = 0; i < activeLight; i++) {
-			auto light = lights[i];
-			light->PutLightUniform("light",i);
-			light->Draw("light");
-		}
-	}
+	lightManager->DrawLight(camera);
 
 	auto showNormal = imguiController->showNormal;
 
@@ -310,11 +244,6 @@ void Game::GenerateOutput() {
 		glUseProgram(normalProgram);
 
 		camera->putCameraUniform("normal");
-
-		for (int i = 0; i < activeLight; i++) {
-			auto light = lights[i];
-			light->Draw("normal");
-		}
 		//circle->Draw("normal");
 		plane->Draw("normal");
 

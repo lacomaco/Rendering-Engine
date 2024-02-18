@@ -1,5 +1,5 @@
 #pragma once
-#include "./PrimitiveObject/Box.h"
+#include "../GameObject/PrimitiveObject/Box.h"
 #include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
