@@ -13,24 +13,24 @@ void Light::Draw(const char* shaderProgramName) {
 	box->Draw(shaderProgramName);
 }
 
-void Light::PutLightUniform(const char* shaderProgramName) {
+void Light::PutLightUniform(const char* shaderProgramName,int lightPosition) {
 	const auto& shader = Shader::getInstance();
-	shader->setVec3(shaderProgramName, "light.position", getPosition());
-	shader->setFloat(shaderProgramName, "light.constant", constant);
-	shader->setFloat(shaderProgramName, "light.linear", linear);
-	shader->setFloat(shaderProgramName, "light.quadratic", quadratic);
-	shader->setVec3(shaderProgramName, "light.direction", direction);
-	shader->setInt(shaderProgramName, "light.lightType", lightType);
 
-	shader->setVec3(shaderProgramName, "light.ambient", ambient);
-	shader->setVec3(shaderProgramName, "light.diffuse", diffuse);
-	shader->setVec3(shaderProgramName, "light.specular", specular);
-	if (lightType == 0) {
-		shader->setVec3(shaderProgramName, "light.direction", direction);
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].position").c_str(), getPosition());
+	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].constant").c_str(), constant);
+	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].linear").c_str(), linear);
+	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].quadratic").c_str(), quadratic);
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
+	shader->setInt(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].lightType").c_str(), lightType);
+
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].ambient").c_str(), ambient);
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].diffuse").c_str(), diffuse);
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].specular").c_str(), specular);
+	if (lightType == 0 || lightType == 2) {
+		shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
 	}
-	else if (lightType == 2) {
-		shader->setVec3(shaderProgramName, "light.direction", direction);
-		shader->setFloat(shaderProgramName, "light.cutOff", cutOff);
-		shader->setFloat(shaderProgramName, "light.cutOuter", cutOuter);
+	if (lightType == 2) {
+		shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].cutOff").c_str(), cutOff);
+		shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].cutOuter").c_str(), cutOuter);
 	}
 }	

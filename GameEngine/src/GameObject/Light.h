@@ -31,7 +31,7 @@ public:
 	float cutOff = glm::cos(glm::radians(12.5f));
 	float cutOuter = glm::cos(glm::radians(17.5f));
 
-	void PutLightUniform(const char* shaderProgramName);
+	void PutLightUniform(const char* shaderProgramName, int lightPosition);
 
 	glm::vec3 getPosition() {
 		return box->position;

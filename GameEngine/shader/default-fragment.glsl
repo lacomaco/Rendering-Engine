@@ -13,17 +13,48 @@ void main() {
 	vec3 diffuseColor = texture(albedo0,TexCoord).rgb;
 	vec3 specularColor = texture(specular0,TexCoord).rgb;
 
-	vec3 color = spotLight(
-	    light,
-		material,
-		posWorld,
-		normalWorld,
-		toEye,
-		ambientColor,
-		diffuseColor,
-		specularColor
-	);
+	vec3 color = vec3(0.0);
 
+	for(int i = 0; i < activeLight; i++){
+	    Light light = lights[i];
+
+		if(light.lightType == 0){
+			color += directionalLight(
+				light,
+				material,
+				posWorld,
+				normalWorld,
+				toEye,
+				ambientColor,
+				diffuseColor,
+				specularColor
+			);
+		}
+		else if(light.lightType == 1){
+			color += pointLight(
+				light,
+				material,
+				posWorld,
+				normalWorld,
+				toEye,
+				ambientColor,
+				diffuseColor,
+				specularColor
+			);
+		}
+		else if(light.lightType == 2){
+			color += spotLight(
+				light,
+				material,
+				posWorld,
+				normalWorld,
+				toEye,
+				ambientColor,
+				diffuseColor,
+				specularColor
+			);
+		}
+	}
 
 	FragColor = vec4(color, 1.0);
 }

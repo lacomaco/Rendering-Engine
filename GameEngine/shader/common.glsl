@@ -1,3 +1,5 @@
+#define MAX_LIGHTS 10
+
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -14,6 +16,8 @@ struct Material {
 };
 
 uniform Material material;
+
+uniform int activeLight;
 
 struct Light {
 	vec3 direction; // Directional Light 에서만 사용함.
@@ -34,7 +38,7 @@ struct Light {
     float cutOuter;
 };
 
-uniform Light light;
+uniform Light lights[MAX_LIGHTS];
 
 uniform vec3 cameraPos;
 
@@ -43,6 +47,7 @@ float calcAttenuation(float distance,Light l) {
 }
 
 vec3 phongShading(
+    Light l,
     float lightStrength,
     vec3 toLightDirection, // 지표면 <- 빛 방향이다.
     vec3 normal,
@@ -52,14 +57,14 @@ vec3 phongShading(
     vec3 diffuseColor,
     vec3 specularColor
     ) {
-	vec3 ambient = light.ambient * ambientColor;
+	vec3 ambient = l.ambient * ambientColor;
 
-    vec3 diffuse = lightStrength * light.diffuse * diffuseColor;
+    vec3 diffuse = lightStrength * l.diffuse * diffuseColor;
 
     vec3 reflectDir = reflect(-toLightDirection, normal);
     float spec = pow(max(dot(toEye, reflectDir), 0.0), mat.shininess);
 
-	vec3 specular = specularColor * light.specular;
+	vec3 specular = specularColor * l.specular;
 
 	return ambient + diffuse;
 }
@@ -78,6 +83,7 @@ vec3 directionalLight(
     float lightStrength = max(dot(normal, lightVec), 0.0);
 
     return phongShading(
+        l,
         lightStrength,
         lightVec,normal,
         toEye,
@@ -108,6 +114,7 @@ vec3 pointLight(
     specularColor *= attenuation;
 
     return phongShading(
+        l,
         lightStrength,
         toLight,
         normal,
@@ -145,7 +152,7 @@ vec3 spotLight(
     // Theta가 Phi보다 크고 Theta보다 작으면 비로소 0~1 사이의 값이 나온다.
 
     float epsilon = l.cutOff - l.cutOuter;
-    float intensity = clamp((theta - l.cutOuter) / epsilon, light.ambient.r, 1.0);
+    float intensity = clamp((theta - l.cutOuter) / epsilon, l.ambient.r, 1.0);
 
     float lightStrength = max(dot(normal, lightVec), 0.0);
     float distance = length(l.position - posWorld);
@@ -156,6 +163,7 @@ vec3 spotLight(
     specularColor *= attenuation * intensity;
 
     return phongShading(
+        l,
 		lightStrength,
 		lightVec,
         normal,

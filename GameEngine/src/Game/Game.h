@@ -53,7 +53,8 @@ private:
 	Input* input;
 
 	Model* backPack;
-	Light* light;
+	Light* lights[10];
+	int activeLight = 3;
 
 	float accTime;
 };

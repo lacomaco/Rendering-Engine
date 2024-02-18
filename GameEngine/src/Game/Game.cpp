@@ -10,6 +10,8 @@
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../Constants.h"
 #include <glm/gtc/quaternion.hpp>
+#include <random>
+
 
 Game::Game() {
 	mWindow = nullptr;
@@ -111,15 +113,28 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
 
-	light = new Light();
-	light->lightType = 2;
-	light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-	light->direction = camera->cameraFront;
-	light->setPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+	// 0 ~ 2 사이의 int 랜덤
+	std::mt19937 mt{std::random_device{}()};
+	std::uniform_int_distribution<int> dist(0, 2);
 
-	std::cout << light->direction.x << " " 
-		<< light->direction.y << " " 
-		<< light->direction.z << std::endl;
+	for (int i = 0; i < activeLight; i++) {
+		int random = dist(mt);
+
+		std::cout << "light 생성 타입 : " << random << std::endl;
+		auto light = new Light();
+		light->lightType = random;
+		light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
+		light->direction = camera->cameraFront;
+
+		// random 포지션 x : 0 ~ 2, y : 0 ~ 2, z : 0 ~ 2
+		int randomX = dist(mt);
+		int randomY = dist(mt);
+		int randomZ = dist(mt);
+
+		light->setPosition(glm::vec3(randomX, randomY, randomZ));
+
+		lights[i] = light;
+	}
 
 
 	// 거리좀 떨어져서 보이게 하기 위해서 x축 0.5씩 이동
@@ -226,7 +241,12 @@ void Game::UpdateGame() {
 
 	// 빛 움직임.
 	{
-		light->Update(deltaTime);
+		for (int i = 0; i < activeLight; i++) {
+			auto light = lights[i];
+			if (light->lightType == 1) {
+				light->Update(deltaTime);
+			}
+		}
 	}
 
 
@@ -244,7 +264,8 @@ void Game::GenerateOutput() {
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
 
-	auto program = Shader::getInstance()->getShaderProgram("default");
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram("default");
 	// 만약 찾지 못하면 -1이다.
 	glUseProgram(program);
 
@@ -253,7 +274,14 @@ void Game::GenerateOutput() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	camera->putCameraUniform("default");
-	light->PutLightUniform("default");
+
+	shader->setInt("default", "activeLight", activeLight);
+
+	for(int i = 0; i < activeLight; i++) {
+		auto light = lights[i];
+		light->PutLightUniform("default",i);
+	}
+	//light->PutLightUniform("default");
 	//plane->Draw("default");
 
 	//backPack->Draw("default");
@@ -268,8 +296,11 @@ void Game::GenerateOutput() {
 		program = Shader::getInstance()->getShaderProgram("light");
 		glUseProgram(program);
 		camera->putCameraUniform("light");
-		light->PutLightUniform("light");
-		light->Draw("light");
+		for (int i = 0; i < activeLight; i++) {
+			auto light = lights[i];
+			light->PutLightUniform("light",i);
+			light->Draw("light");
+		}
 	}
 
 	auto showNormal = imguiController->showNormal;
@@ -280,8 +311,11 @@ void Game::GenerateOutput() {
 
 		camera->putCameraUniform("normal");
 
+		for (int i = 0; i < activeLight; i++) {
+			auto light = lights[i];
+			light->Draw("normal");
+		}
 		//circle->Draw("normal");
-		light->Draw("normal");
 		plane->Draw("normal");
 
 
