@@ -57,6 +57,7 @@ private:
 	Light* lights[10];
 	int activeLight = 3;
 	LightManager* lightManager;
+	std::vector<Plane*> grass;
 
 	float accTime;
 };

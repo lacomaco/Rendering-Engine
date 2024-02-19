@@ -77,35 +77,40 @@ bool Game::Initialize() {
 	// 화면에 그릴 오브젝트들 생성
 	plane = new Plane();
 	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
-	plane->position = glm::vec3(0.0f, 0.0f, -5.0f);
+	plane->position = glm::vec3(0.0f, 0.0f, -2.0f);
 	plane->SetTexture("./assets/images/wall.jpg", "albedo");
 	plane->SetTexture("./assets/container2_specular.png", "specular");
 	plane->SetupMesh();
 
 	plane->rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
+	vector<glm::vec3> translations = {
+		glm::vec3(-1.5f,0.0f,-0.48f),
+		glm::vec3(1.5f, 0.0f, 0.51f),
+		glm::vec3(0.0f, 0.0f, 0.7f),
+		glm::vec3(-0.3f, 0.0f, -2.3f),
+		glm::vec3(0.5f, 0.0f, -0.6f)
 	};
 
-	for (int i = 0; i < 10; i++) {
-		//box[i] = new Box();
-		//box[i]->SetTexture("./assets/container2.png", "albedo");
-		//box[i]->SetTexture("./assets/container2_specular.png", "specular");
-		//box[i]->SetupMesh();
-		//box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-		//box[i]->position = cubePositions[i];
-		//box[i]->rotation = glm::vec3(20.0f * i, 20.0f * i, 20.0f * i);
+	for (int i = 0; i < translations.size(); i++) {
+		box[i] = new Box();
+		box[i]->SetTexture("./assets/container2.png", "albedo");
+		box[i]->SetTexture("./assets/container2_specular.png", "specular");
+		box[i]->SetupMesh();
+		box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		box[i]->position = translations[i] + glm::vec3(0.0f, 0.5f, 0.0f);
 	}
+
+	for (int i = 0; i < translations.size(); i++) {
+		auto grass = new Plane();
+		grass->SetTexture("./assets/images/grass.png", "albedo");
+		grass->SetupMesh();
+		grass->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		grass->position = translations[i] + glm::vec3(0.0f,0.5f,0.6f);
+
+		this->grass.push_back(grass);
+	}
+
 
 	circle = new Circle();
 
@@ -123,15 +128,15 @@ bool Game::Initialize() {
 		WINDOW_HEIGHT
 	);
 
-	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
+	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
 	lightManager = new LightManager(3);
 
 	// 태양
 	lightManager->CreateLight(
 		0,
-		glm::vec3(0.0f, 10.0f, 0.0f),
-		glm::vec3(0.0f, -1.0f, 0.0f)
+		glm::vec3(0.0f, 5.0f, 3.0f),
+		glm::vec3(0.0f, -0.7f, -1.0f)
 	);
 
 	input = Input::GetInstance();
@@ -248,9 +253,14 @@ void Game::GenerateOutput() {
 
 	plane->Draw("default");
 
-	for (int i = 0; i < 10; i++) {
-		//box[i]->Draw("default");
+	for (int i = 0; i < 5; i++) {
+		box[i]->Draw("default");
 	}
+
+	for (int i = 0; i < grass.size(); i++) {
+		grass[i]->Draw("default");
+	}
+
 	//backPack->Draw("default");
 
 	lightManager->DrawLight(camera);

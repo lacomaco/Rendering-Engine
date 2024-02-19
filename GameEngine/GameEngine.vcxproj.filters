@@ -1339,6 +1339,9 @@
     <Image Include="assets\images\wall.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="assets\images\grass.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />
