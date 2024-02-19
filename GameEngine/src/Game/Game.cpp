@@ -82,6 +82,8 @@ bool Game::Initialize() {
 	plane->SetTexture("./assets/container2_specular.png", "specular");
 	plane->SetupMesh();
 
+	plane->rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(2.0f,  5.0f, -15.0f),
@@ -96,19 +98,23 @@ bool Game::Initialize() {
 	};
 
 	for (int i = 0; i < 10; i++) {
-		box[i] = new Box();
-		box[i]->SetTexture("./assets/container2.png", "albedo");
-		box[i]->SetTexture("./assets/container2_specular.png", "specular");
-		box[i]->SetupMesh();
-		box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-		box[i]->position = cubePositions[i];
-		box[i]->rotation = glm::vec3(20.0f * i, 20.0f * i, 20.0f * i);
+		//box[i] = new Box();
+		//box[i]->SetTexture("./assets/container2.png", "albedo");
+		//box[i]->SetTexture("./assets/container2_specular.png", "specular");
+		//box[i]->SetupMesh();
+		//box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		//box[i]->position = cubePositions[i];
+		//box[i]->rotation = glm::vec3(20.0f * i, 20.0f * i, 20.0f * i);
 	}
 
 	circle = new Circle();
 
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
 	//backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	//backPack = new Model("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
+	//backPack = new Model("./assets/abandoned_warehouse/scene.gltf");
+
+	//backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 
 	camera = new Camera(
@@ -120,7 +126,13 @@ bool Game::Initialize() {
 	camera->cameraPos = glm::vec3(0.0f, 0.6f, 3.0f);
 
 	lightManager = new LightManager(3);
-	lightManager->SetRandomLight(camera);
+
+	// 태양
+	lightManager->CreateLight(
+		0,
+		glm::vec3(0.0f, 10.0f, 0.0f),
+		glm::vec3(0.0f, -1.0f, 0.0f)
+	);
 
 	input = Input::GetInstance();
 
@@ -234,45 +246,12 @@ void Game::GenerateOutput() {
 
 	lightManager->PutLightUniform("default");
 
-	{
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
+	plane->Draw("default");
 
-
-		for (int i = 0; i < 10; i++) {
-			box[i]->Draw("default");
-		}
-
-		// 현재 box의 stencil 값 모두 1로 설정됨.
-		glm::vec3 defaultBoxScale = box[0]->scale;
-
-		auto layoutProgram = shader->getShaderProgram("stencil-layout");
-		glUseProgram(layoutProgram);
-		camera->putCameraUniform("stencil-layout");
-
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
-		for (int i = 0; i < 10; i++) {
-			box[i]->scale = defaultBoxScale * 1.05f;
-			box[i]->Draw("stencil-layout");
-		}
-
-		for (int i = 0; i < 10; i++) {
-			box[i]->scale = defaultBoxScale;
-		}
-
-		glEnable(GL_DEPTH_TEST);
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-
-		glUseProgram(program);
-
+	for (int i = 0; i < 10; i++) {
+		//box[i]->Draw("default");
 	}
-
+	//backPack->Draw("default");
 
 	lightManager->DrawLight(camera);
 
@@ -287,7 +266,7 @@ void Game::GenerateOutput() {
 		plane->Draw("normal");
 
 
-		//backPack->Draw("normal");
+		//ㄴ->Draw("normal");
 	}
 
 	imguiController->Render();

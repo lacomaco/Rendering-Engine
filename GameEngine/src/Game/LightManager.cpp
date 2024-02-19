@@ -10,6 +10,7 @@ LightManager::LightManager(int _activeLight)
 void LightManager::CreateLight(
 	int lightType,
 	glm::vec3 position,
+	glm::vec3 direction,
 	float constant,
 	float linear,
 	float quadratic,
@@ -23,6 +24,7 @@ void LightManager::CreateLight(
 
 	auto light = make_shared<Light>();
 	light->lightType = lightType;
+	light->direction = direction;
 	light->setPosition(position);
 	light->constant = constant;
 	light->linear = linear;
@@ -34,7 +36,7 @@ void LightManager::CreateLight(
 }
 
 void LightManager::PutLightUniform(const char* programName) {
-	for(int i = 0; i < activeLight; i++) {
+	for(int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
 		light->PutLightUniform(programName,i);
 	}
@@ -44,7 +46,7 @@ void LightManager::DrawLight(Camera* camera) {
 	auto program = Shader::getInstance()->getShaderProgram("light");
 	glUseProgram(program);
 	camera->putCameraUniform("light");
-	for (int i = 0; i < activeLight; i++) {
+	for (int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
 		light->PutLightUniform("light", i);
 		light->Draw("light");
@@ -53,7 +55,7 @@ void LightManager::DrawLight(Camera* camera) {
 
 
 void LightManager::UpdateLight(float deltaTime) {
-	for (int i = 0; i < activeLight; i++) {
+	for (int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
 		if (light->lightType == 1) {
 			light->Update(deltaTime);
@@ -65,7 +67,7 @@ void LightManager::SetRandomLight(Camera* camera) {
 	std::mt19937 mt{std::random_device{}()};
 	std::uniform_int_distribution<int> dist(0, 2);
 
-	for (int i = 0; i < activeLight; i++) {
+	for (int i = lights.size(); i < activeLight; i++) {
 		int random = dist(mt);
 
 		std::cout << "light 생성 타입 : " << random << std::endl;

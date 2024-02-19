@@ -124,7 +124,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;%(AdditionalIncludeDirectories);C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +152,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\lib\Release\x64;C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

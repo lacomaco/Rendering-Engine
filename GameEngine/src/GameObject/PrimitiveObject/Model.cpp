@@ -31,7 +31,7 @@ void Model::Draw(const char* shaderProgramName)
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_PreTransformVertices);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
 		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
@@ -190,9 +190,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		mat->GetTexture(type, i, &str);
 		bool skip = false;
 
+		auto fileName = ExtractFileName(str.C_Str());
+
 		for (unsigned int j = 0; j < textures_loaded.size(); j++)
 		{
-			if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+			if (std::strcmp(textures_loaded[j].path.data(), fileName.c_str()) == 0)
 			{
 				textures.push_back(textures_loaded[j]);
 				skip = true;
@@ -202,9 +204,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		if (!skip)
 		{   // if texture hasn't been loaded already, load it
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directory);
+			texture.id = TextureFromFile(fileName.c_str(), directory);
 			texture.type = textureType;
-			texture.path = str.C_Str();
+			texture.path = fileName;
 			textures.push_back(texture);
 			textures_loaded.push_back(texture); // add to loaded textures
 		}
@@ -218,6 +220,8 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
 
+	std::cout << filename << std::endl;
+
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
@@ -228,6 +232,8 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 		GLenum format;
 		if (nrComponents == 1)
 			format = GL_RED;
+		else if(nrComponents == 2)
+			format = GL_RG;
 		else if (nrComponents == 3)
 			format = GL_RGB;
 		else if (nrComponents == 4)
@@ -269,4 +275,15 @@ glm::mat4 Model::AiMatrix4x4ToGlmMat4(const aiMatrix4x4& from) {
 	to[2][3] = from.d3; to[3][3] = from.d4;
 
 	return to;
+}
+
+std::string Model::ExtractFileName(const std::string& path)
+{
+	size_t pos = path.find_last_of("\\/");
+	if (pos != std::string::npos) {
+		return path.substr(pos + 1);
+	}
+	else {
+		return path;
+	}
 }

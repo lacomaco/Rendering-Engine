@@ -25,6 +25,7 @@ private:
 	std::shared_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string textureType);
 	unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+	std::string ExtractFileName(const std::string& path);
 public:
 	Model(const char* path);
 	~Model();
