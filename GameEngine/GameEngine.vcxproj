@@ -610,6 +610,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\default-vertex.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="shader\stencil-layout-fragment.glsl" />
+    <None Include="shader\stencil-layout-vertex.glsl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>

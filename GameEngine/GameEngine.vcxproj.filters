@@ -1329,6 +1329,8 @@
     <None Include="shader\light-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\linearize-depth.glsl" />
+    <None Include="shader\stencil-layout-vertex.glsl" />
+    <None Include="shader\stencil-layout-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

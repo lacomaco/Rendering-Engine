@@ -27,6 +27,11 @@ bool Game::Initialize() {
 		return false;
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+
 	mWindow = SDL_CreateWindow(
 		"My Game Practices",
 		100,
@@ -41,8 +46,7 @@ bool Game::Initialize() {
 		return false;
 	}
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
+
 
 	context = SDL_GL_CreateContext(mWindow);
 
@@ -60,6 +64,7 @@ bool Game::Initialize() {
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
 
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
@@ -103,8 +108,8 @@ bool Game::Initialize() {
 	circle = new Circle();
 
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
-	backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
+	//backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 
 	camera = new Camera(
 		45.0f,
@@ -218,8 +223,10 @@ void Game::GenerateOutput() {
 	glUseProgram(program);
 
 	// 하얀색으로 초기화.
+	glEnable(GL_STENCIL_TEST);
+
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	
 	camera->putCameraUniform("default");
 
@@ -227,13 +234,45 @@ void Game::GenerateOutput() {
 
 	lightManager->PutLightUniform("default");
 
-	//plane->Draw("default");
+	{
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
 
-	backPack->Draw("default");
-	//circle->Draw("default");
-	for (int i = 0; i < 10; i++) {
-		//box[i]->Draw("default");
+
+		for (int i = 0; i < 10; i++) {
+			box[i]->Draw("default");
+		}
+
+		// 현재 box의 stencil 값 모두 1로 설정됨.
+		glm::vec3 defaultBoxScale = box[0]->scale;
+
+		auto layoutProgram = shader->getShaderProgram("stencil-layout");
+		glUseProgram(layoutProgram);
+		camera->putCameraUniform("stencil-layout");
+
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		for (int i = 0; i < 10; i++) {
+			box[i]->scale = defaultBoxScale * 1.05f;
+			box[i]->Draw("stencil-layout");
+		}
+
+		for (int i = 0; i < 10; i++) {
+			box[i]->scale = defaultBoxScale;
+		}
+
+		glEnable(GL_DEPTH_TEST);
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+		glUseProgram(program);
+
 	}
+
 
 	lightManager->DrawLight(camera);
 
@@ -304,5 +343,11 @@ void Game::CreateShaderProgram() {
 		"./shader/light-vertex.glsl",
 		"./shader/light-fragment.glsl",
 		"light"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/stencil-layout-vertex.glsl",
+		"./shader/stencil-layout-fragment.glsl",
+		"stencil-layout"
 	);
 }
