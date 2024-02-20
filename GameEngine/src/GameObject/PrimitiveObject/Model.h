@@ -24,7 +24,7 @@ private:
 	void processNode(aiNode* node, const aiScene* scene, glm::mat4 tr);
 	std::shared_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string textureType);
-	unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+	unsigned int TextureFromFile(const char* path, const std::string& directory, int& nrComponents, bool gamma = false);
 	std::string ExtractFileName(const std::string& path);
 public:
 	Model(const char* path);

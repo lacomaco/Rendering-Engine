@@ -75,11 +75,17 @@ void Primitive::SetTexture(std::string path, std::string type) {
     if (nrChannels == 1) {
         format = GL_RED;
     }
+    else if (nrChannels == 2) {
+        format = GL_RG;
+    }
     else if (nrChannels == 3) {
         format = GL_RGB;
     }
     else if (nrChannels == 4) {
         format = GL_RGBA;
+        if (type == "albedo") {
+            texture.isAlpha = true;
+        }
     }
 
     glGenTextures(1, &texture.id);
@@ -119,4 +125,12 @@ void Primitive::SetupMesh() {
 	mesh = make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(textures));
 	mesh->CalculateTangents();
 	mesh->setupMesh();
+}
+
+void Primitive::CalculateVertexAveragePosition() {
+	glm::vec3 sum = glm::vec3(0.0f);
+    for (auto& vertex : vertices) {
+		sum += vertex.position;
+	}
+	vertexAveragePosition = sum / (float)vertices.size();
 }

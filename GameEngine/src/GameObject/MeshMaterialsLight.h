@@ -52,6 +52,7 @@ struct Texture {
 	unsigned int id;
 	std::string type;
 	std::string path;
+	bool isAlpha = false;
 };
 
 extern std::vector<Texture> textures_loaded;
@@ -61,6 +62,9 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
+	// 모든 vertex들의 평균 위치.
+	glm::vec3 vertexAveragePosition;
+	bool isAlphaMesh = false;
 
 	/*
 	Mesh(std::vector<Vertex>&& vertices,

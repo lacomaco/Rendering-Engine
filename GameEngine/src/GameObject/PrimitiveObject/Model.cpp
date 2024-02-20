@@ -24,7 +24,6 @@ void Model::Draw(const char* shaderProgramName)
 	for (auto& mesh : meshes) {
 		mesh->Draw(shaderProgramName);
 	}
-	//meshes[0]->Draw(shaderProgramName);
 }
 
 // see: https://learnopengl.com/Model-Loading/Model
@@ -202,20 +201,22 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			}
 		}
 		if (!skip)
-		{   // if texture hasn't been loaded already, load it
+		{
 			Texture texture;
-			texture.id = TextureFromFile(fileName.c_str(), directory);
+			int nrComponents;
+			texture.id = TextureFromFile(fileName.c_str(), directory,nrComponents);
 			texture.type = textureType;
 			texture.path = fileName;
+			texture.isAlpha = nrComponents == 4;
 			textures.push_back(texture);
-			textures_loaded.push_back(texture); // add to loaded textures
+			textures_loaded.push_back(texture);
 		}
 	}
 	return textures;
 }
 
 // 나중에 텍스처 생성 옵션은 따로 컨트롤 가능하도록 해야함.
-unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool gamma)
+unsigned int Model::TextureFromFile(const char* path, const std::string& directory, int& nrComponents, bool gamma)
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
@@ -225,7 +226,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
-	int width, height, nrComponents;
+	int width, height;
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{

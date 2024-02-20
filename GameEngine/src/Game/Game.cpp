@@ -65,6 +65,8 @@ bool Game::Initialize() {
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_BLEND);
+
 
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
@@ -115,7 +117,7 @@ bool Game::Initialize() {
 	circle = new Circle();
 
 	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	//backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = new Model("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
 	//backPack = new Model("./assets/abandoned_warehouse/scene.gltf");
 
@@ -256,6 +258,8 @@ void Game::GenerateOutput() {
 	for (int i = 0; i < 5; i++) {
 		box[i]->Draw("default");
 	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (int i = 0; i < grass.size(); i++) {
 		grass[i]->Draw("default");

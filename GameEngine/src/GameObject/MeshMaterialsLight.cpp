@@ -12,6 +12,23 @@ Mesh::Mesh(std::vector<Vertex> _vertices,
 	indices(_indices),
 	textures(_textures)
 {
+	glm::vec3 vertexAveragePosition;
+
+	for (auto& vertex : _vertices) {
+		vertexAveragePosition += vertex.position;
+	}
+
+	vertexAveragePosition /= vertices.size();
+	this->vertexAveragePosition = vertexAveragePosition;
+
+
+	for (auto& texture : _textures) {
+		if (texture.type == "albedo" && texture.isAlpha) {
+			isAlphaMesh = true;
+			break;
+		}
+	}
+
 	setupMesh();
 }
 
