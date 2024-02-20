@@ -14,11 +14,11 @@ public:
 	~LightManager() = default;
 
 	void UpdateLight(float deltaTime);
-	void SetRandomLight(Camera* camera);
+	void SetRandomLight(shared_ptr<Camera> camera);
 	vector<shared_ptr<Light>> lights;
 
 	void PutLightUniform(const char* programName);
-	void DrawLight(Camera* camera);
+	void DrawLight(shared_ptr<Camera> camera);
 	void CreateLight(
 		int lightType, 
 		glm::vec3 position,

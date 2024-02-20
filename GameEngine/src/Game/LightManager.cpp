@@ -42,7 +42,7 @@ void LightManager::PutLightUniform(const char* programName) {
 	}
 }
 
-void LightManager::DrawLight(Camera* camera) {
+void LightManager::DrawLight(shared_ptr<Camera> camera) {
 	auto program = Shader::getInstance()->getShaderProgram("light");
 	glUseProgram(program);
 	camera->putCameraUniform("light");
@@ -63,7 +63,7 @@ void LightManager::UpdateLight(float deltaTime) {
 	}
 }
 
-void LightManager::SetRandomLight(Camera* camera) {
+void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 	std::mt19937 mt{std::random_device{}()};
 	std::uniform_int_distribution<int> dist(0, 2);
 

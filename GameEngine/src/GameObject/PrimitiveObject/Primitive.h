@@ -12,8 +12,6 @@ protected:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
-	std::shared_ptr<Mesh> mesh;
-	bool isAlphaMesh = false;
 	glm::vec3 vertexAveragePosition;
 
 	void CalculateTangents();
@@ -28,6 +26,9 @@ protected:
 	}
 
 public:
+	bool isAlphaMesh = false;
+	std::shared_ptr<Mesh> mesh;
+
 	void SetTexture(std::string path, std::string type);
 	void SetupMesh();
 	void CalculateVertexAveragePosition();

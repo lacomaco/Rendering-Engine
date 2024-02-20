@@ -47,6 +47,13 @@ void Model::processNode(aiNode* node, const aiScene* scene, glm::mat4 tr)
 {
 	glm::mat4 m = AiMatrix4x4ToGlmMat4(node->mTransformation);
 
+	// volumatric god rays로 대체할예정..
+	// sketchfab에서 받은 모델에 rodrays 큐브가 있는데 블렌더로 어떻게 지우는지 모르겠음....
+	if (std::strcmp(node->mName.C_Str(),"GodRays_GodRays_0") == 0) {
+		std::cout <<"cut god ray" << std::endl;
+		return;
+	}
+
 	m = tr * m;
 
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {

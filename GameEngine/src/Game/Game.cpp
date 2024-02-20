@@ -75,9 +75,10 @@ bool Game::Initialize() {
 
 	// 쉐이더 생성
 	CreateShaderProgram();
+	meshRenderer = make_shared<MeshRenderer>();
 
 	// 화면에 그릴 오브젝트들 생성
-	plane = new Plane();
+	plane = make_shared<Plane>();
 	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
 	plane->position = glm::vec3(0.0f, 0.0f, -2.0f);
 	plane->SetTexture("./assets/images/wall.jpg", "albedo");
@@ -95,16 +96,19 @@ bool Game::Initialize() {
 	};
 
 	for (int i = 0; i < translations.size(); i++) {
-		box[i] = new Box();
-		box[i]->SetTexture("./assets/container2.png", "albedo");
-		box[i]->SetTexture("./assets/container2_specular.png", "specular");
-		box[i]->SetupMesh();
-		box[i]->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-		box[i]->position = translations[i] + glm::vec3(0.0f, 0.5f, 0.0f);
+		auto box = make_shared<Box>();
+
+		box->SetTexture("./assets/container2.png", "albedo");
+		box->SetTexture("./assets/container2_specular.png", "specular");
+		box->SetupMesh();
+		box->scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		box->position = translations[i] + glm::vec3(0.0f, 0.5f, 0.0f);
+
+		this->box.push_back(box);
 	}
 
 	for (int i = 0; i < translations.size(); i++) {
-		auto grass = new Plane();
+		auto grass = make_shared<Plane>();
 		grass->SetTexture("./assets/images/grass.png", "albedo");
 		grass->SetupMesh();
 		grass->scale = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -113,18 +117,18 @@ bool Game::Initialize() {
 		this->grass.push_back(grass);
 	}
 
+	circle.push_back(make_shared<Circle>());
 
-	circle = new Circle();
+	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
+	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	//backPack = make_shared<Model>("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
+	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
+	backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 
-	//backPack = new Model("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	backPack = new Model("./assets/pbrSponza/sponza/Sponza.gltf");
-	//backPack = new Model("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
-	//backPack = new Model("./assets/abandoned_warehouse/scene.gltf");
-
-	//backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
+	backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 
-	camera = new Camera(
+	camera = make_shared<Camera>(
 		45.0f,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT
@@ -132,7 +136,7 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	lightManager = new LightManager(3);
+	lightManager = make_shared<LightManager>(3);
 
 	// 태양
 	lightManager->CreateLight(
@@ -246,6 +250,9 @@ void Game::GenerateOutput() {
 
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	// 리셋해줘야함!
+	meshRenderer->ResetMesh();
 	
 	camera->putCameraUniform("default");
 
@@ -253,19 +260,19 @@ void Game::GenerateOutput() {
 
 	lightManager->PutLightUniform("default");
 
-	plane->Draw("default");
+	//meshRenderer->AddMesh(plane);
 
 	for (int i = 0; i < 5; i++) {
-		box[i]->Draw("default");
+		//meshRenderer->AddMesh(box[i]);
 	}
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (int i = 0; i < grass.size(); i++) {
-		grass[i]->Draw("default");
+		//meshRenderer->AddMesh(grass[i]);
 	}
 
-	//backPack->Draw("default");
+	meshRenderer->AddMesh(backPack);
+
+	meshRenderer->Draw("default");
 
 	lightManager->DrawLight(camera);
 

@@ -13,6 +13,8 @@
 #include "../GameObject/PrimitiveObject/Model.h"
 #include "./Light.h"
 #include "./LightManager.h"
+#include "MeshRenderer.h"
+#include <memory>
 
 class Game
 {
@@ -47,17 +49,26 @@ private:
 	std::vector<class Actor*> mActors;
 	std::vector<class Actor*> mPendingActors;
 
-	Plane* plane;
-	Box* box[10];
-	Circle* circle;
-	Camera* camera;
+	std::shared_ptr<Plane> plane;
+
+	std::vector<std::shared_ptr<Box>> box;
+
+	std::vector<std::shared_ptr<Circle>> circle;
+
+	std::shared_ptr<Camera> camera;
+
 	Input* input;
 
-	Model* backPack;
-	Light* lights[10];
+	std::shared_ptr<Model> model;
+
 	int activeLight = 3;
-	LightManager* lightManager;
-	std::vector<Plane*> grass;
+	std::shared_ptr<LightManager> lightManager;
+
+	std::vector<std::shared_ptr<Plane>> grass;
+
+	shared_ptr<MeshRenderer> meshRenderer;
+
+	shared_ptr<Model> backPack;
 
 	float accTime;
 };

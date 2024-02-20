@@ -11,7 +11,6 @@
 class Model : public BaseObject
 {
 private:
-	std::vector<std::shared_ptr<Mesh>> meshes;
 	std::string directory;
 	std::string path;
 	bool gammaCorrection;
@@ -27,6 +26,7 @@ private:
 	unsigned int TextureFromFile(const char* path, const std::string& directory, int& nrComponents, bool gamma = false);
 	std::string ExtractFileName(const std::string& path);
 public:
+	std::vector<std::shared_ptr<Mesh>> meshes;
 	Model(const char* path);
 	~Model();
 

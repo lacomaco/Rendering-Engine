@@ -85,6 +85,7 @@ void Primitive::SetTexture(std::string path, std::string type) {
         format = GL_RGBA;
         if (type == "albedo") {
             texture.isAlpha = true;
+            isAlphaMesh = true;
         }
     }
 
