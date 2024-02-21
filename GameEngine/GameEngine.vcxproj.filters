@@ -837,6 +837,12 @@
     <ClInclude Include="src\Game\MeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\PostProcessingFrameBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -921,6 +927,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\MeshRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1337,6 +1349,10 @@
     <None Include="shader\linearize-depth.glsl" />
     <None Include="shader\stencil-layout-vertex.glsl" />
     <None Include="shader\stencil-layout-fragment.glsl" />
+    <None Include="shader\framebuffer-example-vertex.glsl" />
+    <None Include="shader\framebuffer-example-fragment.glsl" />
+    <None Include="shader\cubemap-vertex.glsl" />
+    <None Include="shader\cubemap-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
@@ -1346,6 +1362,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="assets\images\grass.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\images\white.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

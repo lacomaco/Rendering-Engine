@@ -3,7 +3,7 @@
 
 Light::Light() {
 	box = make_shared<Box>();
-	box->SetTexture("./assets/white.png", "albedo");
+	box->SetTexture("./assets/images/white.png", "albedo");
 	box->SetupMesh();
 	box->scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	box->position = glm::vec3(1.0f, 1.0f, 0.0f);

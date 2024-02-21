@@ -133,8 +133,8 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <AdditionalLibraryDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\lib\Release\x64;C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /E /I /Y "$(ProjectDir)assets" "$(OutDir)assets"
+xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,6 +161,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h" />
+    <ClInclude Include="src\Game\PostProcessingFrameBuffer.h" />
     <ClInclude Include="src\Game\MeshRenderer.h" />
     <ClInclude Include="src\Game\LightManager.h" />
     <ClInclude Include="src\Game\Light.h" />
@@ -437,6 +439,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp" />
+    <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp" />
     <ClCompile Include="src\Game\MeshRenderer.cpp" />
     <ClCompile Include="src\Game\LightManager.cpp" />
     <ClCompile Include="src\Game\Light.cpp" />
@@ -606,6 +610,10 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
     <None Include="LICENSE.md" />
+    <None Include="shader\cubemap-fragment.glsl" />
+    <None Include="shader\cubemap-vertex.glsl" />
+    <None Include="shader\framebuffer-example-fragment.glsl" />
+    <None Include="shader\framebuffer-example-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\light-vertex.glsl" />
     <None Include="shader\linearize-depth.glsl" />
@@ -630,6 +638,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <Image Include="assets\images\wall.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
+    <Image Include="assets\images\white.png" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />

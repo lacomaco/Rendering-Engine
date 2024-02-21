@@ -12,6 +12,5 @@ public:
 		int numStacks = 100);
 	~Circle();
 	void Draw(const char* shaderProgramName);
-	void SetTexture(std::string path, std::string type);
 };
 

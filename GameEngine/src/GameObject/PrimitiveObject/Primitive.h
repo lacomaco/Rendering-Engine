@@ -31,7 +31,7 @@ public:
 
 	void SetTexture(std::string path, std::string type);
 	void SetupMesh();
-	void CalculateVertexAveragePosition();
+	void CalculateVertexAveragePosition(glm::vec3 scale = glm::vec3(1.0f));
 
 	~Primitive();
 };

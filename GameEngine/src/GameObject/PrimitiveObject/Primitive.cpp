@@ -128,10 +128,10 @@ void Primitive::SetupMesh() {
 	mesh->setupMesh();
 }
 
-void Primitive::CalculateVertexAveragePosition() {
+void Primitive::CalculateVertexAveragePosition(glm::vec3 scale) {
 	glm::vec3 sum = glm::vec3(0.0f);
     for (auto& vertex : vertices) {
-		sum += vertex.position;
+		sum += vertex.position * scale;
 	}
 	vertexAveragePosition = sum / (float)vertices.size();
 }

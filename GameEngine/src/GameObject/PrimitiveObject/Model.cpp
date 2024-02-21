@@ -30,7 +30,7 @@ void Model::Draw(const char* shaderProgramName)
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_PreTransformVertices);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
 		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
@@ -38,32 +38,30 @@ void Model::loadModel(std::string path)
 	}
 	directory = path.substr(0, path.find_last_of('/'));
 
-	glm::mat4 tr = glm::mat4(1.0f);
-
-	processNode(scene->mRootNode, scene, tr);
+	processNode(scene->mRootNode, scene, aiMatrix4x4());
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene, glm::mat4 tr)
+void Model::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 tr)
 {
-	glm::mat4 m = AiMatrix4x4ToGlmMat4(node->mTransformation);
+	aiMatrix4x4 nodeTransform = tr * node->mTransformation;
+
 
 	// volumatric god rays로 대체할예정..
 	// sketchfab에서 받은 모델에 rodrays 큐브가 있는데 블렌더로 어떻게 지우는지 모르겠음....
+	std::cout << node->mName.C_Str() << std::endl;
 	if (std::strcmp(node->mName.C_Str(),"GodRays_GodRays_0") == 0) {
 		std::cout <<"cut god ray" << std::endl;
 		return;
 	}
 
-	m = tr * m;
-
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		auto newMesh = processMesh(mesh, scene);
+		auto newMesh = processMesh(mesh, scene, nodeTransform, node->mName.C_Str());
 
 		for (auto& v : newMesh->vertices) {
 			// 정점 위치를 변환
 			glm::vec4 pos = glm::vec4(v.position.x, v.position.y, v.position.z, 1.0);
-			pos = m * pos;
+			//pos = tr * pos;
 			v.position.x = pos.x;
 			v.position.y = pos.y;
 			v.position.z = pos.z;
@@ -73,11 +71,11 @@ void Model::processNode(aiNode* node, const aiScene* scene, glm::mat4 tr)
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-		processNode(node->mChildren[i], scene,m);
+		processNode(node->mChildren[i], scene, nodeTransform);
 	}
 }
 
-std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
+std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMatrix4x4 tr, std::string nodeName)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -86,12 +84,14 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
+		auto tt = tr * mesh->mVertices[i];
+
 
 		// process vertex positions, normals and texture coordinates
 		glm::vec3 vector;
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
+		vector.x = tt.x;
+		vector.y = tt.y;
+		vector.z = tt.z;
 
 		vertex.position = vector;
 
@@ -210,11 +210,16 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		if (!skip)
 		{
 			Texture texture;
-			int nrComponents;
-			texture.id = TextureFromFile(fileName.c_str(), directory,nrComponents);
+			bool hasAlpha = false;
+			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha);
 			texture.type = textureType;
 			texture.path = fileName;
-			texture.isAlpha = nrComponents == 4;
+
+			std::vector<std::string> notAlphaTexture = {
+				"Walls_baseColor.png",
+			};
+
+			texture.isAlpha = hasAlpha && notAlphaTexture.end() == std::find(notAlphaTexture.begin(), notAlphaTexture.end(), fileName);
 			textures.push_back(texture);
 			textures_loaded.push_back(texture);
 		}
@@ -223,7 +228,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 }
 
 // 나중에 텍스처 생성 옵션은 따로 컨트롤 가능하도록 해야함.
-unsigned int Model::TextureFromFile(const char* path, const std::string& directory, int& nrComponents, bool gamma)
+unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool& hasAlpha, bool gamma)
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
@@ -233,7 +238,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
-	int width, height;
+	int width, height, nrComponents;
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
@@ -244,8 +249,18 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			format = GL_RG;
 		else if (nrComponents == 3)
 			format = GL_RGB;
-		else if (nrComponents == 4)
+		else if (nrComponents == 4) {
 			format = GL_RGBA;
+
+			int pixelCount = width * height;
+			for (int i = 0; i < pixelCount; i++) {
+				if (data[i * nrComponents + 3] < 255) {
+					hasAlpha = 1;
+					std::cout << "알파값 있음" << std::endl;
+					break;
+				}
+			}
+		}
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -267,24 +282,6 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	return textureID;
 }
 
-
-// aiMatrix4x4에서 glm::mat4로 변환하는 헬퍼 함수
-glm::mat4 Model::AiMatrix4x4ToGlmMat4(const aiMatrix4x4& from) {
-	glm::mat4 to;
-
-	// aiMatrix4x4는 row-major, glm::mat4는 column-major
-	to[0][0] = from.a1; to[1][0] = from.a2;
-	to[2][0] = from.a3; to[3][0] = from.a4;
-	to[0][1] = from.b1; to[1][1] = from.b2;
-	to[2][1] = from.b3; to[3][1] = from.b4;
-	to[0][2] = from.c1; to[1][2] = from.c2;
-	to[2][2] = from.c3; to[3][2] = from.c4;
-	to[0][3] = from.d1; to[1][3] = from.d2;
-	to[2][3] = from.d3; to[3][3] = from.d4;
-
-	return to;
-}
-
 std::string Model::ExtractFileName(const std::string& path)
 {
 	size_t pos = path.find_last_of("\\/");
@@ -293,5 +290,13 @@ std::string Model::ExtractFileName(const std::string& path)
 	}
 	else {
 		return path;
+	}
+}
+
+void Model::SetScale(glm::vec3 _scale) {
+	scale = _scale;
+
+	for (auto& mesh : meshes) {
+		mesh->CalculateVertexAveragePosition(scale);
 	}
 }

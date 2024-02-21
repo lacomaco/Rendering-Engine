@@ -67,7 +67,6 @@ bool Game::Initialize() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
 
-
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
 
@@ -76,6 +75,9 @@ bool Game::Initialize() {
 	// 쉐이더 생성
 	CreateShaderProgram();
 	meshRenderer = make_shared<MeshRenderer>();
+
+	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
+	cubeMap = make_shared<CubeMap>("./assets/skybox/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -117,7 +119,13 @@ bool Game::Initialize() {
 		this->grass.push_back(grass);
 	}
 
-	circle.push_back(make_shared<Circle>());
+	auto _circle = make_shared<Circle>();
+	_circle->SetTexture("./assets/images/white.png", "albedo");
+	_circle->SetupMesh();
+
+
+
+	this->circle.push_back(_circle);
 
 	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
 	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
@@ -125,8 +133,9 @@ bool Game::Initialize() {
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 
-	backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
+	//backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
+	backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	camera = make_shared<Camera>(
 		45.0f,
@@ -240,41 +249,52 @@ void Game::GenerateOutput() {
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
 
+	postProcessingFrameBuffer->use();
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	cubeMap->Draw("cubemap", camera.get());
+
+	// 리셋해줘야함!
+	meshRenderer->ResetMesh();
+
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram("default");
 	// 만약 찾지 못하면 -1이다.
 	glUseProgram(program);
 
-	// 하얀색으로 초기화.
-	glEnable(GL_STENCIL_TEST);
-
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	// 리셋해줘야함!
-	meshRenderer->ResetMesh();
-	
 	camera->putCameraUniform("default");
 
 	shader->setInt("default", "activeLight", activeLight);
 
 	lightManager->PutLightUniform("default");
-
-	//meshRenderer->AddMesh(plane);
+	/*
+	meshRenderer->AddMesh(plane);
 
 	for (int i = 0; i < 5; i++) {
-		//meshRenderer->AddMesh(box[i]);
+		meshRenderer->AddMesh(box[i]);
 	}
 
 	for (int i = 0; i < grass.size(); i++) {
-		//meshRenderer->AddMesh(grass[i]);
+		meshRenderer->AddMesh(grass[i]);
 	}
+	*/
+	meshRenderer->AddMesh(circle[0]);
 
 	meshRenderer->AddMesh(backPack);
+	meshRenderer->MeshAlignment(camera.get());
 
-	meshRenderer->Draw("default");
+	meshRenderer->Draw("default",camera.get());
 
 	lightManager->DrawLight(camera);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	// postProcessingFrameBuffer에서 뎁스 테스트를 disable하기 때문에
+	// 컬러 버퍼 비트만 클리어한다.
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	postProcessingFrameBuffer->Draw("framebuffer-example");
 
 	auto showNormal = imguiController->showNormal;
 
@@ -349,5 +369,17 @@ void Game::CreateShaderProgram() {
 		"./shader/stencil-layout-vertex.glsl",
 		"./shader/stencil-layout-fragment.glsl",
 		"stencil-layout"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/framebuffer-example-vertex.glsl",
+		"./shader/framebuffer-example-fragment.glsl",
+		"framebuffer-example"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/cubemap-vertex.glsl",
+		"./shader/cubemap-fragment.glsl",
+		"cubemap"
 	);
 }

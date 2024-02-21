@@ -136,3 +136,17 @@ void Camera::putCameraUniform(const char* shaderProgramName) {
 	shader->setMat4(shaderProgramName,"view", view);
 	shader->setVec3(shaderProgramName,"cameraPos", cameraPos);
 }
+
+void Camera::putCameraUniformForSkybox(const char* shaderProgramName) {
+	auto shader = Shader::getInstance();
+
+	auto skyboxView = glm::lookAt(
+		glm::vec3(0.0f),
+		cameraFront,
+		cameraUp
+	);
+
+	shader->setMat4(shaderProgramName, "projection", projection);
+	shader->setMat4(shaderProgramName, "view", skyboxView);
+	shader->setVec3(shaderProgramName, "cameraPos", cameraPos);
+}

@@ -63,7 +63,7 @@ public:
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 	// 모든 vertex들의 평균 위치.
-	glm::vec3 vertexAveragePosition;
+	glm::vec3 position = glm::vec3(0.0f);
 	bool isAlphaMesh = false;
 
 	/*
@@ -83,6 +83,8 @@ public:
 	*/
 	void CalculateTangents();
 	void setupMesh();
+	void CalculateVertexAveragePosition(glm::vec3 scale = glm::vec3(1.0f));
+
 
 
 private:

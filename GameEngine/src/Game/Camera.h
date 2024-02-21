@@ -37,6 +37,7 @@ public:
 	void CameraLookAround(float deltaTime);
 
 	void putCameraUniform(const char* shaderProgramName);
+	void putCameraUniformForSkybox(const char* shaderProgramName);
 	void ResetPitch();
 
 };

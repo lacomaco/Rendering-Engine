@@ -13,8 +13,8 @@ void MeshRenderer::MeshAlignment(Camera* camera) {
 		auto aModelPos = a.isPrimitive ? a.primitive->position : a.model->position;
 		auto bModelPos = b.isPrimitive ? b.primitive->position : b.model->position;
 
-		auto aDistance = (camera->cameraPos - a.mesh->vertexAveragePosition + aModelPos).length;
-		auto bDistance = (camera->cameraPos - b.mesh->vertexAveragePosition + bModelPos).length;
+		auto aDistance = glm::length(camera->cameraPos - a.mesh->position +aModelPos);
+		auto bDistance = glm::length(camera->cameraPos - b.mesh->position + bModelPos);
 
 		return aDistance > bDistance;
 	};
@@ -64,7 +64,7 @@ void MeshRenderer::AddMesh(std::shared_ptr<Primitive> primitive) {
 	}
 }
 
-void MeshRenderer::Draw(const char* programName) {
+void MeshRenderer::Draw(const char* programName, Camera* camera) {
 	for (auto& meshStruct : nonAlphaMesh) {
 		if (meshStruct.isPrimitive) {
 			meshStruct.primitive->PutModelUniform(programName);
@@ -76,7 +76,8 @@ void MeshRenderer::Draw(const char* programName) {
 		}
 	}
 
-	glEnable(GL_BLEND);
+	
+ 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	for (auto& meshStruct : transparentMesh) {
 		if (meshStruct.isPrimitive) {
@@ -89,5 +90,7 @@ void MeshRenderer::Draw(const char* programName) {
 		}
 	}
 
+	transparentMesh[0].model->PutModelUniform(programName);
+	transparentMesh[0].mesh->Draw(programName);
 	glDisable(GL_BLEND);
 }

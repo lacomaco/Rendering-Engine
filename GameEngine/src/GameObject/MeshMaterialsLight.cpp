@@ -12,15 +12,7 @@ Mesh::Mesh(std::vector<Vertex> _vertices,
 	indices(_indices),
 	textures(_textures)
 {
-	glm::vec3 vertexAveragePosition;
-
-	for (auto& vertex : _vertices) {
-		vertexAveragePosition += vertex.position;
-	}
-
-	vertexAveragePosition /= vertices.size();
-	this->vertexAveragePosition = vertexAveragePosition;
-
+	CalculateVertexAveragePosition();
 
 	for (auto& texture : _textures) {
 		if (texture.type == "albedo" && texture.isAlpha) {
@@ -30,6 +22,18 @@ Mesh::Mesh(std::vector<Vertex> _vertices,
 	}
 
 	setupMesh();
+}
+
+void Mesh::CalculateVertexAveragePosition(glm::vec3 scale) {
+	glm::vec3 center = glm::vec3(0.0f);
+
+	for (auto& vertex : vertices) {
+		center += vertex.position * scale;
+	}
+
+	center /= vertices.size();
+
+	position = center;
 }
 
 Mesh::~Mesh() {

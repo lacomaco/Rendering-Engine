@@ -15,6 +15,8 @@
 #include "./LightManager.h"
 #include "MeshRenderer.h"
 #include <memory>
+#include "./PostProcessingFrameBuffer.h"
+#include "../GameObject/PrimitiveObject/CubeMap.h"
 
 class Game
 {
@@ -52,6 +54,7 @@ private:
 	std::shared_ptr<Plane> plane;
 
 	std::vector<std::shared_ptr<Box>> box;
+	std::shared_ptr<CubeMap> cubeMap;
 
 	std::vector<std::shared_ptr<Circle>> circle;
 
@@ -69,6 +72,8 @@ private:
 	shared_ptr<MeshRenderer> meshRenderer;
 
 	shared_ptr<Model> backPack;
+
+	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
 
 	float accTime;
 };
