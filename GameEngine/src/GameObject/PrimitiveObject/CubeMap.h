@@ -12,16 +12,25 @@
 
 class CubeMap
 {
+private:
+    void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
 public:
 	CubeMap(std::string filePath);
-	unsigned int textureId;
+    unsigned int skyBoxId;
+	unsigned int radianceId;
+    unsigned int irradianceId;
     unsigned int vao, vbo;
 
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(50.0f));
 
     void Draw(const char* shaderProgramName, Camera* camera);
+
+    void PutCubeMapTexture(const char* shaderProgramName);
 	
-    std::vector<std::string> faces;
+    std::vector<std::string> skyBox;
+    std::vector<std::string> skyBoxRadiance;
+
+    std::vector<std::string> skyBoxIrradiance;
 
     std::vector<float> skyboxVertices = {      
         -1.0f,  1.0f, -1.0f,

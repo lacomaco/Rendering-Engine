@@ -61,8 +61,11 @@ void Mesh::Draw(const char* shaderProgramName) {
 	unsigned int roughnessNr = 0;
 
 
+	// 0,1,2 텍스처는 큐브매핑의 스카이박스, 라디언스, 이리디언스 맵이 예약중.
 	for (unsigned int i = 0; i < textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE0 + i);
+		int textureNumber = i + 3;
+
+		glActiveTexture(GL_TEXTURE0 + textureNumber);
 
 		std::string number;
 		auto name = textures[i].type;
@@ -100,7 +103,7 @@ void Mesh::Draw(const char* shaderProgramName) {
 		}
 
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		shader->setInt(shaderProgramName, (name + number).c_str(), i);
+		shader->setInt(shaderProgramName, (name + number).c_str(), textureNumber);
 	}
 
 	// draw mesh
@@ -108,7 +111,7 @@ void Mesh::Draw(const char* shaderProgramName) {
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE0 + i);
+		glActiveTexture(GL_TEXTURE0 + i + 3);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
@@ -201,5 +204,6 @@ void Material::PutMaterialUniforms(const char* shaderProgramName) {
 
 	shader->setVec3(shaderProgramName, "material.ambient", ambient);
 	shader->setVec3(shaderProgramName, "material.specular", specular);
+	shader->setVec3(shaderProgramName, "material.diffuse", diffuse);
 	shader->setFloat(shaderProgramName, "material.shininess", shininess);
 }

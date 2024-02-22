@@ -1,43 +1,40 @@
 #include "CubeMap.h"
+#include "../../Util/dds_loader.h"
+#include <memory>
+#include <gli/gli.hpp>
 
 CubeMap::CubeMap(std::string filePath) {
-    std::vector<std::string> faces = {
-        filePath + "right.jpg",
-        filePath + "left.jpg",
-        filePath + "top.jpg",
-        filePath + "bottom.jpg",
-        filePath + "front.jpg",
-        filePath + "back.jpg"
+
+    std::vector<std::string> skyBox = {
+        filePath + "skybox_posx.dds",
+        filePath + "skybox_negx.dds",
+        filePath + "skybox_posy.dds",
+        filePath + "skybox_negy.dds",
+        filePath + "skybox_posz.dds",
+        filePath + "skybox_negz.dds"
+    };
+    
+    std::vector<std::string> skyBoxRadiance = {
+        filePath + "radiance_posx.dds",
+        filePath + "radiance_negx.dds",
+        filePath + "radiance_posy.dds",
+        filePath + "radiance_negy.dds",
+        filePath + "radiance_posz.dds",
+        filePath + "radiance_negz.dds"
     };
 
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+    std::vector<std::string> skyBoxIrradiance = {
+		filePath + "irradiance_posx.dds",
+		filePath + "irradiance_negx.dds",
+		filePath + "irradiance_posy.dds",
+		filePath + "irradiance_negy.dds",
+		filePath + "irradiance_posz.dds",
+		filePath + "irradiance_negz.dds"
+	}; 
 
-    stbi_set_flip_vertically_on_load(false);
-
-    int width,height, nrChannels;
-    for (unsigned int i = 0; i < faces.size(); i++)
-    {
-        unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-            );
-            std::cout << faces[i].c_str() << std::endl;
-            stbi_image_free(data);
-        }
-        else
-        {
-            std::cout << "Cubemap tex failed to load at path: " << faces[i] << std::endl;
-            stbi_image_free(data);
-        }
-    }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    CreateCubeMapTexture(skyBoxId, skyBox);
+    CreateCubeMapTexture(radianceId, skyBoxRadiance);
+    CreateCubeMapTexture(irradianceId, skyBoxIrradiance);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -52,17 +49,77 @@ CubeMap::CubeMap(std::string filePath) {
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+}
 
-    stbi_set_flip_vertically_on_load(true);
+
+void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+    bool do_flip = true;
+
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cout << "Error Bind Texture : " << error << std::endl;
+    }
+
+    for (unsigned int i = 0; i < maps.size(); i++)
+    {
+
+        gli::texture2d Texture(gli::load_dds(maps[i].c_str()));
+        std::cout << gli::is_compressed(Texture.format()) << std::endl;
+        std::cout << Texture.format() << std::endl;
+
+        gli::gl GL(gli::gl::PROFILE_GL33);
+        gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            GL_RGBA,
+            Texture.extent().x,
+            Texture.extent().y,
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            Texture.data()
+        );
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR) {
+            std::cout << "Error loading texture: " << error << std::endl;
+        }
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
+
+void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
+	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram(shaderProgramName));
+
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxId);
+    shader->setInt(shaderProgramName, "skyBox", 0);
+
+    glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, radianceId);
+    shader->setInt(shaderProgramName, "radianceMap", 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceId);
+    shader->setInt(shaderProgramName, "irradianceMap", 2);
 }
 
 void CubeMap::Draw(const char* shaderProgramName,Camera* camera) {
     auto shader = Shader::getInstance();
-
     glUseProgram(shader->getShaderProgram(shaderProgramName));
+    PutCubeMapTexture(shaderProgramName);
     camera->putCameraUniformForSkybox(shaderProgramName);
     shader->setMat4(shaderProgramName, "model", scaleMatrix);
     glBindVertexArray(vao);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }

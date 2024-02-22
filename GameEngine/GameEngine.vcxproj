@@ -122,9 +122,9 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;C:\Users\kyg\source\repos\GameEngine\GameEngine\gli;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,6 +181,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\Game\ImguiController.h" />
     <ClInclude Include="src\Game\Camera.h" />
     <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\Util\dds_loader.h" />
     <ClInclude Include="src\Util\Shader.h" />
     <ClInclude Include="src\Component\Component.h" />
     <ClInclude Include="src\GameObject\Actor.h" />
@@ -457,6 +458,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\GameObject\MeshMaterialsLight.cpp" />
     <ClCompile Include="src\Game\ImguiController.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />
+    <ClCompile Include="src\Util\dds_loader.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\GameObject\Actor.cpp" />
@@ -631,6 +633,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\그래픽스 공부용\홍정모 강의 파트2\08_ShaderToys_Step4_ImageBasedLighting\CubemapTextures\skybox.dds" />
     <Image Include="assets\images\awesomeface.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>

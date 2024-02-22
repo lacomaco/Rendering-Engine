@@ -77,7 +77,8 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
-	cubeMap = make_shared<CubeMap>("./assets/skybox/");
+	cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
+	//cubeMap = make_shared<CubeMap>("./assets/skybox/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -128,14 +129,14 @@ bool Game::Initialize() {
 	this->circle.push_back(_circle);
 
 	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
-	backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
+	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 
 	//backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
-	backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	camera = make_shared<Camera>(
 		45.0f,
@@ -253,8 +254,6 @@ void Game::GenerateOutput() {
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	cubeMap->Draw("cubemap", camera.get());
-
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
@@ -279,14 +278,17 @@ void Game::GenerateOutput() {
 		meshRenderer->AddMesh(grass[i]);
 	}
 	*/
-	meshRenderer->AddMesh(circle[0]);
+	//meshRenderer->AddMesh(circle[0]);
 
 	meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
 
+	cubeMap->PutCubeMapTexture("default");
 	meshRenderer->Draw("default",camera.get());
 
 	lightManager->DrawLight(camera);
+	cubeMap->Draw("cubemap", camera.get());
+
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

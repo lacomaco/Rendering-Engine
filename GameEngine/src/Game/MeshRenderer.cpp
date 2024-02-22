@@ -89,8 +89,5 @@ void MeshRenderer::Draw(const char* programName, Camera* camera) {
 			meshStruct.mesh->Draw(programName);
 		}
 	}
-
-	transparentMesh[0].model->PutModelUniform(programName);
-	transparentMesh[0].mesh->Draw(programName);
 	glDisable(GL_BLEND);
 }

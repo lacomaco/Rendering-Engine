@@ -843,6 +843,9 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\dds_loader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -933,6 +936,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\dds_loader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1367,6 +1373,7 @@
     <Image Include="assets\images\white.png">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="..\..\..\..\Desktop\그래픽스 공부용\홍정모 강의 파트2\08_ShaderToys_Step4_ImageBasedLighting\CubemapTextures\skybox.dds" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />

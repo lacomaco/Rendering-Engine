@@ -9,7 +9,13 @@ uniform mat4 invTranspose;
 uniform sampler2D albedo0;
 uniform sampler2D specular0;
 
+
+uniform samplerCube skyBox;
+uniform samplerCube radianceMap;
+uniform samplerCube irradianceMap;
+
 struct Material {
+    vec3 ambient;
 	vec3 diffuse;
     vec3 specular;
     float shininess;
