@@ -71,7 +71,6 @@ void main() {
 	);
 
 	diffuse *= vec4(material.diffuse,1.0);
-	//diffuse *= vec4(color,1.0);
 
-	FragColor = texture(radianceMap, normalWorld);
+	FragColor = colorWithAlpha * (diffuse + specular);
 }
