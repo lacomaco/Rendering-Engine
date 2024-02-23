@@ -57,6 +57,19 @@ struct Texture {
 
 extern std::vector<Texture> textures_loaded;
 
+class Material {
+public:
+	float shininess = 0.03f;
+	// TMI: DirectX에서는 constant buffer로 보내는 데이터 4byte 단위로 정렬하기 위해
+	// 여기에 float dummy padding을 넣어야한다.
+	glm::vec3 ambient = glm::vec3(0.2f);
+	glm::vec3 diffuse = glm::vec3(0.8f);
+	glm::vec3 specular = glm::vec3(1.0f);
+
+	void PutMaterialUniforms(const char* shaderProgramName);
+};
+
+
 class Mesh {
 public:
 	std::vector<Vertex> vertices;
@@ -65,7 +78,7 @@ public:
 	// 모든 vertex들의 평균 위치.
 	glm::vec3 position = glm::vec3(0.0f);
 	bool isAlphaMesh = false;
-
+	Material mat;
 	/*
 	Mesh(std::vector<Vertex>&& vertices,
 		std::vector<unsigned int>&& indices);
@@ -89,16 +102,4 @@ public:
 
 private:
 	unsigned int VAO, VBO, EBO;
-};
-
-class Material {
-public:
-	glm::vec3 ambient = glm::vec3(0.1f);
-	float shininess = 0.03f;
-	// TMI: DirectX에서는 constant buffer로 보내는 데이터 4byte 단위로 정렬하기 위해
-	// 여기에 float dummy padding을 넣어야한다.
-	glm::vec3 diffuse = glm::vec3(1.0f);
-	glm::vec3 specular = glm::vec3(0.23f);
-
-	void PutMaterialUniforms(const char* shaderProgramName);
 };

@@ -20,11 +20,6 @@ public:
 	float linear = 0.09f;
 	float quadratic = 0.032f;
 
-
-	glm::vec3 ambient = glm::vec3(0.2f);
-	glm::vec3 diffuse = glm::vec3(0.8f);
-	glm::vec3 specular = glm::vec3(1.0f);
-
 	// directional light, spot light ¿¡ »ç¿ë.
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);
 

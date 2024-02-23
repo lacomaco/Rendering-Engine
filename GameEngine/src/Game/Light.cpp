@@ -23,9 +23,6 @@ void Light::PutLightUniform(const char* shaderProgramName,int lightPosition) {
 	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
 	shader->setInt(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].lightType").c_str(), lightType);
 
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].ambient").c_str(), ambient);
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].diffuse").c_str(), diffuse);
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].specular").c_str(), specular);
 	if (lightType == 0 || lightType == 2) {
 		shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
 	}

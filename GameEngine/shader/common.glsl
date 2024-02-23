@@ -15,9 +15,11 @@ uniform samplerCube radianceMap;
 uniform samplerCube irradianceMap;
 
 struct Material {
+    // phong shading 전용.
     vec3 ambient;
-	vec3 diffuse;
+    vec3 diffuse;
     vec3 specular;
+
     float shininess;
 };
 
@@ -34,11 +36,6 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
-
-    // phong shading 전용 PBR에서 지울거임.
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
 
     float cutOff;
     float cutOuter;
@@ -63,14 +60,14 @@ vec3 phongShading(
     vec3 diffuseColor,
     vec3 specularColor
     ) {
-	vec3 ambient = l.ambient * ambientColor;
+	vec3 ambient = mat.ambient * ambientColor;
 
-    vec3 diffuse = lightStrength * l.diffuse * diffuseColor;
+    vec3 diffuse = lightStrength * mat.diffuse * diffuseColor;
 
     vec3 reflectDir = reflect(-toLightDirection, normal);
     float spec = pow(max(dot(toEye, reflectDir), 0.0), mat.shininess);
 
-	vec3 specular = specularColor * l.specular;
+	vec3 specular = specularColor * mat.specular;
 
 	return ambient + diffuse;
 }
@@ -158,7 +155,7 @@ vec3 spotLight(
     // Theta가 Phi보다 크고 Theta보다 작으면 비로소 0~1 사이의 값이 나온다.
 
     float epsilon = l.cutOff - l.cutOuter;
-    float intensity = clamp((theta - l.cutOuter) / epsilon, l.ambient.r, 1.0);
+    float intensity = clamp((theta - l.cutOuter) / epsilon, mat.ambient.r, 1.0);
 
     float lightStrength = max(dot(normal, lightVec), 0.0);
     float distance = length(l.position - posWorld);
