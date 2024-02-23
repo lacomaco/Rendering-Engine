@@ -251,8 +251,6 @@ void Game::GenerateOutput() {
 	float timeValue = SDL_GetTicks() / 1000.0f;
 
 	postProcessingFrameBuffer->use();
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
@@ -278,7 +276,7 @@ void Game::GenerateOutput() {
 		meshRenderer->AddMesh(grass[i]);
 	}
 	*/
-	//meshRenderer->AddMesh(circle[0]);
+	meshRenderer->AddMesh(circle[0]);
 
 	meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
@@ -288,13 +286,6 @@ void Game::GenerateOutput() {
 
 	lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
-
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	// postProcessingFrameBuffer에서 뎁스 테스트를 disable하기 때문에
-	// 컬러 버퍼 비트만 클리어한다.
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	postProcessingFrameBuffer->Draw("framebuffer-example");
 
