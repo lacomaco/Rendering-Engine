@@ -32,6 +32,8 @@ struct Light {
     vec3 position;
     int lightType; // 0: directional, 1: point, 2: spot
 
+    vec3 strength; // ºûÀÇ ¼¼±â
+
     // ºû°¨¼è
     float constant;
     float linear;
@@ -49,6 +51,18 @@ float calcAttenuation(float distance,Light l) {
 	return 1.0 / (l.constant + l.linear * distance + l.quadratic * distance * distance);
 }
 
+vec3 ambientIBL(Material material,vec3 normal, vec3 toEye) {
+    vec4 diffuse = texture(radianceMap, normal);
+    vec4 specular = texture(irradianceMap,reflect(-toEye,normal));
+
+    specular *= pow(
+        (specular.x + specular.y + specular.z) / 3.0,
+        material.shininess
+    );
+
+    return (specular + diffuse).rgb;
+}
+
 vec3 phongShading(
     Light l,
     float lightStrength,
@@ -62,13 +76,13 @@ vec3 phongShading(
     ) {
     vec3 halfWayDir = normalize(toLightDirection + toEye);
 
-	vec3 ambient = mat.ambient * ambientColor;
+	vec3 ambient = ambientIBL(mat,normal,toEye) * mat.ambient * ambientColor;
 
-    vec3 diffuse = lightStrength * mat.diffuse * diffuseColor;
+    vec3 diffuse = lightStrength * mat.diffuse * diffuseColor * l.strength;
 
     float spec = pow(max(dot(toEye, halfWayDir), 0.0), mat.shininess);
 
-	vec3 specular = specularColor * mat.specular;
+	vec3 specular = specularColor * mat.specular * l.strength * spec;
 
 	return ambient + diffuse;
 }

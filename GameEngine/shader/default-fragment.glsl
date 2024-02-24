@@ -60,21 +60,6 @@ void main() {
 	}
 
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
-	/*
-	vec4 diffuse = texture(radianceMap, normalWorld);
-	vec4 specular = texture(irradianceMap, reflect(-toEye,normalWorld));
-
-	
-	specular *= pow(
-	    (specular.x + specular.y + specular.z)/3.0,
-		material.shininess
-	);
-
-	diffuse *= vec4(material.diffuse,1.0);
-
-	FragColor = colorWithAlpha * (diffuse + specular);
-	*/
 
 	FragColor = colorWithAlpha;
-
 }

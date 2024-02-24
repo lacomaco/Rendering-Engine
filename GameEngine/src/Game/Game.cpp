@@ -148,12 +148,13 @@ bool Game::Initialize() {
 
 	lightManager = make_shared<LightManager>(3);
 
+	// еб╬Г.
 	lightManager->CreateLight
 	(
 		1,
-		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 2.0f, 0.0f),
 		glm::vec3(0.0f, -1.0f, 0.0f),
-		3
+		8
 	);
 	
 

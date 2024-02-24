@@ -37,14 +37,13 @@ void Light::PutLightUniform(const char* shaderProgramName,int lightPosition) {
 	const auto linear = lightPowers[lightPower].linear;
 	const auto quadratic = lightPowers[lightPower].quadratic;
 
-	std::cout << lightPower <<  " " << quadratic << std::endl;
-
 	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].position").c_str(), getPosition());
 	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].constant").c_str(), constant);
 	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].linear").c_str(), linear);
 	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].quadratic").c_str(), quadratic);
 	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
 	shader->setInt(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].lightType").c_str(), lightType);
+	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].strength").c_str(), strength);
 
 	if (lightType == 0 || lightType == 2) {
 		shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);

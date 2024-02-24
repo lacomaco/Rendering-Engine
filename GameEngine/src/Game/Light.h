@@ -31,6 +31,8 @@ public:
 	// directional light, spot light ¿¡ »ç¿ë.
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);
 
+	glm::vec3 strength = glm::vec3(1.0f, 1.0f, 1.0f);
+
 	float cutOff = glm::cos(glm::radians(12.5f));
 	float cutOuter = glm::cos(glm::radians(17.5f));
 
