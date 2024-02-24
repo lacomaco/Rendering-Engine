@@ -18,7 +18,7 @@ void main() {
 
 	vec3 color = vec3(0.0);
 
-	for(int i = 0; i < activeLight; i++){
+	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
 
 		if(light.lightType == 0){
@@ -60,7 +60,7 @@ void main() {
 	}
 
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
-
+	/*
 	vec4 diffuse = texture(radianceMap, normalWorld);
 	vec4 specular = texture(irradianceMap, reflect(-toEye,normalWorld));
 
@@ -73,4 +73,8 @@ void main() {
 	diffuse *= vec4(material.diffuse,1.0);
 
 	FragColor = colorWithAlpha * (diffuse + specular);
+	*/
+
+	FragColor = colorWithAlpha;
+
 }

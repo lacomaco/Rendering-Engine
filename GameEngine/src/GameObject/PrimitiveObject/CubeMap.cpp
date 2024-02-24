@@ -67,15 +67,13 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     {
 
         gli::texture2d Texture(gli::load_dds(maps[i].c_str()));
-        std::cout << gli::is_compressed(Texture.format()) << std::endl;
-        std::cout << Texture.format() << std::endl;
 
         gli::gl GL(gli::gl::PROFILE_GL33);
         gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
             0,
-            GL_RGBA,
+            GL_SRGB_ALPHA,
             Texture.extent().x,
             Texture.extent().y,
             0,

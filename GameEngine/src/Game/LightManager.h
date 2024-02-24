@@ -7,25 +7,23 @@
 class LightManager
 {
 private:
-	int activeLight;
+	int maxLights;
 
 public:
-	LightManager(int _activeLight);
+	LightManager(int _maxLights);
 	~LightManager() = default;
 
 	void UpdateLight(float deltaTime);
-	void SetRandomLight(shared_ptr<Camera> camera);
+	void SetRandomLight(shared_ptr<Camera> camera, int lightType = -1);
 	vector<shared_ptr<Light>> lights;
 
 	void PutLightUniform(const char* programName);
 	void DrawLight(shared_ptr<Camera> camera);
 	void CreateLight(
-		int lightType, 
+		int lightType,
 		glm::vec3 position,
 		glm::vec3 direction,
-		float constant = 1.0f, 
-		float linear = 0.09f, 
-		float quadratic = 0.032f, 
+		int lightPower = 2,
 		float cutOff = glm::cos(glm::radians(12.5f)),
 		float outerCutOff = glm::cos(glm::radians(17.5f))
 	);

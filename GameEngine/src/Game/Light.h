@@ -6,9 +6,18 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+struct LightPower {
+	float constant;
+	float linear;
+	float quadratic;
+};
+
 
 class Light
 {
+private:
+	static std::vector<LightPower> lightPowers;
+
 public:
 	shared_ptr<Box> box;
 	Light();
@@ -16,9 +25,8 @@ public:
 	// 0 : directional , 1 : point, 2 : spot
 	int lightType = 1;
 
-	float constant = 1.0f;
-	float linear = 0.09f;
-	float quadratic = 0.032f;
+	// 선택함.
+	int lightPower = 3;
 
 	// directional light, spot light 에 사용.
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);

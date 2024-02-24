@@ -131,6 +131,8 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 
 	// 기본 컬러버퍼 사용.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -141,6 +143,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void PostProcessingFrameBuffer::use()

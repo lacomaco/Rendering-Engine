@@ -70,19 +70,23 @@ void Primitive::SetTexture(std::string path, std::string type) {
         std::cerr << "Failed to load texture" << std::endl;
     }
 
-    GLenum format;
-
+    GLenum internalFormat;
+    GLenum dataFormat;
     if (nrChannels == 1) {
-        format = GL_RED;
+        internalFormat = GL_RED;
+        dataFormat = GL_RED;
     }
     else if (nrChannels == 2) {
-        format = GL_RG;
+        internalFormat = GL_RG;
+        dataFormat = GL_RG;
     }
     else if (nrChannels == 3) {
-        format = GL_RGB;
+        internalFormat = GL_SRGB;
+        dataFormat = GL_RGB;
     }
     else if (nrChannels == 4) {
-        format = GL_RGBA;
+        internalFormat = GL_SRGB_ALPHA;
+        dataFormat = GL_RGBA;
         if (type == "albedo") {
             texture.isAlpha = true;
             isAlphaMesh = true;
@@ -94,11 +98,11 @@ void Primitive::SetTexture(std::string path, std::string type) {
     glTexImage2D(
         GL_TEXTURE_2D, // 텍스처 바인딩 대상 지정, 큐브맵은 GL_TEXTURE_3D이다.
         0, // mipmap 레벨
-        format, // internal formap
+        internalFormat, // internal formap
         width,
         height,
         0, // border 크기
-        format, // 입력 데이터 형식
+        dataFormat, // 입력 데이터 형식
         GL_UNSIGNED_BYTE, // 픽셀 데이터 타입
         data // 픽셀 데이터 포인터.
     );

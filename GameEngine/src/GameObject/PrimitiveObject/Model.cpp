@@ -242,15 +242,23 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if(nrComponents == 2)
-			format = GL_RG;
-		else if (nrComponents == 3)
-			format = GL_RGB;
+		GLenum internalFormat;
+		GLenum dataFormat;
+		if (nrComponents == 1) {
+			internalFormat = GL_RED;
+			dataFormat = GL_RED;
+		}
+		else if (nrComponents == 2) {
+			internalFormat = GL_RG;
+			dataFormat = GL_RG;
+		}
+		else if (nrComponents == 3) {
+			internalFormat = GL_SRGB;
+			dataFormat = GL_RGB;
+		}
 		else if (nrComponents == 4) {
-			format = GL_RGBA;
+			internalFormat = GL_SRGB_ALPHA;
+			dataFormat = GL_RGBA;
 
 			int pixelCount = width * height;
 			for (int i = 0; i < pixelCount; i++) {
@@ -263,7 +271,12 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 		}
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+		// 에러 체크
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			std::cout << "Error Bind Texture : " << error << std::endl;
+		}
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
