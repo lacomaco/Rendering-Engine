@@ -2,10 +2,8 @@
 #include <random>
 #include "../Util/Shader.h"
 
-LightManager::LightManager(int _maxLights)
-{
-	maxLights = _maxLights;
-}
+LightManager* LightManager::instance = nullptr;
+
 
 void LightManager::CreateLight(
 	int lightType,

@@ -65,7 +65,7 @@ private:
 	std::shared_ptr<Model> model;
 
 	int activeLight = 3;
-	std::shared_ptr<LightManager> lightManager;
+	LightManager* lightManager;
 
 	std::vector<std::shared_ptr<Plane>> grass;
 

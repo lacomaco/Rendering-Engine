@@ -108,6 +108,7 @@ bool Game::Initialize() {
 		box->position = translations[i] + glm::vec3(0.0f, 0.5f, 0.0f);
 
 		this->box.push_back(box);
+		box->isAlphaMesh = false;
 	}
 
 	for (int i = 0; i < translations.size(); i++) {
@@ -118,6 +119,7 @@ bool Game::Initialize() {
 		grass->position = translations[i] + glm::vec3(0.0f,0.5f,0.6f);
 
 		this->grass.push_back(grass);
+		grass->isAlphaMesh = true;
 	}
 
 	auto _circle = make_shared<Circle>();
@@ -129,7 +131,7 @@ bool Game::Initialize() {
 	this->circle.push_back(_circle);
 
 	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
@@ -146,15 +148,15 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	lightManager = make_shared<LightManager>(3);
+	lightManager = LightManager::getInstance(3);
 
 	// еб╬Г.
 	lightManager->CreateLight
 	(
-		1,
-		glm::vec3(0.0f, 2.0f, 0.0f),
-		glm::vec3(0.0f, -1.0f, 0.0f),
-		8
+		0,
+		glm::vec3(0.0f, 5.0f, 0.0f),
+		glm::vec3(0.0f, -1.0f, -0.2f),
+		0
 	);
 	
 
@@ -270,7 +272,7 @@ void Game::GenerateOutput() {
 	shader->setInt("default", "activeLight", activeLight);
 
 	lightManager->PutLightUniform("default");
-	/*
+	
 	meshRenderer->AddMesh(plane);
 
 	for (int i = 0; i < 5; i++) {
@@ -280,10 +282,10 @@ void Game::GenerateOutput() {
 	for (int i = 0; i < grass.size(); i++) {
 		meshRenderer->AddMesh(grass[i]);
 	}
-	*/
+	
 	meshRenderer->AddMesh(circle[0]);
 
-	meshRenderer->AddMesh(backPack);
+	//meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
 
 	cubeMap->PutCubeMapTexture("default");

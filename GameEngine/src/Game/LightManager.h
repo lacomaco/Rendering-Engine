@@ -8,10 +8,26 @@ class LightManager
 {
 private:
 	int maxLights;
+	static LightManager* instance;
+
 
 public:
-	LightManager(int _maxLights);
+	LightManager(int _maxLights) :maxLights(_maxLights) {};
+
 	~LightManager() = default;
+
+	LightManager& operator=(const LightManager&) = delete;
+
+	static LightManager* getInstance(int _maxLights = 0) {
+		if (LightManager::instance == nullptr) {
+			instance = new LightManager(_maxLights);
+		}
+		return instance;
+	}
+
+	int getMaxLights() const {
+		return maxLights;
+	}
 
 	void UpdateLight(float deltaTime);
 	void SetRandomLight(shared_ptr<Camera> camera, int lightType = -1);
