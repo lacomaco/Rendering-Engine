@@ -5,6 +5,7 @@
 #include "../Util/CommonMath.h"
 #include <math.h>
 #include <glm/gtc/quaternion.hpp>
+#include "../Game/ImguiController.h"
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(fov, float(width) / height, near, far);
@@ -103,6 +104,7 @@ void Camera::Update(float deltaTime) {
 	const auto& Input = Input::GetInstance();
 	const float cameraSpeed = 2.5f * deltaTime;
 
+
 	CameraLookAround(deltaTime);
 
 	if (Input->IsKeyPressed(SDL_SCANCODE_W)) {
@@ -127,6 +129,12 @@ void Camera::Update(float deltaTime) {
 		cameraPos + cameraFront,
 		cameraUp
 	);
+
+
+	auto imgui = ImguiController::getInstance();
+
+	imgui->cameraPosition = cameraPos;
+	imgui->cameraFront = cameraFront;
 }
 
 void Camera::putCameraUniform(const char* shaderProgramName) {

@@ -31,19 +31,9 @@ public:
 
 	// imgui ÀÎÇ²°ªµé.
 	bool useTexture = false;
-	glm::vec3 modelTranslation = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 modelRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 modelScale = glm::vec3(1.0f, 1.0f, 1.0f);
-	float viewRoot = 0.0f;
-	float materialShininess;
-	int selectLightType = 0; // 0 : Directional, 1: Point, 2: Spot
-	float materialDiffuse = 0.5f;
-	float materialSpecular = 0.5f;
-	glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, -2.0f);
-	float lightFallOffStart = 0.0f;
-	float lightFallOffEnd = 0.0f;
-	float lightSpotPower = 0.0f;
 
+	glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	bool showNormal = false;
 
 
