@@ -3,9 +3,9 @@
 #endif
 
 #ifndef WINDOW_WIDTH
-#define WINDOW_WIDTH 1024
+#define WINDOW_WIDTH 1280
 #endif
 
 #ifndef WINDOW_HEIGHT
-#define WINDOW_HEIGHT 768
+#define WINDOW_HEIGHT 960
 #endif

@@ -8,6 +8,39 @@ PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
+	CreateDepthMapFrameBuffer();
+}
+
+void PostProcessingFrameBuffer::Draw(const char* programName)
+{
+	// msaaFrameBuffer -> intermediateFrameBuffer로 데이터 복사.
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
+	glBlitFramebuffer(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+	// 기본 컬러버퍼 사용.
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glEnable(GL_FRAMEBUFFER_SRGB);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
+	glUseProgram(Shader::getInstance()->getShaderProgram(programName));
+	glBindVertexArray(vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, screenTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_FRAMEBUFFER_SRGB);
+}
+
+void PostProcessingFrameBuffer::use()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
@@ -72,17 +105,17 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorageMultisample(
-		GL_RENDERBUFFER, 
+		GL_RENDERBUFFER,
 		4,
-		GL_DEPTH24_STENCIL8, 
-		WINDOW_WIDTH, 
+		GL_DEPTH24_STENCIL8,
+		WINDOW_WIDTH,
 		WINDOW_HEIGHT
 	);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(
-		GL_FRAMEBUFFER, 
-		GL_DEPTH_STENCIL_ATTACHMENT, 
-		GL_RENDERBUFFER, 
+		GL_FRAMEBUFFER,
+		GL_DEPTH_STENCIL_ATTACHMENT,
+		GL_RENDERBUFFER,
 		rbo
 	);
 
@@ -122,34 +155,42 @@ void PostProcessingFrameBuffer::CreateVAO()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-void PostProcessingFrameBuffer::Draw(const char* programName)
+void PostProcessingFrameBuffer::CreateDepthMapFrameBuffer()
 {
-	// msaaFrameBuffer -> intermediateFrameBuffer로 데이터 복사.
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
-	glBlitFramebuffer(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	glGenFramebuffers(1,&depthMapFrameBuffer);
 
-	// 기본 컬러버퍼 사용.
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		GL_DEPTH_COMPONENT,
+		SHADOW_WIDTH,
+		SHADOW_HEIGHT,
+		0,
+		GL_DEPTH_COMPONENT,
+		GL_FLOAT,
+		NULL
+	);
+	glTexParameteri(
+		GL_TEXTURE_2D,
+		GL_TEXTURE_MIN_FILTER,
+		GL_NEAREST
+	);
+	glTexParameteri(
+		GL_TEXTURE_2D,
+		GL_TEXTURE_MAG_FILTER,
+		GL_NEAREST
+	);
+	glTexParameteri(
+		GL_TEXTURE_2D,
+		GL_TEXTURE_WRAP_S,
+		GL_REPEAT
+	);
+	glTexParameteri(
+		GL_TEXTURE_2D,
+		GL_TEXTURE_WRAP_T,
+		GL_REPEAT
+	);
 
-	glEnable(GL_FRAMEBUFFER_SRGB);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDisable(GL_DEPTH_TEST);
-
-	glUseProgram(Shader::getInstance()->getShaderProgram(programName));
-	glBindVertexArray(vao);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, screenTexture);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_FRAMEBUFFER_SRGB);
-}
-
-void PostProcessingFrameBuffer::use()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
 }
