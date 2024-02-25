@@ -32,7 +32,7 @@ public:
 		std::shared_ptr<Primitive> primitive
 	);
 
-	void Draw(const char* programName, Camera* camera);
+	void Draw(const char* programName);
 	
 };
 

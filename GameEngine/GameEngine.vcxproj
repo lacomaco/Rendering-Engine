@@ -168,6 +168,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\Game\Light.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Model.h" />
+    <ClInclude Include="src\Game\Shadow.h" />
     <ClInclude Include="src\Util\CommonMath.h" />
     <ClInclude Include="src\Game\Input.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h" />
@@ -458,6 +459,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\GameObject\MeshMaterialsLight.cpp" />
     <ClCompile Include="src\Game\ImguiController.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />
+    <ClCompile Include="src\Game\Shadow.cpp" />
     <ClCompile Include="src\Util\dds_loader.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />

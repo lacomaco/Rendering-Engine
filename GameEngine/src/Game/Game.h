@@ -17,6 +17,7 @@
 #include <memory>
 #include "./PostProcessingFrameBuffer.h"
 #include "../GameObject/PrimitiveObject/CubeMap.h"
+#include "./Shadow.h"
 
 class Game
 {
@@ -74,6 +75,7 @@ private:
 	shared_ptr<Model> backPack;
 
 	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
+	shared_ptr<Shadow> shadow;
 
 	float accTime;
 };

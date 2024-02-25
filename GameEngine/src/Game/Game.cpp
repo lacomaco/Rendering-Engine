@@ -77,8 +77,8 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
+	shadow = make_shared<Shadow>();
 	cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
-	//cubeMap = make_shared<CubeMap>("./assets/skybox/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -299,15 +299,7 @@ void Game::GenerateOutput() {
 	auto showNormal = imguiController->showNormal;
 
 	if (showNormal) {
-		auto normalProgram = Shader::getInstance()->getShaderProgram("normal");
-		glUseProgram(normalProgram);
-
-		camera->putCameraUniform("normal");
-		//circle->Draw("normal");
-		plane->Draw("normal");
-
-
-		//ㄴ->Draw("normal");
+		meshRenderer->Draw("normal", camera.get());
 	}
 
 	imguiController->Render();
