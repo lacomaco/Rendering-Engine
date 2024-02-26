@@ -101,7 +101,7 @@ vec3 phongShading(
 
 	vec3 specular = specularColor * mat.specular * l.strength * spec;
 
-	return ambient + (diffuse + specular); * (1.0 - shadow);
+	return ambient + (diffuse + specular) * (1.0 - shadow);
 }
 
 vec3 directionalLight(
