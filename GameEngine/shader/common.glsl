@@ -202,9 +202,9 @@ vec3 spotLight(
     float distance = length(l.position - posWorld);
     float attenuation = calcAttenuation(distance,l);
 
-    ambientColor *= attenuation * 4 * intensity;
-    diffuseColor *= attenuation * 4 * intensity;
-    specularColor *= attenuation * 4 * intensity;
+    ambientColor *= attenuation * intensity;
+    diffuseColor *= attenuation * intensity;
+    specularColor *= attenuation * intensity;
 
     return phongShading(
         l,
