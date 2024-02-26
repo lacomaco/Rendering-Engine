@@ -12,7 +12,7 @@ class Shader
 {
 public:
 	std::string readShaderSource(const char* filePath);
-	GLuint compileShader(const char* shaderCode,GLenum shaderType);
+	GLuint compileShader(const char* shaderCode,GLenum shaderType, const char* filePath);
 	GLuint getVertexShader(const char* filePath);
 	GLuint getFragmentShader(const char* filePath);
 	GLuint getGeometryShader(const char* filePath);

@@ -19,6 +19,59 @@ Game::Game() {
 
 }
 
+void Game::GenerateOutput() {
+	imguiController->Update();
+
+	float timeValue = SDL_GetTicks() / 1000.0f;
+
+	// 리셋해줘야함!
+	meshRenderer->ResetMesh();
+
+	meshRenderer->AddMesh(plane);
+
+	for (int i = 0; i < 1; i++) {
+		meshRenderer->AddMesh(box[i]);
+	}
+
+	/*
+	for (int i = 0; i < grass.size(); i++) {
+		meshRenderer->AddMesh(grass[i]);
+	}
+	*/
+	//meshRenderer->AddMesh(circle[0]);
+
+	//meshRenderer->AddMesh(backPack);
+	meshRenderer->MeshAlignment(camera.get());
+
+	lightManager->MakeShadow(meshRenderer);
+
+	lightManager->lights[0]->shadow->showDepthMap();
+
+	postProcessingFrameBuffer->use();
+	cubeMap->PutCubeMapTexture("default");
+	camera->putCameraUniform("default");
+	lightManager->PutLightUniform("default");
+	meshRenderer->Draw("default");
+
+
+	lightManager->DrawLight(camera);
+	cubeMap->Draw("cubemap", camera.get());
+
+	if (!depthMode) {
+		postProcessingFrameBuffer->Draw("framebuffer-example");
+	}
+
+
+	auto showNormal = imguiController->showNormal;
+
+	if (showNormal) {
+		meshRenderer->Draw("normal");
+	}
+
+	imguiController->Render();
+	SDL_GL_SwapWindow(mWindow);
+}
+
 bool Game::Initialize() {
 	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
 
@@ -77,7 +130,6 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
-	shadow = make_shared<Shadow>();
 	cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
 
 	// 화면에 그릴 오브젝트들 생성
@@ -148,15 +200,16 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	lightManager = LightManager::getInstance(3);
+	lightManager = LightManager::getInstance();
 
-	// 태양.
+	// 손전등.
 	lightManager->CreateLight
 	(
-		0,
-		glm::vec3(0.0f, 5.0f, 5.0f),
-		glm::vec3(0.0f, -1.0f, -0.2f),
-		0
+		2,
+		//glm::vec3(0.0f, 3.0f, 5.0f),
+		glm::vec3(-1.513,2.007,-3.706),
+		glm::vec3(-0.042, -0.390, 0.952),
+		12
 	);
 	
 
@@ -172,6 +225,48 @@ void Game::Shutdown() {
 	SDL_Quit();
 	SDL_GL_DeleteContext(context);
 	delete imguiController;
+}
+
+void Game::UpdateGame() {
+
+	/*
+	* fps를 60으로 제한한다. (60FPS면 얼추 16.6ms이다.)
+	* 
+	* PS: fps를 60으로 제한하는 이유
+	* 
+	* 물리 계산을 매번 Update할때 프레임이 달라지면 물리 게산 결과도 달라진다.
+	* 여기선 가장 쉬운 방법으로 최대 fps를 60으로 제한 거는 방법으로 해결함
+	*/
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(),mTicksCount + 16));
+
+	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+	mTicksCount = SDL_GetTicks();
+
+	// 델타 시간이 너무 크면 게임이 멈추는 것을 방지
+	/*
+	* 이 로직이 필요한 이유.
+	* 만약 sleep을 걸었거나, 디버거로 시스템을 잠구고 다시 실행시키면
+	* deltaTime이 크게 불어나는 경우가 발생한다.
+	* 이를 방지하기 위해서 deltaTime이 0.05f를 넘지 않도록 제한한다.
+	* 60fps로 제한을 걸어두었기 때문에 일반적인 상황에선 deltaTime은
+	* 0.0166f 정도가된다.
+	*/
+	if (deltaTime > 0.05f) {
+		deltaTime = 0.05f;
+	}
+
+	camera->Update(deltaTime);
+
+	accTime += deltaTime;
+
+	input->SetMouse();
+
+	//lightManager->UpdateLight(deltaTime);
+	/*
+	lightManager->lights[0]->setPosition(camera->cameraPos);
+	lightManager->lights[0]->direction = camera->cameraFront;
+	lightManager->lights[0]->CalculateLightSpaceMatrix();
+	*/
 }
 
 void Game::RunLoop() {
@@ -210,131 +305,16 @@ void Game::ProcessInput() {
 		mIsRunning = false;
 	}
 
+	if (state[SDL_SCANCODE_H]) {
+		std::cout << "depth mode 클릭됨" << std::endl;
+		//depthMode != depthMode;
+	}
+
 	if (state[SDL_SCANCODE_F]) {
 		camera->ResetPitch();
 	}
 }
 
-void Game::UpdateGame() {
-
-	/*
-	* fps를 60으로 제한한다. (60FPS면 얼추 16.6ms이다.)
-	* 
-	* PS: fps를 60으로 제한하는 이유
-	* 
-	* 물리 계산을 매번 Update할때 프레임이 달라지면 물리 게산 결과도 달라진다.
-	* 여기선 가장 쉬운 방법으로 최대 fps를 60으로 제한 거는 방법으로 해결함
-	*/
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(),mTicksCount + 16));
-
-	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
-	mTicksCount = SDL_GetTicks();
-
-	// 델타 시간이 너무 크면 게임이 멈추는 것을 방지
-	/*
-	* 이 로직이 필요한 이유.
-	* 만약 sleep을 걸었거나, 디버거로 시스템을 잠구고 다시 실행시키면
-	* deltaTime이 크게 불어나는 경우가 발생한다.
-	* 이를 방지하기 위해서 deltaTime이 0.05f를 넘지 않도록 제한한다.
-	* 60fps로 제한을 걸어두었기 때문에 일반적인 상황에선 deltaTime은
-	* 0.0166f 정도가된다.
-	*/
-	if (deltaTime > 0.05f) {
-		deltaTime = 0.05f;
-	}
-
-	camera->Update(deltaTime);
-
-	accTime += deltaTime;
-
-	input->SetMouse();
-
-	lightManager->UpdateLight(deltaTime);
-}
-
-void Game::GenerateOutput() {
-	imguiController->Update();
-
-	float timeValue = SDL_GetTicks() / 1000.0f;
-
-	postProcessingFrameBuffer->use();
-
-	// 리셋해줘야함!
-	meshRenderer->ResetMesh();
-
-	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram("default");
-	// 만약 찾지 못하면 -1이다.
-	glUseProgram(program);
-
-	camera->putCameraUniform("default");
-
-	shader->setInt("default", "activeLight", activeLight);
-
-	lightManager->PutLightUniform("default");
-	
-	meshRenderer->AddMesh(plane);
-
-	for (int i = 0; i < 5; i++) {
-		meshRenderer->AddMesh(box[i]);
-	}
-
-	for (int i = 0; i < grass.size(); i++) {
-		meshRenderer->AddMesh(grass[i]);
-	}
-	
-	meshRenderer->AddMesh(circle[0]);
-
-	//meshRenderer->AddMesh(backPack);
-	meshRenderer->MeshAlignment(camera.get());
-
-	cubeMap->PutCubeMapTexture("default");
-	meshRenderer->Draw("default",camera.get());
-
-	lightManager->DrawLight(camera);
-	cubeMap->Draw("cubemap", camera.get());
-
-	postProcessingFrameBuffer->Draw("framebuffer-example");
-
-	auto showNormal = imguiController->showNormal;
-
-	if (showNormal) {
-		meshRenderer->Draw("normal", camera.get());
-	}
-
-	imguiController->Render();
-	SDL_GL_SwapWindow(mWindow);
-}
-
-void Game::AddActor(Actor* actor)
-{
-	if (mUpdatingActors)
-	{
-		mPendingActors.emplace_back(actor);
-	}
-	else
-	{
-		mActors.emplace_back(actor);
-	}
-
-}
-
-void Game::RemoveActor(Actor* actor)
-{
-	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
-	if (iter != mPendingActors.end())
-	{
-		std::iter_swap(iter, mPendingActors.end() - 1);
-		mPendingActors.pop_back();
-	}
-
-	iter = std::find(mActors.begin(), mActors.end(), actor);
-	if (iter != mActors.end())
-	{
-		std::iter_swap(iter, mActors.end() - 1);
-		mActors.pop_back();
-	}
-}
 
 void Game::CreateShaderProgram() {
 	auto shader = Shader::getInstance();
@@ -373,5 +353,17 @@ void Game::CreateShaderProgram() {
 		"./shader/cubemap-vertex.glsl",
 		"./shader/cubemap-fragment.glsl",
 		"cubemap"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/shadow-vertex.glsl",
+		"./shader/shadow-fragment.glsl",
+		"shadow"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/shadow-debug-vertex.glsl",
+		"./shader/shadow-debug-fragment.glsl",
+		"shadow-debug"
 	);
 }

@@ -5,7 +5,7 @@
 LightManager* LightManager::instance = nullptr;
 
 
-void LightManager::CreateLight(
+bool LightManager::CreateLight(
 	int lightType,
 	glm::vec3 position,
 	glm::vec3 direction,
@@ -13,9 +13,19 @@ void LightManager::CreateLight(
 	float cutOff,
 	float outerCutOff
 ) {
-	if (lights.size() == maxLights) {
-		std::cout << "라이트 갯수 초과" << std::endl;
-		return;
+	if (lightType == 0 && directionalLightCount == 1) {
+		std::cout << "directionalLightCount 초과" << std::endl;
+		return false;
+	}
+
+	if (lightType == 1 && pointLightCount == 2) {
+		std::cout << "pointLightCount 초과" << std::endl;
+		return false;
+	}
+
+	if (lightType == 2 && spotLightCount == 2) {
+		std::cout << "spotLightCount 초과" << std::endl;
+		return false;
 	}
 
 	auto light = make_shared<Light>();
@@ -27,6 +37,8 @@ void LightManager::CreateLight(
 	light->cutOuter = outerCutOff;
 
 	lights.push_back(light);
+
+	return true;
 }
 
 void LightManager::PutLightUniform(const char* programName) {
@@ -36,6 +48,39 @@ void LightManager::PutLightUniform(const char* programName) {
 	for(int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
 		light->PutLightUniform(programName,i);
+	}
+
+
+	// set 0 to all shadows.
+	shader->setBool(programName, "directionalShadowMap.use", 0);
+	shader->setBool(programName, "pointShadowMap[0].use", 0);
+	shader->setBool(programName, "spotShadowMap[0].use", 0);
+	shader->setBool(programName, "pointShadowMap[1].use", 0);
+	shader->setBool(programName, "spotShadowMap[1].use", 0);
+
+	int directionalCount = 0;
+	int pointCount = 0;
+	int spotCount = 0;
+
+	for (int i = 0; i < lights.size(); i++) {
+		auto light = lights[i];
+
+		int index = 0;
+
+		if (light->lightType == 0) {
+			index = directionalCount;
+			directionalCount++;
+		}
+		else if (light->lightType == 1) {
+			index = pointCount;
+			pointCount++;
+		}
+		else if (light->lightType == 2) {
+			index = spotCount;
+			spotCount++;
+		}
+
+		light->PutShadowMap(programName, index,i);
 	}
 }
 
@@ -54,40 +99,32 @@ void LightManager::DrawLight(shared_ptr<Camera> camera) {
 void LightManager::UpdateLight(float deltaTime) {
 	for (int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
-		if (light->lightType == 1) {
-			light->Update(deltaTime);
-		}
+		light->Update(deltaTime);
 	}
 }
 
-void LightManager::SetRandomLight(shared_ptr<Camera> camera,int lightType) {
+void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 	std::mt19937 mt{std::random_device{}()};
 	std::uniform_int_distribution<int> dist(0, 2);
 
-	for (int i = lights.size(); i < maxLights; i++) {
+	for (int i = lights.size(); i < 5; i++) {
 		int random = dist(mt);
 
-		std::cout << "light 생성 타입 : " << random << std::endl;
-		auto light = make_shared<Light>();
-
-		if (lightType != -1) {
-			light->lightType = lightType;
-		}
-		else {
-			light->lightType = random;
-		}
-			// random 포지션 x : 0 ~ 2, y : 0 ~ 2, z : 0 ~ 2
-		light->box->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-		light->direction = camera->cameraFront;
-
-		// random 포지션 x : 0 ~ 2, y : 0 ~ 2, z : 0 ~ 2
 		int randomX = dist(mt);
 		int randomY = dist(mt);
 		int randomZ = dist(mt);
+		glm::vec3 position = glm::vec3(randomX, randomY, randomZ);
 
-		light->setPosition(glm::vec3(randomX, randomY, randomZ));
 
-		lights.push_back(light);
+		while (!CreateLight(random,position,camera->cameraFront)) {
+			random = dist(mt);
+		}
 	}
 }
 
+void LightManager::MakeShadow(shared_ptr<MeshRenderer> meshRenderer) {
+	for (int i = 0; i < lights.size(); i++) {
+		auto light = lights[i];
+		light->MakeShadow("shadow", meshRenderer);
+	}
+}

@@ -12,6 +12,7 @@ PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 
 void PostProcessingFrameBuffer::Draw(const char* programName)
 {
+
 	// msaaFrameBuffer -> intermediateFrameBuffer로 데이터 복사.
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
@@ -36,6 +37,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 
 void PostProcessingFrameBuffer::use()
 {
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

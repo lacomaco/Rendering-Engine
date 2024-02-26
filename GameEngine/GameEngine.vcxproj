@@ -184,8 +184,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Util\dds_loader.h" />
     <ClInclude Include="src\Util\Shader.h" />
-    <ClInclude Include="src\Component\Component.h" />
-    <ClInclude Include="src\GameObject\Actor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="libs\glm\common.hpp" />
@@ -462,8 +460,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\Game\Shadow.cpp" />
     <ClCompile Include="src\Util\dds_loader.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />
-    <ClCompile Include="src\Component\Component.cpp" />
-    <ClCompile Include="src\GameObject\Actor.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="libs\glm\detail\glm.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
@@ -630,6 +626,10 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\default-vertex.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="shader\shadow-debug-fragment.glsl" />
+    <None Include="shader\shadow-debug-vertex.glsl" />
+    <None Include="shader\shadow-fragment.glsl" />
+    <None Include="shader\shadow-vertex.glsl" />
     <None Include="shader\stencil-layout-fragment.glsl" />
     <None Include="shader\stencil-layout-vertex.glsl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />

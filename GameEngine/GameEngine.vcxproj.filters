@@ -771,12 +771,6 @@
     <ClInclude Include="src\Game\Game.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject\Actor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Component\Component.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Util\Shader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -873,12 +867,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Game.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObject\Actor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Component\Component.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\Shader.cpp">
@@ -1365,6 +1353,10 @@
     <None Include="shader\framebuffer-example-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\cubemap-fragment.glsl" />
+    <None Include="shader\shadow-vertex.glsl" />
+    <None Include="shader\shadow-fragment.glsl" />
+    <None Include="shader\shadow-debug-vertex.glsl" />
+    <None Include="shader\shadow-debug-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

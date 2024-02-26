@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <cstdlib>
-#include "../GameObject/Actor.h"
 #include "./ImguiController.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../GameObject/PrimitiveObject/Box.h"
@@ -28,9 +27,6 @@ public:
 	void Shutdown();
 	SDL_Window* window;
 	SDL_GLContext context;
-
-	void AddActor(class Actor* actor);
-	void RemoveActor(class Actor* actor);
 
 private:
 	void ProcessInput();
@@ -75,8 +71,9 @@ private:
 	shared_ptr<Model> backPack;
 
 	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
-	shared_ptr<Shadow> shadow;
 
 	float accTime;
+
+	bool depthMode = false;
 };
 

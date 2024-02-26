@@ -1,4 +1,4 @@
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 5
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -13,6 +13,22 @@ uniform sampler2D specular0;
 uniform samplerCube skyBox;
 uniform samplerCube radianceMap;
 uniform samplerCube irradianceMap;
+
+struct NormalShadowMap {
+	sampler2D depthMap;
+    bool use;
+    mat4 lightSpaceMatrix;
+};
+
+struct PointShadowMap {
+	samplerCube depthMap;
+    bool use;
+	mat4 lightSpaceMatrix;
+};
+
+uniform NormalShadowMap directionalShadowMap;
+uniform NormalShadowMap spotShadowMap[2];
+uniform PointShadowMap pointShadowMap[2];
 
 struct Material {
     // phong shading 전용.
@@ -48,7 +64,7 @@ uniform Light lights[MAX_LIGHTS];
 uniform vec3 cameraPos;
 
 float calcAttenuation(float distance,Light l) {
-	return 1.0 / (l.constant + l.linear * distance + l.quadratic * distance * distance);
+	return 1.0 / distance;
 }
 
 vec3 ambientIBL(Material material,vec3 normal, vec3 toEye) {
@@ -69,6 +85,7 @@ vec3 phongShading(
     vec3 toLightDirection, // 지표면 <- 빛 방향이다.
     vec3 normal,
     vec3 toEye,
+    float shadow,
     Material mat,
     vec3 ambientColor,
     vec3 diffuseColor,
@@ -80,11 +97,11 @@ vec3 phongShading(
 
     vec3 diffuse = lightStrength * mat.diffuse * diffuseColor * l.strength;
 
-    float spec = pow(max(dot(toEye, halfWayDir), 0.0), mat.shininess);
+    float spec = pow(max(dot(normal, halfWayDir), 0.0), mat.shininess);
 
 	vec3 specular = specularColor * mat.specular * l.strength * spec;
 
-	return ambient + diffuse;
+	return ambient + (diffuse + specular); * (1.0 - shadow);
 }
 
 vec3 directionalLight(
@@ -93,11 +110,13 @@ vec3 directionalLight(
     vec3 posWorld,
     vec3 normal,
     vec3 toEye,
+    float shadow,
     vec3 ambientColor,
     vec3 diffuseColor,
     vec3 specularColor) {
 
     vec3 lightVec = normalize(-l.direction);
+
     float lightStrength = max(dot(normal, lightVec), 0.0);
 
     return phongShading(
@@ -105,6 +124,7 @@ vec3 directionalLight(
         lightStrength,
         lightVec,normal,
         toEye,
+        shadow,
         mat,
         ambientColor,
         diffuseColor,
@@ -118,6 +138,7 @@ vec3 pointLight(
     vec3 posWorld,
     vec3 normal,
     vec3 toEye,
+    float shadow,
     vec3 ambientColor,
     vec3 diffuseColor,
     vec3 specularColor
@@ -137,6 +158,7 @@ vec3 pointLight(
         toLight,
         normal,
         toEye,
+        shadow,
         mat,
         ambientColor,
         diffuseColor,
@@ -150,6 +172,7 @@ vec3 spotLight(
     vec3 posWorld,
     vec3 normal,
     vec3 toEye,
+    float shadow,
     vec3 ambientColor,
     vec3 diffuseColor,
     vec3 specularColor
@@ -170,15 +193,18 @@ vec3 spotLight(
     // Theta가 Phi보다 크고 Theta보다 작으면 비로소 0~1 사이의 값이 나온다.
 
     float epsilon = l.cutOff - l.cutOuter;
-    float intensity = clamp((theta - l.cutOuter) / epsilon, mat.ambient.r, 1.0);
+    // as-is intensity 최대값 1
+    // to-be intensity 최대값 = 5
+    // 최대값이 1이면 스포트라이트가 너무 약하게 나와 한계를 늘려주었음.
+    float intensity = clamp((theta - l.cutOuter) / epsilon, mat.ambient.r, 5.0);
 
     float lightStrength = max(dot(normal, lightVec), 0.0);
     float distance = length(l.position - posWorld);
     float attenuation = calcAttenuation(distance,l);
 
-    ambientColor *= attenuation * intensity;
-    diffuseColor *= attenuation * intensity;
-    specularColor *= attenuation * intensity;
+    ambientColor *= attenuation * 4 * intensity;
+    diffuseColor *= attenuation * 4 * intensity;
+    specularColor *= attenuation * 4 * intensity;
 
     return phongShading(
         l,
@@ -186,6 +212,7 @@ vec3 spotLight(
 		lightVec,
         normal,
 		toEye,
+        shadow,
 		mat,
 		ambientColor,
 		diffuseColor,
@@ -209,4 +236,17 @@ vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 normal, vec3 lightDir) {
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    float closestDepth = texture(shadowMap.depthMap, projCoords.xy).r;
+
+    float currentDepth = projCoords.z;
+
+    return currentDepth - bias > closestDepth ? 1.0 : 0.0;
 }

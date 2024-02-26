@@ -27,7 +27,7 @@ std::string Shader::readShaderSource(const char* filePath)
     }
 }
 
-GLuint Shader::compileShader(const char* shaderCode, GLenum shaderType) {
+GLuint Shader::compileShader(const char* shaderCode, GLenum shaderType, const char* filePath) {
     GLuint shader = glCreateShader(shaderType);
     glShaderSource(shader, 1, &shaderCode, NULL);
     glCompileShader(shader);
@@ -39,6 +39,7 @@ GLuint Shader::compileShader(const char* shaderCode, GLenum shaderType) {
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cerr << "COMPILE ERROR OCCURED IN SHADER CODE : " << filePath << std::endl;
     }
 
     return shader;
@@ -51,7 +52,7 @@ GLuint Shader::getVertexShader(const char* filePath) {
         std::string vertexShaderSource = readShaderSource(filePath);
         std::string processedVertexShaderSource = ProcessShaderIncludes(vertexShaderSource, "./shader");
 
-        GLuint vertexShaderID = compileShader(processedVertexShaderSource.c_str(), GL_VERTEX_SHADER);
+        GLuint vertexShaderID = compileShader(processedVertexShaderSource.c_str(), GL_VERTEX_SHADER, filePath);
         shaderMap[filePath] = vertexShaderID;
         return vertexShaderID;
     }
@@ -66,7 +67,7 @@ GLuint Shader::getFragmentShader(const char* filePath) {
 		std::string fragmentShaderSource = readShaderSource(filePath);
         std::string processedFragmentShaderSource = ProcessShaderIncludes(fragmentShaderSource, "./shader");
 
-		GLuint fragmentShaderID = compileShader(processedFragmentShaderSource.c_str(), GL_FRAGMENT_SHADER);
+		GLuint fragmentShaderID = compileShader(processedFragmentShaderSource.c_str(), GL_FRAGMENT_SHADER, filePath);
 		shaderMap[filePath] = fragmentShaderID;
 		return fragmentShaderID;
 	}
@@ -81,7 +82,7 @@ GLuint Shader::getGeometryShader(const char* filePath) {
 		std::string geometryShaderSource = readShaderSource(filePath);
 		std::string processedGeometryShaderSource = ProcessShaderIncludes(geometryShaderSource, "./shader");
 
-		GLuint geometryShaderID = compileShader(processedGeometryShaderSource.c_str(), GL_GEOMETRY_SHADER);
+		GLuint geometryShaderID = compileShader(processedGeometryShaderSource.c_str(), GL_GEOMETRY_SHADER, filePath);
 		shaderMap[filePath] = geometryShaderID;
 		return geometryShaderID;
 	}

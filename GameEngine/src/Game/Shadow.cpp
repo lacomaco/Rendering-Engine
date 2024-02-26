@@ -1,8 +1,11 @@
 #include "Shadow.h"
 #include <glew.h>
+#include "../Constants.h"
 
 Shadow::Shadow() {
 	glGenFramebuffers(1, &depthMapFrameBuffer);
+
+	std::cout << "shadow 생성 " << std::endl;
 
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -57,13 +60,74 @@ Shadow::Shadow() {
 	glReadBuffer(GL_NONE);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// 디버깅용도 vao,vbo 생성
+	quadVertices = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		quadVertices.size() * sizeof(float),
+		&quadVertices[0],
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		4 * sizeof(float),
+		(void*)0
+	);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(
+		1,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		4 * sizeof(float),
+		(void*)(2 * sizeof(float))
+	);
 }
 
-void Shadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, Camera* camera) {
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFrameBuffer);
+void Shadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, glm::mat4 lightSpaceMatrix) {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram("shadow");
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	meshRenderer->Draw("shadow",camera);
+	glUseProgram(program);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+	shader->setMat4("shadow", "lightSpaceMatrix", lightSpaceMatrix);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFrameBuffer);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		meshRenderer->Draw("shadow");
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Shadow::showDepthMap() {
+	auto shader = Shader::getInstance()->getShaderProgram("shadow-debug");
+	glUseProgram(shader);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // 컬러버퍼
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }

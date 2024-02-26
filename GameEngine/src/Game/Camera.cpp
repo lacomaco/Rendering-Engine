@@ -29,7 +29,7 @@ Camera::Camera(float fov, int width, int height) {
 
 	view = glm::lookAt(
 		cameraPos,
-		cameraPos + cameraFront,
+		cameraDirection,
 		cameraUp
 	);
 }
