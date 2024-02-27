@@ -30,7 +30,7 @@ bool LightManager::CreateLight(
 
 	auto light = make_shared<Light>();
 	light->lightType = lightType;
-	light->direction = direction;
+	light->direction = glm::normalize(direction);
 	light->setPosition(position);
 	light->lightPower = lightPower;
 	light->cutOff = cutOff;

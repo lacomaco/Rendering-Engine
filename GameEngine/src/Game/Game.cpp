@@ -45,7 +45,7 @@ void Game::GenerateOutput() {
 
 	lightManager->MakeShadow(meshRenderer);
 
-	lightManager->lights[0]->shadow->showDepthMap();
+	//lightManager->lights[0]->shadow->showDepthMap();
 
 	postProcessingFrameBuffer->use();
 	cubeMap->PutCubeMapTexture("default");
@@ -114,8 +114,8 @@ bool Game::Initialize() {
 
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
@@ -207,7 +207,7 @@ bool Game::Initialize() {
 	(
 		2,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-1.513,2.007,-3.706),
+		glm::vec3(-1.513, 2.007, -3.706),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
@@ -261,7 +261,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	lightManager->UpdateLight(deltaTime);
+	//lightManager->UpdateLight(deltaTime);
 	lightManager->lights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);

@@ -247,7 +247,7 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 normal, vec3 lightDir) {
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.003 * (1.0 - dot(normal, lightDir)), 0.003);
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
