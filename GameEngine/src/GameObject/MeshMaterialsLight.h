@@ -4,6 +4,7 @@
 #include <string>
 #include "../Util/Shader.h"
 #include "assimp/aabb.h"
+#include "FresnelIRO.hpp"
 
 struct Vertex {
 	glm::vec3 position;
@@ -65,6 +66,8 @@ public:
 	glm::vec3 ambient = glm::vec3(0.1f);
 	glm::vec3 diffuse = glm::vec3(1.0f);
 	glm::vec3 specular = glm::vec3(1.0f);
+
+	FresnelIRO type = FresnelIRO::DEFAULT;
 
 	void PutMaterialUniforms(const char* shaderProgramName);
 };

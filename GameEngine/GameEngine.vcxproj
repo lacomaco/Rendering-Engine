@@ -161,6 +161,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\FresnelIRO.hpp" />
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h" />
     <ClInclude Include="src\Game\PostProcessingFrameBuffer.h" />
     <ClInclude Include="src\Game\MeshRenderer.h" />
@@ -439,6 +440,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\FresnelIRO.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp" />
     <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp" />
     <ClCompile Include="src\Game\MeshRenderer.cpp" />

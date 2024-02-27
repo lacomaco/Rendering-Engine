@@ -104,6 +104,10 @@ glm::vec3 Light::getPosition() {
 	return box->position;
 }
 
+void Light::lookHere(glm::vec3 point) {
+	direction = glm::normalize(point - getPosition());
+}
+
 void Light::setPosition(glm::vec3 position) {
 	box->position = position;
 }

@@ -202,10 +202,13 @@ void Material::PutMaterialUniforms(const char* shaderProgramName) {
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(shaderProgramName);
 
+	auto fresnelData = FresnelData[type];
+
 	glUseProgram(program);
 
 	shader->setVec3(shaderProgramName, "material.ambient", ambient);
 	shader->setVec3(shaderProgramName, "material.specular", specular);
 	shader->setVec3(shaderProgramName, "material.diffuse", diffuse);
 	shader->setFloat(shaderProgramName, "material.shininess", shininess);
+	shader->setVec3(shaderProgramName, "material.fresnelIRO", fresnelData);
 }

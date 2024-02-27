@@ -37,6 +37,8 @@ struct Material {
     vec3 specular;
 
     float shininess;
+
+    vec3 fresnelIRO;
 };
 
 uniform Material material;
@@ -62,6 +64,8 @@ struct Light {
 uniform Light lights[MAX_LIGHTS];
 
 uniform vec3 cameraPos;
+
+vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye); // 전방선언
 
 float calcAttenuation(float distance,Light l) {
 	return 1.0 / distance;
@@ -100,6 +104,10 @@ vec3 phongShading(
     float spec = pow(max(dot(normal, halfWayDir), 0.0), mat.shininess);
 
 	vec3 specular = specularColor * mat.specular * l.strength * spec;
+
+    vec3 f = schlickFresnel(mat.fresnelIRO,normal,toEye);
+
+    specular *= f;
 
 	return ambient + (diffuse + specular) * (1.0 - shadow);
 }
@@ -249,4 +257,18 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
     float currentDepth = projCoords.z;
 
     return currentDepth - bias > closestDepth ? 1.0 : 0.0;
+}
+
+/*
+https://psgraphics.blogspot.com/2020/03/fresnel-equations-schlick-approximation.html
+
+vec3 R0 = (guess by looking)
+vec3 R = R0 + (1-R0)*pow(1-cosine,5)
+*/
+vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye) {
+    float lookAngle = dot(normal,toEye);
+    // 90도에 가까우면 본연의 색을, 0도에 가까우면 반사색을 반환.
+    lookAngle = 1.0 - clamp(lookAngle,0.0,1.0);
+
+    return iro + (1.0f - iro) * pow(lookAngle,5.0);
 }

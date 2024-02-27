@@ -56,6 +56,7 @@ public:
 	glm::vec3 getPosition();
 
 	void setPosition(glm::vec3 position);
+	void lookHere(glm::vec3 point);
 
 	glm::quat yRotationQuat = glm::angleAxis(
 		glm::radians(0.0f), 
