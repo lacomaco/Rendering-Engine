@@ -247,16 +247,29 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 normal, vec3 lightDir) {
-    float bias = max(0.003 * (1.0 - dot(normal, lightDir)), 0.003);
+    float bias = 0.001;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
+
+    // z값을 조금 높여 색을 가져온다. 큐브와 바닥이 바짝 붙어있으면 그림자가 생기지 않는 이슈가 있다.
+    projCoords.z = projCoords.z + 0.01;
 
     float closestDepth = texture(shadowMap.depthMap, projCoords.xy).r;
 
     float currentDepth = projCoords.z;
 
-    return currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.1;
+
+    vec2 texelSize = 1.0 / textureSize(shadowMap.depthMap, 0);
+    for(int x = -1; x <= 1; ++x) {
+		for(int y = -1; y <= 1; ++y) {
+			float pcfDepth = texture(shadowMap.depthMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+
+    return shadow / 9.0;
 }
 
 /*

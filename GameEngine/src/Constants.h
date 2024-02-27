@@ -32,3 +32,7 @@
 #ifndef TEXTURE_START
 #define TEXTURE_START 8
 #endif
+
+#ifndef BIAS
+#define BIAS 0.005f
+#endif

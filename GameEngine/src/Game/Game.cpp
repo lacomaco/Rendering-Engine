@@ -261,7 +261,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	//lightManager->UpdateLight(deltaTime);
+	lightManager->UpdateLight(deltaTime);
 	lightManager->lights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);
