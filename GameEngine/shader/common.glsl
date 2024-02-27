@@ -259,7 +259,7 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
 
     float currentDepth = projCoords.z;
 
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.1;
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
     vec2 texelSize = 1.0 / textureSize(shadowMap.depthMap, 0);
     for(int x = -1; x <= 1; ++x) {
