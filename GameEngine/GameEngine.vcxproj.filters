@@ -1372,6 +1372,7 @@
     <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-debug-fragment.glsl" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
