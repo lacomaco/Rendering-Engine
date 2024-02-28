@@ -637,7 +637,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\shadow-vertex.glsl" />
     <None Include="shader\stencil-layout-fragment.glsl" />
     <None Include="shader\stencil-layout-vertex.glsl" />
-    <None Include=".gitignore" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>
