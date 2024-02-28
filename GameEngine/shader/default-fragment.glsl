@@ -34,7 +34,7 @@ void main() {
 				directionalLightShadowSpace,
 				directionalShadowMap,
 				normalWorld,
-				-light.direction
+				normalize(light.position - posWorld)
 			);
 
 			color += directionalLight(
@@ -68,7 +68,7 @@ void main() {
 				spotLightShadowSpace[spotLightCount],
 				spotShadowMap[spotLightCount],
 				normalWorld,
-				-light.direction
+				normalize(light.position - posWorld)
 			);
 
 			spotLightCount++;

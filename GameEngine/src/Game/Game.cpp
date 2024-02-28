@@ -27,20 +27,22 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
+	/*
 	meshRenderer->AddMesh(plane);
 
 	for (int i = 0; i < 1; i++) {
 		meshRenderer->AddMesh(box[i]);
 	}
+	*/
 
 	/*
 	for (int i = 0; i < grass.size(); i++) {
 		meshRenderer->AddMesh(grass[i]);
 	}
 	*/
-	//meshRenderer->AddMesh(circle[0]);
+	meshRenderer->AddMesh(circle[0]);
 
-	//meshRenderer->AddMesh(backPack);
+	meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
@@ -183,7 +185,7 @@ bool Game::Initialize() {
 	this->circle.push_back(_circle);
 
 	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
@@ -202,12 +204,26 @@ bool Game::Initialize() {
 
 	lightManager = LightManager::getInstance();
 
+	/*
+	* 스폰자 태양
+	* 	
+	lightManager->CreateLight
+	(
+		0,
+		//glm::vec3(0.0f, 3.0f, 5.0f),
+		glm::vec3(0, 20, -0.001),
+		glm::vec3(-0.042, -0.390, 0.952),
+		12
+	);
+
+	y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
+	*/
 	// 손전등.
 	lightManager->CreateLight
 	(
-		2,
+		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-1.513, 2.007, -3.706),
+		glm::vec3(0, 3, 0),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
@@ -261,7 +277,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	lightManager->UpdateLight(deltaTime);
+	//lightManager->UpdateLight(deltaTime);
 	lightManager->lights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);

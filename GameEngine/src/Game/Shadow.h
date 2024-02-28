@@ -3,12 +3,13 @@
 #include "MeshRenderer.h"
 #include "Camera.h"
 #include <memory>
+#include "ShadowInterface.h"
 
-class Shadow
+class Shadow : public ShadowInterface
 {
 private:
-	const unsigned int SHADOW_WIDTH = 1024;
-	const unsigned int SHADOW_HEIGHT = 1024;
+	const unsigned int SHADOW_WIDTH = 2048 * 2;
+	const unsigned int SHADOW_HEIGHT = 2048 * 2;
 
 	// µð¹ö±ë¿ëµµ vao
 	unsigned int quadVAO;

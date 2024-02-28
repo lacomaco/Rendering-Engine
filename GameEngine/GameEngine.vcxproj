@@ -161,6 +161,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\PointShadow.h" />
     <ClInclude Include="src\GameObject\FresnelIRO.hpp" />
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h" />
     <ClInclude Include="src\Game\PostProcessingFrameBuffer.h" />
@@ -170,6 +171,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Model.h" />
     <ClInclude Include="src\Game\Shadow.h" />
+    <ClInclude Include="src\Game\ShadowInterface.h" />
     <ClInclude Include="src\Util\CommonMath.h" />
     <ClInclude Include="src\Game\Input.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Circle.h" />
@@ -440,6 +442,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\PointShadow.cpp" />
     <ClCompile Include="src\GameObject\FresnelIRO.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp" />
     <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp" />

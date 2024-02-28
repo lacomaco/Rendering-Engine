@@ -94,6 +94,12 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_TRUE
 	);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	// 프레임버퍼 - 텍스처 연결할때 사용하는 함수.
+	// target: 연결 대상 프레임버퍼
+	// attachment: 텍스처 종료, COLOR_ATTACHMENT0 <- 컬러버퍼
+	// texTarget: 연결할 텍스처 종류
+	// texTarget : 텍스처 ID
+	// level: mip level
 	glFramebufferTexture2D(
 		GL_FRAMEBUFFER,
 		GL_COLOR_ATTACHMENT0,

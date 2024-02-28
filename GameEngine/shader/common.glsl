@@ -109,7 +109,8 @@ vec3 phongShading(
 
     specular *= f;
 
-	return ambient + (diffuse + specular) * (1.0 - shadow);
+    // 잠시 specular 연산 제외.
+	return ambient + (diffuse) * (1.0 - shadow);
 }
 
 vec3 directionalLight(
@@ -253,7 +254,10 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
     projCoords = projCoords * 0.5 + 0.5;
 
     // z값을 조금 높여 색을 가져온다. 큐브와 바닥이 바짝 붙어있으면 그림자가 생기지 않는 이슈가 있다.
-    projCoords.z = projCoords.z + 0.01;
+    //projCoords.z = projCoords.z + 0.01;
+    //projCoords.y = projCoords.y + 0.0001;
+
+    projCoords += lightDir * 0.0001;
 
     float closestDepth = texture(shadowMap.depthMap, projCoords.xy).r;
 
@@ -262,14 +266,16 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
     vec2 texelSize = 1.0 / textureSize(shadowMap.depthMap, 0);
-    for(int x = -1; x <= 1; ++x) {
-		for(int y = -1; y <= 1; ++y) {
-			float pcfDepth = texture(shadowMap.depthMap, projCoords.xy + vec2(x, y) * texelSize).r;
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-		}
-	}
+    const int halfkernelWidth = 2;
 
-    return shadow / 9.0;
+    for(int x = -halfkernelWidth; x <= halfkernelWidth; ++x) {
+        for(int y = -halfkernelWidth; y <= halfkernelWidth; ++y){
+            float pcfDepth = texture(shadowMap.depthMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / ((halfkernelWidth * 2 + 1) * (halfkernelWidth * 2 + 1));
 }
 
 /*

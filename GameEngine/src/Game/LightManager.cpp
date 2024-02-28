@@ -28,8 +28,7 @@ bool LightManager::CreateLight(
 		return false;
 	}
 
-	auto light = make_shared<Light>();
-	light->lightType = lightType;
+	auto light = make_shared<Light>(lightType);
 	light->direction = glm::normalize(direction);
 	light->setPosition(position);
 	light->lightPower = lightPower;

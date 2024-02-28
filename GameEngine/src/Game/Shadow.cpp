@@ -28,7 +28,6 @@ Shadow::Shadow() {
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 
-
 	glBindFramebuffer(
 		GL_FRAMEBUFFER,
 		depthMapFrameBuffer
@@ -93,9 +92,6 @@ Shadow::Shadow() {
 
 void Shadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, glm::mat4 lightSpaceMatrix) {
 	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram("shadow");
-
-	glUseProgram(program);
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 

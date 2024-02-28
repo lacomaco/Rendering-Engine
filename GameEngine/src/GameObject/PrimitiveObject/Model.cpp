@@ -196,6 +196,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		mat->GetTexture(type, i, &str);
 		bool skip = false;
 
+		if (type == aiTextureType::aiTextureType_SPECULAR) {
+			std::cout << "specular 이미지 존재함." << std::endl;
+		}
+
 		auto fileName = ExtractFileName(str.C_Str());
 
 		for (unsigned int j = 0; j < textures_loaded.size(); j++)

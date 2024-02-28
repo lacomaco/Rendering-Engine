@@ -22,7 +22,7 @@ std::vector<LightPower> Light::lightPowers = {
 	{1.0f,0.0014f,0.000007f}, // distance 3250 // 12
 };
 
-Light::Light() {
+Light::Light(int lightType) {
 	box = make_shared<Box>();
 	box->SetTexture("./assets/images/white.png", "albedo");
 	box->SetupMesh();
@@ -30,6 +30,15 @@ Light::Light() {
 	box->position = glm::vec3(1.0f, 1.0f, 0.0f);
 
 	shadow = make_shared<Shadow>();
+
+	this->lightType = lightType;
+
+	if (lightType == 1) {
+		_shadow = make_shared<PointShadow>();
+	}
+	else {
+		_shadow = make_shared<Shadow>();
+	}
 }
 
 void Light::Draw(const char* shaderProgramName) {
@@ -39,7 +48,7 @@ void Light::Draw(const char* shaderProgramName) {
 void Light::CalculateLightSpaceMatrix() {
 	glm::mat4 lightProjection, lightView;
 
-	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+	lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near, far);
 
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 lightRight = glm::normalize(glm::cross(up, direction));
@@ -54,10 +63,25 @@ void Light::CalculateLightSpaceMatrix() {
 	lightSpaceMatrix = lightProjection * lightView;
 }
 
-void Light::MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
+void Light::MakeDirectionalShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
 	CalculateLightSpaceMatrix();
-
 	shadow->WriteDepthMap(meshRenderer, lightSpaceMatrix);
+}
+
+void Light::MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
+	// TODO: 포인트 쉐이더 만드는 로직 만들것
+
+	// 1. 뷰포트를 90도씩 회전시키면서 6개의 그림자맵을 만들어야한다. 현재 포인터를 기준으로 회전하는 매트릭스 6개 생성 하기.
+	// 2. shaodw->WriteDepthMap 호출.
+}
+
+void Light::MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
+	if (lightType == 1) {
+		// TODO: MakePointShadow 함수 완성하면 호출
+	}
+	else {
+		MakeDirectionalShadow(shaderProgramName, meshRenderer);
+	}
 }
 
 

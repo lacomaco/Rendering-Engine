@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Camera.h"
 #include "Shadow.h"
+#include "PointShadow.h"
+#include "ShadowInterface.h"
 
 class Shadow;
 
@@ -25,12 +27,15 @@ private:
 	// 그림자 계산을 위한 near,far값.
 	// 멀리있는 물체는 그림자를 생성하지 않는다.
 	float near = 0.1f;
-	float far = 10.0f;
+	float far = 30.0f;
 
 public:
 	shared_ptr<Box> box;
 	shared_ptr<Shadow> shadow;
-	Light();
+
+	shared_ptr<ShadowInterface> _shadow;
+
+	Light(int lightType);
 	glm::mat4 lightSpaceMatrix;
 	void Draw(const char* shaderProgramName);
 	// 0 : directional , 1 : point, 2 : spot
@@ -50,6 +55,8 @@ public:
 	// 그림자 매핑시 시야 변환을 위한 유니폼 생성용 함수.
 	void MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
 	void PutShadowMap(const char* shaderProgramName,int index, int current);
+	void MakeDirectionalShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
+	void MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
 
 	void PutLightUniform(const char* shaderProgramName, int lightPosition);
 

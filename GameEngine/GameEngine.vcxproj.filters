@@ -846,6 +846,12 @@
     <ClInclude Include="src\GameObject\FresnelIRO.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\PointShadow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\ShadowInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -939,6 +945,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\FresnelIRO.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\PointShadow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
