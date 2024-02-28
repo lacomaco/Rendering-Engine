@@ -31,9 +31,8 @@ private:
 
 public:
 	shared_ptr<Box> box;
-	shared_ptr<Shadow> shadow;
 
-	shared_ptr<ShadowInterface> _shadow;
+	shared_ptr<ShadowInterface> shadow;
 
 	Light(int lightType);
 	glm::mat4 lightSpaceMatrix;

@@ -383,4 +383,11 @@ void Game::CreateShaderProgram() {
 		"./shader/shadow-debug-fragment.glsl",
 		"shadow-debug"
 	);
+
+	shader->loadShaderProgram(
+		"./shader/point-shadow-vertex.glsl",
+		"./shader/point-shadow-fragment.glsl",
+		"point-shadow",
+		"./shader/point-shadow-geometry.glsl"
+	);
 }

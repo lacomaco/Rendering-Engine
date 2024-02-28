@@ -17,7 +17,12 @@ public:
 	unsigned int depthCubeMap;
 	unsigned int depthMapFBO;
 
-	void WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, std::vector<glm::mat4> lightSpaceMatrix);
+	void WriteDepthMap(
+		shared_ptr<MeshRenderer> meshRenderer, 
+		std::vector<glm::mat4> lightSpaceMatrix, 
+		float far,
+		glm::vec3 position
+	);
 };
 
 

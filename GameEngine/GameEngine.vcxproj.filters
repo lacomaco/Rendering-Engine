@@ -1372,6 +1372,9 @@
     <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-debug-fragment.glsl" />
+    <None Include="shader\point-shadow-vertex.glsl" />
+    <None Include="shader\point-shadow-geometry.glsl" />
+    <None Include="shader\point-shadow-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

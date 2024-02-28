@@ -37,7 +37,8 @@ PointShadow::PointShadow()
 
 }
 
-void PointShadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, std::vector<glm::mat4> lightSpaceMatrix)
+void PointShadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, std::vector<glm::mat4> lightSpaceMatrix, float far,
+	glm::vec3 position)
 {
 
 	auto shader = Shader::getInstance();
@@ -46,6 +47,9 @@ void PointShadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, std::vect
 	{
 		shader->setMat4("point-shadow", "shadowMatrices", matrix);
 	}
+
+	shader->setFloat("point-shadow", "far_plane", far);
+	shader->setVec3("point-shadow", "lightPos", position);
 
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);

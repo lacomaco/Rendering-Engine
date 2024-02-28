@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include "../Constants.h"
+#include "glm/gtx/transform.hpp"
 
 
 // 0번 <- 태양 예약 1~12번까지 사용가능.
@@ -29,15 +30,13 @@ Light::Light(int lightType) {
 	box->scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	box->position = glm::vec3(1.0f, 1.0f, 0.0f);
 
-	shadow = make_shared<Shadow>();
-
 	this->lightType = lightType;
 
 	if (lightType == 1) {
-		_shadow = make_shared<PointShadow>();
+		shadow = make_shared<PointShadow>();
 	}
 	else {
-		_shadow = make_shared<Shadow>();
+		shadow = make_shared<Shadow>();
 	}
 }
 
@@ -70,9 +69,25 @@ void Light::MakeDirectionalShadow(const char* shaderProgramName, shared_ptr<Mesh
 
 void Light::MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
 	// TODO: 포인트 쉐이더 만드는 로직 만들것
+	float aspect = 1.0;
+	float near = 1.0f;
+	float far = 30.0f;
+	// 90도씩 화면을 찍을 예정이여서 90 radian
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+
+	std::vector<glm::mat4> shadowTransforms;
+
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(getPosition(), getPosition() + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
 	// 1. 뷰포트를 90도씩 회전시키면서 6개의 그림자맵을 만들어야한다. 현재 포인터를 기준으로 회전하는 매트릭스 6개 생성 하기.
 	// 2. shaodw->WriteDepthMap 호출.
+
+	shadow->WriteDepthMap(meshRenderer, shadowTransforms,far,getPosition());
 }
 
 void Light::MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
@@ -143,7 +158,7 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 		shader->setBool(shaderProgramName, "directionalShadowMap.use", 1);
 		shader->setMat4(shaderProgramName, "directionalShadowMap.lightSpaceMatrix", lightSpaceMatrix);
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
-		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
+		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(0));
 		shader->setInt(shaderProgramName, "directionalShadowMap.depthMap", TEXTURE_SKYBOX_OFFSET + current);
 	}
 	else if (lightType == 1) {
@@ -151,7 +166,7 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 		shader->setMat4(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].lightSpaceMatrix").c_str(), lightSpaceMatrix);
 
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, shadow->depthMap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, shadow->getDepthMapTexture(1));
 		shader->setInt(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].depthMap").c_str(), TEXTURE_SKYBOX_OFFSET + current);
 	}
 	else if (lightType == 2) {
@@ -159,7 +174,7 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 		shader->setMat4(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].lightSpaceMatrix").c_str(), lightSpaceMatrix);
 
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
-		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
+		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(2));
 		shader->setInt(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].depthMap").c_str(), TEXTURE_SKYBOX_OFFSET + current);
 	}
 }
