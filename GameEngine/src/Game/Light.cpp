@@ -141,7 +141,7 @@ void Light::Update(float deltaTime) {
 glm::vec3 Light::getPosition() {
 	return box->position;
 }
-
+ 
 void Light::lookHere(glm::vec3 point) {
 	direction = glm::normalize(point - getPosition());
 }
@@ -161,21 +161,21 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 	if (lightType == 0) {
 		shader->setBool(shaderProgramName, "directionalShadowMap.use", 1);
 		shader->setMat4(shaderProgramName, "directionalShadowMap.lightSpaceMatrix", lightSpaceMatrix);
-		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
+		glActiveTexture(GL_TEXTURE0 + current);
 		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(0));
-		shader->setInt(shaderProgramName, "directionalShadowDepthMap", TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, "directionalShadowDepthMap", current);
 	}
 	else if (lightType == 1) {
-		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
+		glActiveTexture(GL_TEXTURE0 + current);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, shadow->getDepthMapTexture(1));
-		shader->setInt(shaderProgramName, ("pointShadowDepthMap[" + std::to_string(index) + "]").c_str(), TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, ("pointShadowDepthMap[" + std::to_string(index) + "]").c_str(), current);
 	}
 	else if (lightType == 2) {
 		shader->setBool(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].use").c_str(), 1);
 		shader->setMat4(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].lightSpaceMatrix").c_str(), lightSpaceMatrix);
 
-		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
+		glActiveTexture(GL_TEXTURE0 + current);
 		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(2));
-		shader->setInt(shaderProgramName, ("spotShadowDepthMap[" + std::to_string(index) + "]").c_str(), TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, ("spotShadowDepthMap[" + std::to_string(index) + "]").c_str(), current);
 	}
 }

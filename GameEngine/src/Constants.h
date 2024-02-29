@@ -30,7 +30,7 @@
 #endif
 
 #ifndef TEXTURE_START
-#define TEXTURE_START 8
+#define TEXTURE_START 9
 #endif
 
 #ifndef BIAS

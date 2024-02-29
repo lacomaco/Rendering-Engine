@@ -1,6 +1,9 @@
 #include "LightManager.h"
 #include <random>
 #include "../Util/Shader.h"
+#include "../Constants.h"
+#include "../Util/DummyTexture2D.h"
+#include "../Util/DummyTextureCube.h"
 
 LightManager* LightManager::instance = nullptr;
 
@@ -67,32 +70,73 @@ void LightManager::PutLightUniform(const char* programName) {
 	shader->setBool(programName, "pointShadowMap[1].use", 0);
 	shader->setBool(programName, "spotShadowMap[1].use", 0);
 
+	int textureOffset = TEXTURE_SKYBOX_OFFSET;
+
 	int directionalCount = 0;
+
+	// directional light 처리.
+	int putDirectionCount = 0;
+	for (int i = 0; i < directionLights.size(); i++) {
+		auto& light = directionLights[i];
+		if (light->lightType == 0) {
+			light->PutLightUniform(programName, putDirectionCount);
+			light->PutShadowMap(programName, putDirectionCount, textureOffset);
+			textureOffset++;
+			putDirectionCount++;
+		}
+	}
+
+	auto dummyTexture = DummyTexture2D::getInstance();
+	// directional light를 안넣었다면 더미 sampler2D를 넣어준다.
+
+	if (putDirectionCount == 0) {
+		glActiveTexture(GL_TEXTURE0 + textureOffset);
+		shader->setBool(programName, "directionalShadowMap.use", 0);
+		glBindTexture(GL_TEXTURE_2D, dummyTexture->dummyTexture2D);
+		shader->setInt(programName, "directionalShadowDepthMap", textureOffset);
+		textureOffset++;
+	}
+
+	// spotLight 처리
 	int spotCount = 0;
 
 	for (int i = 0; i < directionLights.size(); i++) {
 		auto& light = directionLights[i];
-		light->PutLightUniform(programName, i);
-
-		int index = 0;
-		if (light->lightType == 0) {
-			index = directionalCount;
-			directionalCount++;
-		}
-		else if (light->lightType == 2) {
-			index = spotCount;
+		if (light->lightType == 2) {
+			light->PutLightUniform(programName, spotCount);
+			light->PutShadowMap(programName, spotCount, textureOffset);
+			textureOffset++;
 			spotCount++;
 		}
-
-		light->PutShadowMap(programName, index,i);
 	}
+
+	// spotLight 안넣은만큼 더미 sampler2D를 넣어준다.
+	for (int i = spotCount; i < 2; i++) {
+		glActiveTexture(GL_TEXTURE0 + textureOffset);
+		glBindTexture(GL_TEXTURE_2D, dummyTexture->dummyTexture2D);
+		shader->setBool(programName, ("spotShadowMap[" + std::to_string(i) + "].use").c_str(), 0);
+		shader->setInt(programName, ("spotShadowDepthMap[" + std::to_string(i) + "]").c_str(), textureOffset);
+		textureOffset++;
+	}
+
+
+	auto dummyCubeTexture = DummyTextureCube::getInstance();
+	int pointCount = 0;
 
 	for (int i = 0; i < pointLights.size(); i++) {
 		auto& light = pointLights[i];
 		light->PutLightUniform(programName, i);
-
 		// 쉐도우 깊이맵 텍스처 바인딩 겹치는걸 피하기 위해서 index를 directionLight 다음으로 설정함.
-		light->PutShadowMap(programName, i,i + directionLights.size());
+		light->PutShadowMap(programName, i,textureOffset);
+		textureOffset++;
+	}
+
+	// pointLight 안넣은만큼 더미 samplerCube를넣어준다.
+	for (int i = pointCount; i < 2; i++) {
+		glActiveTexture(GL_TEXTURE0 + textureOffset);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, dummyCubeTexture->dummyTextureCube);
+		shader->setInt(programName, ("pointShadowDepthMap[" + std::to_string(i) + "]").c_str(), textureOffset);
+		textureOffset++;
 	}
 }
 

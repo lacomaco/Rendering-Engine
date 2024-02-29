@@ -1,4 +1,6 @@
 #define MAX_LIGHTS 5
+#define MAX_SPOT_LIGHT 2
+#define MAX_POINT_LIGHT 2
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -29,10 +31,10 @@ struct NormalShadowMap {
 uniform NormalShadowMap directionalShadowMap;
 uniform sampler2D directionalShadowDepthMap;
 
-uniform NormalShadowMap spotShadowMap[2];
-uniform sampler2D spotShadowDepthMap[2];
+uniform NormalShadowMap spotShadowMap[MAX_SPOT_LIGHT];
+uniform sampler2D spotShadowDepthMap[MAX_SPOT_LIGHT];
 
-uniform samplerCube pointShadowDepthMap[2];
+uniform samplerCube pointShadowDepthMap[MAX_POINT_LIGHT];
 
 struct Material {
     // phong shading Àü¿ë.
@@ -294,7 +296,7 @@ float pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
 
     float currentDepth = length(posToLight);
 
-    float bias = 0.001;
+    float bias = 0.05;
 
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 

@@ -1,4 +1,4 @@
-#version 410 core
+#version 460 core
 #include common.glsl
 
 out vec4 FragColor;
@@ -71,17 +71,16 @@ void main() {
 			);
 		}
 	}
-	/*
-	for(int i = 0; i < pointLightCount; i++){
+	
+	for(int i = 0; i < pointLightCount; i++) {
 		float shadow = 0.0;
-		Light light = pointLights[0];
+		Light light = pointLights[i]; // 현재 조명
 
-		shadow = pointShadowCalculation(
-			posWorld,
+	    shadow = pointShadowCalculation(
+		    posWorld,
 			light,
-			pointShadowDepthMap[0]
+			pointShadowDepthMap[i]
 		);
-
 
 		color += pointLight(
 			light,
@@ -95,7 +94,7 @@ void main() {
 			specularColor
 		);
 	}
-	*/
+	
 
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 

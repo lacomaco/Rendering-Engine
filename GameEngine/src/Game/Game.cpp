@@ -203,7 +203,7 @@ bool Game::Initialize() {
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
 	lightManager = LightManager::getInstance();
-
+	
 	lightManager->CreateLight
 	(
 		0,
@@ -212,7 +212,7 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
-	
+
 	// Æ÷ÀÎÆ®.
 	/*
 	lightManager->CreateLight
@@ -224,7 +224,6 @@ bool Game::Initialize() {
 		12
 	);
 	*/
-	
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 

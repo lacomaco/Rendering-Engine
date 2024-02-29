@@ -1,4 +1,4 @@
-#version 410 core
+#version 460 core
 #include common.glsl
 
 layout (triangles) in;

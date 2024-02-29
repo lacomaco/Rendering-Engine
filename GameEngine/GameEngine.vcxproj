@@ -161,6 +161,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Util\DummyTextureCube.h" />
+    <ClInclude Include="src\Util\DummyTexture2D.h" />
     <ClInclude Include="src\Game\PointShadow.h" />
     <ClInclude Include="src\GameObject\FresnelIRO.hpp" />
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h" />
@@ -442,6 +444,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Util\DummyTextureCube.cpp" />
+    <ClCompile Include="src\Util\DummyTexture2D.cpp" />
     <ClCompile Include="src\Game\PointShadow.cpp" />
     <ClCompile Include="src\GameObject\FresnelIRO.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp" />
