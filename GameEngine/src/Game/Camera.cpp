@@ -8,7 +8,7 @@
 #include "../Game/ImguiController.h"
 
 Camera::Camera(float fov, int width, int height) {
-	projection = glm::perspective(fov, float(width) / height, near, far);
+	projection = glm::perspective(glm::radians(fov), float(width) / height, near, far);
 	cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 	cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);

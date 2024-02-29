@@ -68,10 +68,7 @@ void Light::MakeDirectionalShadow(const char* shaderProgramName, shared_ptr<Mesh
 }
 
 void Light::MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
-	// TODO: 포인트 쉐이더 만드는 로직 만들것
 	float aspect = 1.0;
-	float near = 1.0f;
-	float far = 30.0f;
 	// 90도씩 화면을 찍을 예정이여서 90 radian
 	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
 
@@ -90,12 +87,12 @@ void Light::MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRender
 	shadow->WriteDepthMap(meshRenderer, shadowTransforms,far,getPosition());
 }
 
-void Light::MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer) {
+void Light::MakeShadow(shared_ptr<MeshRenderer> meshRenderer) {
 	if (lightType == 1) {
-		// TODO: MakePointShadow 함수 완성하면 호출
+		MakePointShadow("point-shadow", meshRenderer);
 	}
 	else {
-		MakeDirectionalShadow(shaderProgramName, meshRenderer);
+		MakeDirectionalShadow("shadow", meshRenderer);
 	}
 }
 
@@ -154,6 +151,11 @@ void Light::setPosition(glm::vec3 position) {
 void Light::PutShadowMap(const char* shaderProgramName, int index, int current) {
 	auto shader = Shader::getInstance();
 
+	auto program = shader->getShaderProgram(shaderProgramName);
+	glUseProgram(program);
+
+	shader->setFloat(shaderProgramName, "far", far);
+
 	if (lightType == 0) {
 		shader->setBool(shaderProgramName, "directionalShadowMap.use", 1);
 		shader->setMat4(shaderProgramName, "directionalShadowMap.lightSpaceMatrix", lightSpaceMatrix);
@@ -163,7 +165,6 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 	}
 	else if (lightType == 1) {
 		shader->setBool(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].use").c_str(), 1);
-		shader->setMat4(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].lightSpaceMatrix").c_str(), lightSpaceMatrix);
 
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, shadow->getDepthMapTexture(1));

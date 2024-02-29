@@ -14,6 +14,8 @@ uniform samplerCube skyBox;
 uniform samplerCube radianceMap;
 uniform samplerCube irradianceMap;
 
+uniform float far;
+
 struct NormalShadowMap {
 	sampler2D depthMap;
     bool use;
@@ -23,7 +25,6 @@ struct NormalShadowMap {
 struct PointShadowMap {
 	samplerCube depthMap;
     bool use;
-	mat4 lightSpaceMatrix;
 };
 
 uniform NormalShadowMap directionalShadowMap;
@@ -276,6 +277,22 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
     }
 
     return shadow / ((halfkernelWidth * 2 + 1) * (halfkernelWidth * 2 + 1));
+}
+
+float pointShadowCalculation(vec3 posWorld,Light light,samplerCube shadowMap){
+    vec3 posToLight = posWorld - light.position;
+
+    float closestDepth = texture(shadowMap, posToLight).r;
+
+    closestDepth *= far;
+
+    float currentDepth = length(posToLight);
+
+    float bias = 0.001;
+
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+    return shadow;
 }
 
 /*

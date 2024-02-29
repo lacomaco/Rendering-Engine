@@ -60,7 +60,7 @@ void Game::GenerateOutput() {
 	cubeMap->Draw("cubemap", camera.get());
 
 	if (!depthMode) {
-		postProcessingFrameBuffer->Draw("framebuffer-example");
+		//postProcessingFrameBuffer->Draw("framebuffer-example");
 	}
 
 
@@ -195,7 +195,7 @@ bool Game::Initialize() {
 	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	camera = make_shared<Camera>(
-		45.0f,
+		90.0f,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT
 	);
@@ -204,21 +204,17 @@ bool Game::Initialize() {
 
 	lightManager = LightManager::getInstance();
 
-	/*
-	* 스폰자 태양
-	* 	
 	lightManager->CreateLight
 	(
 		0,
-		//glm::vec3(0.0f, 3.0f, 5.0f),
+		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
 		glm::vec3(0, 20, -0.001),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
-
-	y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
-	*/
-	// 손전등.
+	
+	// 포인트.
+	/*
 	lightManager->CreateLight
 	(
 		1,
@@ -227,6 +223,7 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
+	*/
 	
 
 	std::cout << lightManager->lights.size() << std::endl;

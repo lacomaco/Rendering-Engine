@@ -24,15 +24,6 @@ void main() {
 
 	directionalLightShadowSpace = directionalShadowMap.lightSpaceMatrix * vec4(posWorld, 1.0);
 
-	for(int i = 0; i < 2; i++) {
-		if(pointShadowMap[i].use){
-			pointLightShadowSpace[i] = pointShadowMap[i].lightSpaceMatrix * vec4(posWorld, 1.0);
-		}
-		else {
-			pointLightShadowSpace[i] = vec4(0.0);
-		}
-	}
-
 	for(int i = 0; i < 2; i++){
 		if(spotShadowMap[i].use){
 			spotLightShadowSpace[i] = spotShadowMap[i].lightSpaceMatrix * vec4(posWorld, 1.0);

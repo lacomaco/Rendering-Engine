@@ -5,6 +5,7 @@
 
 PointShadow::PointShadow()
 {
+	std::cout << "point shadow »ý¼º " << std::endl;
 	glGenTextures(1,&depthCubeMap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubeMap);
 	for (int i = 0; i < 6; i++) {
@@ -42,10 +43,11 @@ void PointShadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, std::vect
 {
 
 	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram("point-shadow");
+	glUseProgram(program);
 
-	for (auto& matrix : lightSpaceMatrix)
-	{
-		shader->setMat4("point-shadow", "shadowMatrices", matrix);
+	for (int i = 0; i < lightSpaceMatrix.size(); i++) {
+		shader->setMat4("point-shadow", ("shadowMatrices[" + std::to_string(i) + "]").c_str(), lightSpaceMatrix[i]);
 	}
 
 	shader->setFloat("point-shadow", "far_plane", far);

@@ -124,6 +124,6 @@ void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 void LightManager::MakeShadow(shared_ptr<MeshRenderer> meshRenderer) {
 	for (int i = 0; i < lights.size(); i++) {
 		auto light = lights[i];
-		light->MakeShadow("shadow", meshRenderer);
+		light->MakeShadow(meshRenderer);
 	}
 }

@@ -8,7 +8,6 @@ in vec3 posWorld;
 
 
 in vec4 directionalLightShadowSpace;
-in vec4 pointLightShadowSpace[2];
 in vec4 spotLightShadowSpace[2];
 
 void main() {
@@ -50,6 +49,16 @@ void main() {
 			);
 		}
 		else if(light.lightType == 1){
+
+			shadow = pointShadowCalculation(
+				posWorld,
+				light,
+				pointShadowMap[pointLightCount].depthMap
+			);
+
+			pointLightCount++;
+
+
 			color += pointLight(
 				light,
 				material,

@@ -52,7 +52,7 @@ public:
 	float cutOuter = glm::cos(glm::radians(17.5f));
 
 	// 그림자 매핑시 시야 변환을 위한 유니폼 생성용 함수.
-	void MakeShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
+	void MakeShadow(shared_ptr<MeshRenderer> meshRenderer);
 	void PutShadowMap(const char* shaderProgramName,int index, int current);
 	void MakeDirectionalShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
 	void MakePointShadow(const char* shaderProgramName, shared_ptr<MeshRenderer> meshRenderer);
