@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 #include common.glsl
 out vec4 FragColor;
 

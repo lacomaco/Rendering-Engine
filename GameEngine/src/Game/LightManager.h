@@ -30,7 +30,12 @@ public:
 
 	void UpdateLight(float deltaTime);
 	void SetRandomLight(shared_ptr<Camera> camera);
-	vector<shared_ptr<Light>> lights;
+	vector<shared_ptr<Light>> directionLights;
+	vector<shared_ptr<Light>> pointLights;
+
+	int getTotalLightCount() {
+		return directionLights.size() + pointLights.size();
+	}
 
 	void PutLightUniform(const char* programName);
 	void DrawLight(shared_ptr<Camera> camera);

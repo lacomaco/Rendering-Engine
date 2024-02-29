@@ -7,7 +7,12 @@ uniform mat4 invTranspose;
 
 
 uniform sampler2D albedo0;
+uniform sampler2D albedo1;
 uniform sampler2D specular0;
+uniform sampler2D metallic0;
+uniform sampler2D metallic1;
+uniform sampler2D roughness0;
+uniform sampler2D normal0;
 
 
 uniform samplerCube skyBox;
@@ -17,19 +22,17 @@ uniform samplerCube irradianceMap;
 uniform float far;
 
 struct NormalShadowMap {
-	sampler2D depthMap;
     bool use;
     mat4 lightSpaceMatrix;
 };
 
-struct PointShadowMap {
-	samplerCube depthMap;
-    bool use;
-};
-
 uniform NormalShadowMap directionalShadowMap;
+uniform sampler2D directionalShadowDepthMap;
+
 uniform NormalShadowMap spotShadowMap[2];
-uniform PointShadowMap pointShadowMap[2];
+uniform sampler2D spotShadowDepthMap[2];
+
+uniform samplerCube pointShadowDepthMap[2];
 
 struct Material {
     // phong shading 전용.
@@ -45,6 +48,7 @@ struct Material {
 uniform Material material;
 
 uniform int lightCount;
+uniform int pointLightCount;
 
 struct Light {
 	vec3 direction; // Directional Light 에서만 사용함.
@@ -62,7 +66,9 @@ struct Light {
     float cutOuter;
 };
 
-uniform Light lights[MAX_LIGHTS];
+uniform Light lights[MAX_LIGHTS - 2];
+
+uniform Light pointLights[2];
 
 uniform vec3 cameraPos;
 
@@ -248,7 +254,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 normal, vec3 lightDir) {
+float shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal, vec3 lightDir) {
     float bias = 0.001;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -260,18 +266,18 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
 
     projCoords += lightDir * 0.0001;
 
-    float closestDepth = texture(shadowMap.depthMap, projCoords.xy).r;
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
 
     float currentDepth = projCoords.z;
 
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
-    vec2 texelSize = 1.0 / textureSize(shadowMap.depthMap, 0);
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
     const int halfkernelWidth = 2;
 
     for(int x = -halfkernelWidth; x <= halfkernelWidth; ++x) {
         for(int y = -halfkernelWidth; y <= halfkernelWidth; ++y){
-            float pcfDepth = texture(shadowMap.depthMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
@@ -279,10 +285,10 @@ float shadowCalculation(vec4 fragPosLightSpace, NormalShadowMap shadowMap,vec3 n
     return shadow / ((halfkernelWidth * 2 + 1) * (halfkernelWidth * 2 + 1));
 }
 
-float pointShadowCalculation(vec3 posWorld,Light light,samplerCube shadowMap){
+float pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
     vec3 posToLight = posWorld - light.position;
 
-    float closestDepth = texture(shadowMap, posToLight).r;
+    float closestDepth = texture(map, posToLight).r;
 
     closestDepth *= far;
 

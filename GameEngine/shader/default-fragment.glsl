@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 #include common.glsl
 
 out vec4 FragColor;
@@ -21,7 +21,6 @@ void main() {
 	vec3 color = vec3(0.0);
 
 	int spotLightCount = 0;
-	int pointLightCount = 0;
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
@@ -31,7 +30,7 @@ void main() {
 
 			shadow = shadowCalculation(
 				directionalLightShadowSpace,
-				directionalShadowMap,
+				directionalShadowDepthMap,
 				normalWorld,
 				normalize(light.position - posWorld)
 			);
@@ -48,34 +47,11 @@ void main() {
 				specularColor
 			);
 		}
-		else if(light.lightType == 1){
-
-			shadow = pointShadowCalculation(
-				posWorld,
-				light,
-				pointShadowMap[pointLightCount].depthMap
-			);
-
-			pointLightCount++;
-
-
-			color += pointLight(
-				light,
-				material,
-				posWorld,
-				normalWorld,
-				toEye,
-				shadow,
-				ambientColor,
-				diffuseColor,
-				specularColor
-			);
-		}
 		else if(light.lightType == 2){
 
 			shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
-				spotShadowMap[spotLightCount],
+				spotShadowDepthMap[spotLightCount],
 				normalWorld,
 				normalize(light.position - posWorld)
 			);
@@ -95,6 +71,31 @@ void main() {
 			);
 		}
 	}
+	/*
+	for(int i = 0; i < pointLightCount; i++){
+		float shadow = 0.0;
+		Light light = pointLights[0];
+
+		shadow = pointShadowCalculation(
+			posWorld,
+			light,
+			pointShadowDepthMap[0]
+		);
+
+
+		color += pointLight(
+			light,
+			material,
+			posWorld,
+			normalWorld,
+			toEye,
+			shadow,
+			ambientColor,
+			diffuseColor,
+			specularColor
+		);
+	}
+	*/
 
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 

@@ -92,6 +92,7 @@ Shadow::Shadow() {
 
 void Shadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, glm::mat4 lightSpaceMatrix) {
 	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram("shadow"));
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 

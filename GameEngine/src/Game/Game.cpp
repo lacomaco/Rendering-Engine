@@ -60,7 +60,7 @@ void Game::GenerateOutput() {
 	cubeMap->Draw("cubemap", camera.get());
 
 	if (!depthMode) {
-		//postProcessingFrameBuffer->Draw("framebuffer-example");
+		postProcessingFrameBuffer->Draw("framebuffer-example");
 	}
 
 
@@ -208,7 +208,7 @@ bool Game::Initialize() {
 	(
 		0,
 		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
-		glm::vec3(0, 20, -0.001),
+		glm::vec3(1.0, 20, -0.001),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
@@ -226,7 +226,7 @@ bool Game::Initialize() {
 	*/
 	
 
-	std::cout << lightManager->lights.size() << std::endl;
+	std::cout << lightManager->getTotalLightCount() << std::endl;
 
 	input = Input::GetInstance();
 
@@ -275,7 +275,7 @@ void Game::UpdateGame() {
 	input->SetMouse();
 
 	//lightManager->UpdateLight(deltaTime);
-	lightManager->lights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
+	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);
 	lightManager->lights[0]->direction = camera->cameraFront;

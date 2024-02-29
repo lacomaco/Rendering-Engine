@@ -35,19 +35,29 @@ bool LightManager::CreateLight(
 	light->cutOff = cutOff;
 	light->cutOuter = outerCutOff;
 
-	lights.push_back(light);
+	if (lightType == 0) {
+		directionLights.push_back(light);
+		directionalLightCount++;
+	}
+	else if (lightType == 1) {
+		pointLights.push_back(light);
+		pointLightCount++;
+	}
+	else if (lightType == 2) {
+		directionLights.push_back(light);
+		spotLightCount++;
+	}
 
 	return true;
 }
 
 void LightManager::PutLightUniform(const char* programName) {
 	auto shader = Shader::getInstance();
-	shader->setInt(programName, "lightCount", lights.size());
+	auto program = shader->getShaderProgram(programName);
+	glUseProgram(program);
 
-	for(int i = 0; i < lights.size(); i++) {
-		auto light = lights[i];
-		light->PutLightUniform(programName,i);
-	}
+	shader->setInt(programName, "lightCount", directionLights.size());
+	shader->setInt(programName, "pointLightCount", pointLights.size());
 
 
 	// set 0 to all shadows.
@@ -58,21 +68,16 @@ void LightManager::PutLightUniform(const char* programName) {
 	shader->setBool(programName, "spotShadowMap[1].use", 0);
 
 	int directionalCount = 0;
-	int pointCount = 0;
 	int spotCount = 0;
 
-	for (int i = 0; i < lights.size(); i++) {
-		auto light = lights[i];
+	for (int i = 0; i < directionLights.size(); i++) {
+		auto& light = directionLights[i];
+		light->PutLightUniform(programName, i);
 
 		int index = 0;
-
 		if (light->lightType == 0) {
 			index = directionalCount;
 			directionalCount++;
-		}
-		else if (light->lightType == 1) {
-			index = pointCount;
-			pointCount++;
 		}
 		else if (light->lightType == 2) {
 			index = spotCount;
@@ -81,14 +86,28 @@ void LightManager::PutLightUniform(const char* programName) {
 
 		light->PutShadowMap(programName, index,i);
 	}
+
+	for (int i = 0; i < pointLights.size(); i++) {
+		auto& light = pointLights[i];
+		light->PutLightUniform(programName, i);
+
+		// 쉐도우 깊이맵 텍스처 바인딩 겹치는걸 피하기 위해서 index를 directionLight 다음으로 설정함.
+		light->PutShadowMap(programName, i,i + directionLights.size());
+	}
 }
 
 void LightManager::DrawLight(shared_ptr<Camera> camera) {
 	auto program = Shader::getInstance()->getShaderProgram("light");
 	glUseProgram(program);
 	camera->putCameraUniform("light");
-	for (int i = 0; i < lights.size(); i++) {
-		auto light = lights[i];
+	for (int i = 0; i < directionLights.size(); i++) {
+		auto& light = directionLights[i];
+		light->PutLightUniform("light", i);
+		light->Draw("light");
+	}
+
+	for (int i = 0; i < pointLights.size(); i++) {
+		auto& light = pointLights[i];
 		light->PutLightUniform("light", i);
 		light->Draw("light");
 	}
@@ -96,8 +115,11 @@ void LightManager::DrawLight(shared_ptr<Camera> camera) {
 
 
 void LightManager::UpdateLight(float deltaTime) {
-	for (int i = 0; i < lights.size(); i++) {
-		auto light = lights[i];
+	for (auto& light : directionLights) {
+		light->Update(deltaTime);
+	}
+
+	for (auto& light : pointLights) {
 		light->Update(deltaTime);
 	}
 }
@@ -106,7 +128,7 @@ void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 	std::mt19937 mt{std::random_device{}()};
 	std::uniform_int_distribution<int> dist(0, 2);
 
-	for (int i = lights.size(); i < 5; i++) {
+	for (int i = getTotalLightCount(); i < 5; i++) {
 		int random = dist(mt);
 
 		int randomX = dist(mt);
@@ -122,8 +144,11 @@ void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 }
 
 void LightManager::MakeShadow(shared_ptr<MeshRenderer> meshRenderer) {
-	for (int i = 0; i < lights.size(); i++) {
-		auto light = lights[i];
+	for (auto& light : directionLights) {
+		light->MakeShadow(meshRenderer);
+	}
+
+	for (auto& light : pointLights) {
 		light->MakeShadow(meshRenderer);
 	}
 }

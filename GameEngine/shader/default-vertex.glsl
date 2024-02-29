@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 #include common.glsl
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
@@ -10,7 +10,6 @@ out vec2 TexCoord;
 out vec3 posWorld;
 out vec3 normalWorld;
 out vec4 directionalLightShadowSpace;
-out vec4 pointLightShadowSpace[2];
 out vec4 spotLightShadowSpace[2];
 
 void main() {

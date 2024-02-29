@@ -617,8 +617,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="LICENSE.md" />
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
-    <None Include="shader\framebuffer-example-fragment.glsl" />
-    <None Include="shader\framebuffer-example-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\light-vertex.glsl" />
     <None Include="shader\linearize-depth.glsl" />

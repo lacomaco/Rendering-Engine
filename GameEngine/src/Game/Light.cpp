@@ -104,20 +104,22 @@ void Light::PutLightUniform(const char* shaderProgramName,int lightPosition) {
 	const auto linear = lightPowers[lightPower].linear;
 	const auto quadratic = lightPowers[lightPower].quadratic;
 
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].position").c_str(), getPosition());
-	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].constant").c_str(), constant);
-	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].linear").c_str(), linear);
-	shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].quadratic").c_str(), quadratic);
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
-	shader->setInt(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].lightType").c_str(), lightType);
-	shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].strength").c_str(), strength);
+	string lightTypeString = lightType == 1 ? "pointLights[" : "lights[";
+
+	shader->setVec3(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].position").c_str(), getPosition());
+	shader->setFloat(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].constant").c_str(), constant);
+	shader->setFloat(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].linear").c_str(), linear);
+	shader->setFloat(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].quadratic").c_str(), quadratic);
+	shader->setVec3(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].direction").c_str(), direction);
+	shader->setInt(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].lightType").c_str(), lightType);
+	shader->setVec3(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].strength").c_str(), strength);
 
 	if (lightType == 0 || lightType == 2) {
-		shader->setVec3(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].direction").c_str(), direction);
+		shader->setVec3(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].direction").c_str(), direction);
 	}
 	if (lightType == 2) {
-		shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].cutOff").c_str(), cutOff);
-		shader->setFloat(shaderProgramName, ("lights[" + std::to_string(lightPosition) + "].cutOuter").c_str(), cutOuter);
+		shader->setFloat(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].cutOff").c_str(), cutOff);
+		shader->setFloat(shaderProgramName, (lightTypeString + std::to_string(lightPosition) + "].cutOuter").c_str(), cutOuter);
 	}
 }
 
@@ -161,14 +163,12 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 		shader->setMat4(shaderProgramName, "directionalShadowMap.lightSpaceMatrix", lightSpaceMatrix);
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
 		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(0));
-		shader->setInt(shaderProgramName, "directionalShadowMap.depthMap", TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, "directionalShadowDepthMap", TEXTURE_SKYBOX_OFFSET + current);
 	}
 	else if (lightType == 1) {
-		shader->setBool(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].use").c_str(), 1);
-
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, shadow->getDepthMapTexture(1));
-		shader->setInt(shaderProgramName, ("pointShadowMap[" + std::to_string(index) + "].depthMap").c_str(), TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, ("pointShadowDepthMap[" + std::to_string(index) + "]").c_str(), TEXTURE_SKYBOX_OFFSET + current);
 	}
 	else if (lightType == 2) {
 		shader->setBool(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].use").c_str(), 1);
@@ -176,6 +176,6 @@ void Light::PutShadowMap(const char* shaderProgramName, int index, int current) 
 
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_SKYBOX_OFFSET + current);
 		glBindTexture(GL_TEXTURE_2D, shadow->getDepthMapTexture(2));
-		shader->setInt(shaderProgramName, ("spotShadowMap[" + std::to_string(index) + "].depthMap").c_str(), TEXTURE_SKYBOX_OFFSET + current);
+		shader->setInt(shaderProgramName, ("spotShadowDepthMap[" + std::to_string(index) + "]").c_str(), TEXTURE_SKYBOX_OFFSET + current);
 	}
 }
