@@ -128,6 +128,7 @@ void LightManager::PutLightUniform(const char* programName) {
 		light->PutLightUniform(programName, i);
 		// 쉐도우 깊이맵 텍스처 바인딩 겹치는걸 피하기 위해서 index를 directionLight 다음으로 설정함.
 		light->PutShadowMap(programName, i,textureOffset);
+		pointCount++;
 		textureOffset++;
 	}
 
