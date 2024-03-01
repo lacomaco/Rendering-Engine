@@ -5,6 +5,7 @@ out vec4 FragColor;
 in vec2 TexCoord;
 in vec3 normalWorld;
 in vec3 posWorld;
+in vec3 tangentWorld;
 
 
 in vec4 directionalLightShadowSpace;
@@ -22,6 +23,12 @@ void main() {
 
 	int spotLightCount = 0;
 
+	vec3 normal = normalWorld;
+
+	if(use_normal0){
+	    normal = getNormal(normalWorld, tangentWorld, normal0, TexCoord);
+	}
+
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
 		float shadow = 0.0;
@@ -31,7 +38,7 @@ void main() {
 			shadow = shadowCalculation(
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
-				normalWorld,
+				normal,
 				normalize(light.position - posWorld)
 			);
 
@@ -39,7 +46,7 @@ void main() {
 				light,
 				material,
 				posWorld,
-				normalWorld,
+				normal,
 				toEye,
 				shadow,
 				ambientColor,
@@ -52,7 +59,7 @@ void main() {
 			shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
 				spotShadowDepthMap[spotLightCount],
-				normalWorld,
+				normal,
 				normalize(light.position - posWorld)
 			);
 
@@ -62,7 +69,7 @@ void main() {
 				light,
 				material,
 				posWorld,
-				normalWorld,
+				normal,
 				toEye,
 				shadow,
 				ambientColor,
@@ -86,7 +93,7 @@ void main() {
 			light,
 			material,
 			posWorld,
-			normalWorld,
+			normal,
 			toEye,
 			shadow,
 			ambientColor,

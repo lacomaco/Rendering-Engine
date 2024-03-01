@@ -14,6 +14,8 @@ uniform sampler2D specular0;
 uniform sampler2D metallic0;
 uniform sampler2D metallic1;
 uniform sampler2D roughness0;
+
+uniform bool use_normal0;
 uniform sampler2D normal0;
 
 
@@ -315,4 +317,16 @@ vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye) {
     lookAngle = 1.0 - clamp(lookAngle,0.0,1.0);
 
     return iro + (1.0f - iro) * pow(lookAngle,5.0);
+}
+
+vec3 getNormal(vec3 normal,vec3 tangent,sampler2D normalMap,vec2 TexCoords){
+	vec3 n = texture(normalMap, TexCoords).rgb;
+	n = normalize(n * 2.0 - 1.0); // [-1 ~ 1] ¡§±‘»≠.
+
+	vec3 T = normalize(tangent);
+	vec3 N = normalize(normal);
+	vec3 B = cross(T, N);
+	mat3 TBN = mat3(T, B, N);
+
+	return normalize(TBN * n);
 }

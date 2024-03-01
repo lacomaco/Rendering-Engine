@@ -86,6 +86,7 @@ void Mesh::Draw(const char* shaderProgramName) {
 
 		else if (name == "normal") {
 			number = std::to_string(normalNr++);
+			shader->setInt(shaderProgramName, ("use_"+name + number).c_str(), textureNumber);
 		}
 
 		else if (name == "height") {
@@ -124,6 +125,7 @@ void Mesh::setupMesh() {
 	glGenBuffers(1, &EBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glBufferData(
 		GL_ARRAY_BUFFER,
@@ -131,7 +133,6 @@ void Mesh::setupMesh() {
 		vertices.data(),
 		GL_STATIC_DRAW
 	);
-
 	// position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)0);
@@ -154,7 +155,6 @@ void Mesh::setupMesh() {
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)(11 * sizeof(float)));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER,
 		indices.size() * sizeof(unsigned int),

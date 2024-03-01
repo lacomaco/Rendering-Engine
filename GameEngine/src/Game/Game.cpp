@@ -40,7 +40,7 @@ void Game::GenerateOutput() {
 		meshRenderer->AddMesh(grass[i]);
 	}
 	*/
-	meshRenderer->AddMesh(circle[0]);
+	//meshRenderer->AddMesh(circle[0]);
 
 	meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
@@ -204,6 +204,7 @@ bool Game::Initialize() {
 
 	lightManager = LightManager::getInstance();
 	
+	/*
 	lightManager->CreateLight
 	(
 		0,
@@ -212,18 +213,19 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
+	*/
+	
 
 	// Æ÷ÀÎÆ®.
-	/*
+	
 	lightManager->CreateLight
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(0, 3, 0),
+		glm::vec3(0, 3, 1),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
-	*/
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 
@@ -273,7 +275,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	//lightManager->UpdateLight(deltaTime);
+	lightManager->UpdateLight(deltaTime);
 	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);
