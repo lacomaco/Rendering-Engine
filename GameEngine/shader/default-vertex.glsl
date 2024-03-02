@@ -15,7 +15,7 @@ out vec3 tangentWorld;
 
 void main() {
 	// 위치벡터이기 때문에 1.0으로 설정
-	tangentWorld = aTagentModel;
+	tangentWorld = vec3(model * vec4(aTagentModel,0.0));
 
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 

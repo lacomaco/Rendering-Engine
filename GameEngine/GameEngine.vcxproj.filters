@@ -852,6 +852,12 @@
     <ClInclude Include="src\Game\ShadowInterface.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\DummyTextureCube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\DummyTexture2D.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -948,6 +954,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\PointShadow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\DummyTextureCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\DummyTexture2D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1364,8 +1376,6 @@
     <None Include="shader\linearize-depth.glsl" />
     <None Include="shader\stencil-layout-vertex.glsl" />
     <None Include="shader\stencil-layout-fragment.glsl" />
-    <None Include="shader\framebuffer-example-vertex.glsl" />
-    <None Include="shader\framebuffer-example-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\shadow-vertex.glsl" />
@@ -1390,6 +1400,21 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="..\..\..\..\Desktop\그래픽스 공부용\홍정모 강의 파트2\08_ShaderToys_Step4_ImageBasedLighting\CubemapTextures\skybox.dds" />
+    <Image Include="assets\images\brickwall.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\images\brickwall_normal.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\images\bricks2.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\images\bricks2_disp.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\images\bricks2_normal.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />

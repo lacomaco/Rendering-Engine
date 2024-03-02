@@ -18,6 +18,9 @@ uniform sampler2D roughness0;
 uniform bool use_normal0;
 uniform sampler2D normal0;
 
+uniform bool use_height0;
+uniform sampler2D height0;
+
 
 uniform samplerCube skyBox;
 uniform samplerCube radianceMap;
@@ -274,7 +277,7 @@ float shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,
 
     float currentDepth = projCoords.z;
 
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    float shadow = 0.0;
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
     const int halfkernelWidth = 2;
@@ -319,14 +322,3 @@ vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye) {
     return iro + (1.0f - iro) * pow(lookAngle,5.0);
 }
 
-vec3 getNormal(vec3 normal,vec3 tangent,sampler2D normalMap,vec2 TexCoords){
-	vec3 n = texture(normalMap, TexCoords).rgb;
-	n = normalize(n * 2.0 - 1.0); // [-1 ~ 1] ¡§±‘»≠.
-
-	vec3 T = normalize(tangent);
-	vec3 N = normalize(normal);
-	vec3 B = cross(T, N);
-	mat3 TBN = mat3(T, B, N);
-
-	return normalize(TBN * n);
-}

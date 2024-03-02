@@ -27,9 +27,10 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
-	/*
+	
 	meshRenderer->AddMesh(plane);
 
+	/*
 	for (int i = 0; i < 1; i++) {
 		meshRenderer->AddMesh(box[i]);
 	}
@@ -42,7 +43,7 @@ void Game::GenerateOutput() {
 	*/
 	//meshRenderer->AddMesh(circle[0]);
 
-	meshRenderer->AddMesh(backPack);
+	//meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
@@ -138,8 +139,9 @@ bool Game::Initialize() {
 	plane = make_shared<Plane>();
 	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
 	plane->position = glm::vec3(0.0f, 0.0f, -2.0f);
-	plane->SetTexture("./assets/images/wall.jpg", "albedo");
-	plane->SetTexture("./assets/container2_specular.png", "specular");
+	plane->SetTexture("./assets/images/bricks2.jpg", "albedo");
+	plane->SetTexture("./assets/images/bricks2_normal.jpg", "normal");
+	plane->SetTexture("./assets/images/bricks2_disp.jpg", "height");
 	plane->SetupMesh();
 
 	plane->rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
@@ -186,12 +188,7 @@ bool Game::Initialize() {
 
 	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
 	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-	//backPack = make_shared<Model>("./assets/abandoned-warehouse/source/Apocalyptic_Warehouse.fbx");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
-	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
-
-	//backPack->scale = glm::vec3(0.05f, 0.05f, 0.05f);
-	//backPack->scale = glm::vec3(0.01f, 0.01f, 0.01f);
 	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	camera = make_shared<Camera>(
@@ -204,7 +201,7 @@ bool Game::Initialize() {
 
 	lightManager = LightManager::getInstance();
 	
-	/*
+	
 	lightManager->CreateLight
 	(
 		0,
@@ -213,7 +210,6 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
-	*/
 	
 
 	// 포인트.
@@ -222,7 +218,7 @@ bool Game::Initialize() {
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(0, 3, 1),
+		glm::vec3(0, 3, 0),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
@@ -275,7 +271,7 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	lightManager->UpdateLight(deltaTime);
+	//lightManager->UpdateLight(deltaTime);
 	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*
 	lightManager->lights[0]->setPosition(camera->cameraPos);

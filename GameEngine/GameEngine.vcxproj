@@ -649,6 +649,11 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <Image Include="assets\images\awesomeface.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
+    <Image Include="assets\images\bricks2.jpg" />
+    <Image Include="assets\images\bricks2_disp.jpg" />
+    <Image Include="assets\images\bricks2_normal.jpg" />
+    <Image Include="assets\images\brickwall.jpg" />
+    <Image Include="assets\images\brickwall_normal.jpg" />
     <Image Include="assets\images\grass.png" />
     <Image Include="assets\images\wall.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
