@@ -145,7 +145,8 @@ vec3 directionalLight(
     return phongShading(
         l,
         lightStrength,
-        lightVec,normal,
+        lightVec,
+        normal,
         toEye,
         shadow,
         mat,

@@ -6,12 +6,14 @@ in vec2 TexCoord;
 in vec3 normalWorld;
 in vec3 posWorld;
 in vec3 tangentWorld;
+in vec3 bitangentWorld;
+in mat3 TBN;
 
 
 in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
-vec3 getNormal(vec3 normal,vec3 tangent,sampler2D normalMap,vec2 TexCoords);
+vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords);
 
 void main() {
 
@@ -28,7 +30,7 @@ void main() {
 	vec3 normal = normalWorld;
 
 	if(use_normal0){
-	    normal = getNormal(normalWorld, tangentWorld, normal0, TexCoord);
+	    normal = getNormal(normalWorld, tangentWorld, bitangentWorld, normal0, TexCoord);
 	}
 
 	for(int i = 0; i < lightCount; i++){
@@ -128,16 +130,11 @@ nomalMap을 가져오는 방법엔 2가지 방법이 있다.
 나는 1번 방법을 사용하엿음.
 
 
+solution: https://stackoverflow.com/questions/47620285/normal-mapping-bug
 */
-vec3 getNormal(vec3 normal,vec3 tangent,sampler2D normalMap,vec2 TexCoords){
+vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords){
 	vec3 n = texture(normalMap, TexCoords).rgb;
-	n = normalize(n * 2.0 - 1.0); // [-1 ~ 1] 정규화.
-
-	vec3 T = normalize(tangent);
-	vec3 N = normalize(normal);
-	vec3 B = cross(T, N);
-	mat3 TBN = mat3(T, B, N);
-
+	n = n * 2.0 - 1.0; // [-1 ~ 1] 정규화.
 	return normalize(TBN * n);
 }
 

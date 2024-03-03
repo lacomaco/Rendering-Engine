@@ -27,49 +27,36 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
-	
-	meshRenderer->AddMesh(plane);
-
-	/*
-	for (int i = 0; i < 1; i++) {
-		meshRenderer->AddMesh(box[i]);
-	}
-	*/
-
-	/*
-	for (int i = 0; i < grass.size(); i++) {
-		meshRenderer->AddMesh(grass[i]);
-	}
-	*/
-	//meshRenderer->AddMesh(circle[0]);
-
-	//meshRenderer->AddMesh(backPack);
+	meshRenderer->AddMesh(backPack);
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
 
-	//lightManager->lights[0]->shadow->showDepthMap();
-
 	postProcessingFrameBuffer->use();
-	cubeMap->PutCubeMapTexture("default");
-	camera->putCameraUniform("default");
-	lightManager->PutLightUniform("default");
-	meshRenderer->Draw("default");
+
+	// TODO: simple-shading -> default 로 변경
+	
+	// const char* shaderName = "simple-shading";
+	const char* shaderName = "default";
+
+	cubeMap->PutCubeMapTexture(shaderName);
+	camera->putCameraUniform(shaderName);
+	lightManager->PutLightUniform(shaderName);
+	meshRenderer->Draw(shaderName);
 
 
 	lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
 
-	if (!depthMode) {
-		postProcessingFrameBuffer->Draw("framebuffer-example");
-	}
+	auto normalMode = ImguiController::getInstance()->showNormal;
 
-
-	auto showNormal = imguiController->showNormal;
-
-	if (showNormal) {
+	if (normalMode) {
+		lightManager->PutLightUniform("normal");
+		camera->putCameraUniform("normal");
 		meshRenderer->Draw("normal");
 	}
+
+	postProcessingFrameBuffer->Draw("framebuffer-example");
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);
@@ -200,28 +187,36 @@ bool Game::Initialize() {
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
 	lightManager = LightManager::getInstance();
-	
+
+	auto imguiController = ImguiController::getInstance();
 	
 	lightManager->CreateLight
 	(
 		0,
 		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
-		glm::vec3(1.0, 20, -0.001),
-		glm::vec3(-0.042, -0.390, 0.952),
+		glm::vec3(0, 20, -0.001),
+		glm::vec3(0, -1, 0.005),
 		12
 	);
+	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
+	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
+	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	
 	
 
 	// 포인트.
 	
+	
+	/*
 	lightManager->CreateLight
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(0, 3, 0),
+		glm::vec3(-3, 3, -0.05),
 		glm::vec3(-0.042, -0.390, 0.952),
 		12
 	);
+	*/
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 
@@ -270,6 +265,15 @@ void Game::UpdateGame() {
 	accTime += deltaTime;
 
 	input->SetMouse();
+
+	auto imguiController = ImguiController::getInstance();
+
+	const auto exposure = imguiController->exposure;
+
+	postProcessingFrameBuffer->exposure = exposure;
+
+	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
+	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
 
 	//lightManager->UpdateLight(deltaTime);
 	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -349,12 +353,6 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadShaderProgram(
-		"./shader/stencil-layout-vertex.glsl",
-		"./shader/stencil-layout-fragment.glsl",
-		"stencil-layout"
-	);
-
-	shader->loadShaderProgram(
 		"./shader/framebuffer-example-vertex.glsl",
 		"./shader/framebuffer-example-fragment.glsl",
 		"framebuffer-example"
@@ -383,5 +381,11 @@ void Game::CreateShaderProgram() {
 		"./shader/point-shadow-fragment.glsl",
 		"point-shadow",
 		"./shader/point-shadow-geometry.glsl"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/simple-shading-vertex.glsl",
+		"./shader/simple-shading-fragment.glsl",
+		"simple-shading"
 	);
 }

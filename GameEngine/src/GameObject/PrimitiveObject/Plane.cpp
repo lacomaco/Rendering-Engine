@@ -17,10 +17,6 @@ Plane::Plane() {
     positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f)); // 1
     positions.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
     positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-    colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
     normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -32,7 +28,6 @@ Plane::Plane() {
     for (size_t i = 0; i < positions.size(); i++) {
         Vertex v;
         v.position = positions[i];
-        v.color = colors[i];
         v.normal = normals[i];
         v.texcoord = texcoords[i];
         vertices.push_back(v);

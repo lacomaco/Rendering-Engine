@@ -3,8 +3,8 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
-layout (location = 3) in vec3 aTagentModel;
-layout (location = 4) in vec3 aColor;
+layout (location = 3) in vec3 aTangentModel;
+layout (location = 4) in vec3 aBitangent;
 
 out vec2 TexCoord;
 out vec3 posWorld;
@@ -12,10 +12,10 @@ out vec3 normalWorld;
 out vec4 directionalLightShadowSpace;
 out vec4 spotLightShadowSpace[2];
 out vec3 tangentWorld;
+out vec3 bitangentWorld;
+out mat3 TBN;
 
 void main() {
-	// 위치벡터이기 때문에 1.0으로 설정
-	tangentWorld = vec3(model * vec4(aTagentModel,0.0));
 
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 
@@ -23,7 +23,18 @@ void main() {
 
 	// normal은 법선벡터이기 때문에 0.0으로 설정.
 	// 4차원이 0이면 이동 변환이 적용되지 않기 때문에 법선벡터는 0.0이다.
-	normalWorld = normalize((invTranspose * vec4(aNormal,0.0f)).xyz);
+	normalWorld = normalize(vec3(invTranspose * vec4(aNormal,0.0f)));
+
+	tangentWorld = aTangentModel;
+	
+	if(dot(cross(aNormal, aTangentModel), aBitangent) < 0.0) {
+		tangentWorld = -aTangentModel;
+	}
+
+	tangentWorld = normalize(vec3(invTranspose * vec4(tangentWorld,0.0)));
+	bitangentWorld = normalize(vec3(invTranspose * vec4(aBitangent,0.0)));
+
+	TBN = mat3(tangentWorld, bitangentWorld, normalWorld);
 
 	directionalLightShadowSpace = directionalShadowMap.lightSpaceMatrix * vec4(posWorld, 1.0);
 

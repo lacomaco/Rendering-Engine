@@ -11,11 +11,7 @@ struct Vertex {
 	glm::vec3 normal;
 	glm::vec2 texcoord;
 	glm::vec3 tangentModel;
-
-	// 값이 없을때 곱하기 연산시 이상이 없도록 1.0으로 초기화.
-	glm::vec3 color = {
-		1.0f, 1.0f, 1.0f 
-	};
+	glm::vec3 bitangentModel;
 };
 
 /*

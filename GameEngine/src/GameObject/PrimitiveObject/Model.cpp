@@ -30,7 +30,7 @@ void Model::Draw(const char* shaderProgramName)
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
 		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
@@ -120,13 +120,18 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMa
 			tangent.y = mesh->mTangents[i].y;
 			tangent.z = mesh->mTangents[i].z;
 
+			glm::vec3 bitangent;
+			bitangent.x = mesh->mBitangents[i].x;
+			bitangent.y = mesh->mBitangents[i].y;
+			bitangent.z = mesh->mBitangents[i].z;
+
 			vertex.tangentModel = tangent;
+			vertex.bitangentModel = bitangent;
 		}
 		else {
+			vertex.texcoord = glm::vec2(0.0f, 0.0f);
 			std::cout << path << " has no texture coordinates" << std::endl;
 		}
-
-
 
 		vertices.push_back(vertex);
 	}

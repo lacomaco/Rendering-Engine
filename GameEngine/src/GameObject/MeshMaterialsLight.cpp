@@ -105,6 +105,7 @@ void Mesh::Draw(const char* shaderProgramName) {
 			number = std::to_string(roughnessNr++);
 		}
 
+		
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		shader->setInt(shaderProgramName, (name + number).c_str(), textureNumber);
 	}

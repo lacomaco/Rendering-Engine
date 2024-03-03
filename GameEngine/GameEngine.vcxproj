@@ -621,6 +621,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="LICENSE.md" />
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
+    <None Include="shader\framebuffer-example-fragment.glsl" />
+    <None Include="shader\framebuffer-example-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\light-vertex.glsl" />
     <None Include="shader\linearize-depth.glsl" />
@@ -633,6 +635,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\default-vertex.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="shader\simple-shading-fragment.glsl" />
+    <None Include="shader\simple-shading-vertex.glsl" />
     <None Include="shader\point-shadow-fragment.glsl" />
     <None Include="shader\point-shadow-geometry.glsl" />
     <None Include="shader\point-shadow-vertex.glsl" />
@@ -640,8 +644,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-vertex.glsl" />
-    <None Include="shader\stencil-layout-fragment.glsl" />
-    <None Include="shader\stencil-layout-vertex.glsl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>

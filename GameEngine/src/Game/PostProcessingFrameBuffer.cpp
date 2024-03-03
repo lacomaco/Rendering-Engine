@@ -13,6 +13,7 @@ PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 void PostProcessingFrameBuffer::Draw(const char* programName)
 {
 
+	auto shader = Shader::getInstance();
 	// msaaFrameBuffer -> intermediateFrameBuffer로 데이터 복사.
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
@@ -27,6 +28,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(Shader::getInstance()->getShaderProgram(programName));
+	shader->setFloat(programName, "exposure", exposure);
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
@@ -53,7 +55,7 @@ void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
 	glTexImage2D(
 		GL_TEXTURE_2D,
 		0,
-		GL_RGB,
+		GL_RGBA32F,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT,
 		0,

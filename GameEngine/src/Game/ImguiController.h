@@ -36,6 +36,14 @@ public:
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	bool showNormal = false;
 
+	// exposure
+	float exposure = 1.0f;
+
+	// directional light
+	glm::vec3 directionalLightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 directionalLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
+	unsigned int directionalLightDepthMap = 0;
+
 
 };
 
