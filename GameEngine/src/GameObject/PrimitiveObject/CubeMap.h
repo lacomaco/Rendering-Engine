@@ -9,16 +9,17 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-
 class CubeMap
 {
 private:
     void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
+    void CreateBrdfLutTexture(std::string map);
 public:
 	CubeMap(std::string filePath);
     unsigned int skyBoxId;
 	unsigned int radianceId;
     unsigned int irradianceId;
+    unsigned int brdfLUTTextureId;
     unsigned int vao, vbo;
 
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(50.0f));
