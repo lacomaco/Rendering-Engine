@@ -161,8 +161,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="libs\FreeImage\FreeImage.h" />
-    <ClInclude Include="src\GameObject\PrimitiveObject\EquirectangularCubemap.h" />
     <ClInclude Include="src\Util\DummyTextureCube.h" />
     <ClInclude Include="src\Util\DummyTexture2D.h" />
     <ClInclude Include="src\Game\PointShadow.h" />
@@ -446,7 +444,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameObject\PrimitiveObject\EquirectangularCubemap.cpp" />
     <ClCompile Include="src\Util\DummyTextureCube.cpp" />
     <ClCompile Include="src\Util\DummyTexture2D.cpp" />
     <ClCompile Include="src\Game\PointShadow.cpp" />
@@ -483,7 +480,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\Util\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FreeImage.dll" />
     <None Include="glew32.dll" />
     <None Include="libs\glm\detail\func_common.inl" />
     <None Include="libs\glm\detail\func_common_simd.inl" />
@@ -651,8 +647,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Desktop\그래픽스 공부용\홍정모 강의 파트2\08_ShaderToys_Step4_ImageBasedLighting\CubemapTextures\skybox.dds" />
-    <Image Include="..\..\..\..\Downloads\testEnvHDR.dds" />
     <Image Include="assets\hdr-cubemap\brdf.dds" />
     <Image Include="assets\hdr-cubemap\diffuse_hdr.dds" />
     <Image Include="assets\hdr-cubemap\diffuse_mdr.dds" />
@@ -675,13 +669,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <Image Include="assets\images\white.png" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="libs\FreeImage\FreeImage.lib" />
     <Library Include="glew32.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="libs\FreeImage\license-fi.txt" />
-    <Text Include="libs\FreeImage\license-gplv2.txt" />
-    <Text Include="libs\FreeImage\license-gplv3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
