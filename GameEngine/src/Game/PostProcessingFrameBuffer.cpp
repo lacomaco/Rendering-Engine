@@ -90,7 +90,7 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 	glTexImage2DMultisample(
 		GL_TEXTURE_2D_MULTISAMPLE,
 		4,
-		GL_RGB,
+		GL_RGBA32F,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT,
 		GL_TRUE
