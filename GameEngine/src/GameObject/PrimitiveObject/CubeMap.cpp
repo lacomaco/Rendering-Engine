@@ -73,12 +73,12 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
             0,
-            GL_SRGB_ALPHA,
+            GL_RGB32F,
             Texture.extent().x,
             Texture.extent().y,
             0,
             GL_RGBA,
-            GL_UNSIGNED_BYTE,
+            GL_FLOAT,
             Texture.data()
         );
         GLenum error = glGetError();

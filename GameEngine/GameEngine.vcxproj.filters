@@ -858,6 +858,12 @@
     <ClInclude Include="src\Util\DummyTexture2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\EquirectangularCubemap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\FreeImage\FreeImage.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -960,6 +966,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\DummyTexture2D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\EquirectangularCubemap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1387,6 +1396,7 @@
     <None Include="shader\framebuffer-example-fragment.glsl" />
     <None Include="shader\simple-shading-vertex.glsl" />
     <None Include="shader\simple-shading-fragment.glsl" />
+    <None Include="FreeImage.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
@@ -1417,8 +1427,22 @@
     <Image Include="assets\images\bricks2_normal.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="assets\hdr-cubemap\brdf.dds" />
+    <Image Include="assets\hdr-cubemap\diffuse_hdr.dds" />
+    <Image Include="assets\hdr-cubemap\diffuse_mdr.dds" />
+    <Image Include="assets\hdr-cubemap\env_mdr.dds" />
+    <Image Include="assets\hdr-cubemap\specular_hdr.dds" />
+    <Image Include="assets\hdr-cubemap\specular_mdr.dds" />
+    <Image Include="assets\hdr-cubemap\env_hdr.dds" />
+    <Image Include="..\..\..\..\Downloads\testEnvHDR.dds" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />
+    <Library Include="libs\FreeImage\FreeImage.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="libs\FreeImage\license-fi.txt" />
+    <Text Include="libs\FreeImage\license-gplv2.txt" />
+    <Text Include="libs\FreeImage\license-gplv3.txt" />
   </ItemGroup>
 </Project>
