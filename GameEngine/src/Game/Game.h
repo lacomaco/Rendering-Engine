@@ -40,14 +40,6 @@ private:
 
 	ImguiController* imguiController;
 
-
-	std::vector<SDL_Scancode> mLeftPaddleKeys;
-
-	bool mUpdatingActors;
-
-	std::vector<class Actor*> mActors;
-	std::vector<class Actor*> mPendingActors;
-
 	std::shared_ptr<Plane> plane;
 
 	std::vector<std::shared_ptr<Box>> box;
@@ -61,7 +53,6 @@ private:
 
 	std::shared_ptr<Model> model;
 
-	int activeLight = 3;
 	LightManager* lightManager;
 
 	std::vector<std::shared_ptr<Plane>> grass;
@@ -73,7 +64,5 @@ private:
 	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
 
 	float accTime;
-
-	bool depthMode = false;
 };
 

@@ -203,7 +203,7 @@ bool Game::Initialize() {
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
 
 	imguiController->bloomCount = postProcessingFrameBuffer->bloom->bloomCount;
-	imguiController->bloomSceneTexture = postProcessingFrameBuffer->screenTexture;
+	imguiController->bloomSceneTexture = postProcessingFrameBuffer->bloom->sceneTexture;
 	
 	
 
@@ -321,11 +321,6 @@ void Game::ProcessInput() {
 	const Uint8* state = input->state;
 	if (state[SDL_SCANCODE_ESCAPE]) {
 		mIsRunning = false;
-	}
-
-	if (state[SDL_SCANCODE_H]) {
-		std::cout << "depth mode Å¬¸¯µÊ" << std::endl;
-		//depthMode != depthMode;
 	}
 
 	if (state[SDL_SCANCODE_F]) {
