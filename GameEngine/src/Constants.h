@@ -14,19 +14,20 @@
 * 0: 큐브매핑 스카이박스 예약
 * 1: 큐브매핑 라디언스 맵 예약
 * 2: 큐브매핑 이리디언스 맵 예약.
+* 3: brdf룩업 텍스처
 * 
-* 3: directional light 그림자맵 예약
-* 4: point light 그림자 큐브맵 예약.
+* 4: directional light 그림자맵 예약
 * 5: point light 그림자 큐브맵 예약.
-* 6: spot light 그림자맵 예약.
+* 6: point light 그림자 큐브맵 예약.
 * 7: spot light 그림자맵 예약.
+* 8: spot light 그림자맵 예약.
 * 
 * 나중에 그림자맵 아틀라스로 변경할수도 있음.
 * 
 * 가장 가까운 
 */
 #ifndef TEXTURE_SKYBOX_OFFSET
-#define TEXTURE_SKYBOX_OFFSET 3
+#define TEXTURE_SKYBOX_OFFSET 4
 #endif
 
 #ifndef TEXTURE_START

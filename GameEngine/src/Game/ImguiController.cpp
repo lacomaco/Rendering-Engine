@@ -57,17 +57,17 @@ void ImguiController::Update() {
 	ImGui::Checkbox("showNormal", &showNormal);
 
 	if (ImGui::TreeNode("DirectionalLight")) {
-		ImGui::Text("DirectionalLight Position");
-		ImGui::SliderFloat("directionalLightPositionX", &directionalLightPosition.x, -20.0f, 20.0f);
-		ImGui::SliderFloat("directionalLightPositionY", &directionalLightPosition.y, -20.0f, 20.0f);
-		ImGui::SliderFloat("directionalLightPositionZ", &directionalLightPosition.z, -20.0f, 20.0f);
+		ImGui::Text("Position");
+		ImGui::SliderFloat("x", &directionalLightPosition.x, -20.0f, 20.0f);
+		ImGui::SliderFloat("y", &directionalLightPosition.y, -20.0f, 20.0f);
+		ImGui::SliderFloat("z", &directionalLightPosition.z, -20.0f, 20.0f);
 
-		ImGui::Text("DirectionalLight Direction");
-		ImGui::SliderFloat("directionalLightDirectionX", &directionalLightDirection.x, -1.0f, 1.0f);
-		ImGui::SliderFloat("directionalLightDirectionY", &directionalLightDirection.y, -1.0f, 1.0f);
-		ImGui::SliderFloat("directionalLightDirectionZ", &directionalLightDirection.z, -1.0f, 1.0f);
+		ImGui::Text("Direction");
+		ImGui::SliderFloat("x", &directionalLightDirection.x, -1.0f, 1.0f);
+		ImGui::SliderFloat("y", &directionalLightDirection.y, -1.0f, 1.0f);
+		ImGui::SliderFloat("z", &directionalLightDirection.z, -1.0f, 1.0f);
 
-		ImGui::Text("DirectionalLight DepthMap");
+		ImGui::Text("shadow depthMap");
 		ImGui::Image(
 			(void*)(intptr_t)directionalLightDepthMap,
 			ImVec2(200, 200)

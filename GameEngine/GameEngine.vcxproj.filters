@@ -858,7 +858,7 @@
     <ClInclude Include="src\Util\DummyTexture2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="libs\FreeImage\FreeImage.h">
+    <ClInclude Include="src\Game\Bloom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -963,6 +963,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\DummyTexture2D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bloom.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1429,11 +1432,5 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />
-    <Library Include="libs\FreeImage\FreeImage.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="libs\FreeImage\license-fi.txt" />
-    <Text Include="libs\FreeImage\license-gplv2.txt" />
-    <Text Include="libs\FreeImage\license-gplv3.txt" />
   </ItemGroup>
 </Project>

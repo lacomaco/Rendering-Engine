@@ -136,6 +136,10 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceId);
     shader->setInt(shaderProgramName, "irradianceMap", 2);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
+    shader->setInt(shaderProgramName, "brdfLUT", 3);
 }
 
 void CubeMap::Draw(const char* shaderProgramName,Camera* camera) {
