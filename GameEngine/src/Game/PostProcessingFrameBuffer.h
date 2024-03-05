@@ -23,8 +23,6 @@ public:
 	unsigned int vbo;
 	void use();
 
-	std::vector<float> quadVertices;
-
 	void Draw(const char* programName);
 
 	float exposure = 1.0f;

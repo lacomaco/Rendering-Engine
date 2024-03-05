@@ -161,6 +161,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Util\GLHelper.h" />
     <ClInclude Include="src\Game\Bloom.h" />
     <ClInclude Include="src\Util\DummyTextureCube.h" />
     <ClInclude Include="src\Util\DummyTexture2D.h" />
@@ -445,6 +446,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Util\GLHelper.cpp" />
     <ClCompile Include="src\Game\Bloom.cpp" />
     <ClCompile Include="src\Util\DummyTextureCube.cpp" />
     <ClCompile Include="src\Util\DummyTexture2D.cpp" />
