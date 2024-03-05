@@ -42,7 +42,7 @@ unsigned int CreateSimpleTexture() {
 		WINDOW_HEIGHT,
 		0,
 		GL_RGB,
-		GL_UNSIGNED_BYTE,
+		GL_FLOAT,
 		NULL
 	);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

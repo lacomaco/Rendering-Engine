@@ -12,6 +12,7 @@ public:
 	int bloomCount = 10;
 
 	void CreateSceneTexture();
+	void CopySceneTexture(unsigned int msaaFB);
 
 };
 

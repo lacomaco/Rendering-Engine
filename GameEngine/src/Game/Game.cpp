@@ -39,6 +39,7 @@ void Game::GenerateOutput() {
 	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
 
+	postProcessingFrameBuffer->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	camera->putCameraUniform(shaderName);
 	lightManager->PutLightUniform(shaderName);
@@ -201,9 +202,8 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-
 	imguiController->bloomCount = postProcessingFrameBuffer->bloom->bloomCount;
-	imguiController->bloomSceneTexture = postProcessingFrameBuffer->bloom->sceneTexture;
+	imguiController->bloomSceneTexture = postProcessingFrameBuffer->bloom->pingpongColorbuffers[1];
 	
 	
 
@@ -285,6 +285,9 @@ void Game::UpdateGame() {
 	lightManager->lights[0]->direction = camera->cameraFront;
 	lightManager->lights[0]->CalculateLightSpaceMatrix();
 	*/
+
+
+	postProcessingFrameBuffer->bloom->bloomCount = imguiController->bloomCount;
 }
 
 void Game::RunLoop() {

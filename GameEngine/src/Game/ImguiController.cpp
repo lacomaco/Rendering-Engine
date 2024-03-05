@@ -20,7 +20,7 @@ ImguiController::ImguiController(SDL_Window* window, SDL_GLContext context) {
 	io.Fonts->Build();
 
 	ImGui_ImplSDL2_InitForOpenGL(window, context);
-	ImGui_ImplOpenGL3_Init("#version 330"); // 여기서 적절한 GLSL 버전을 설정하세요.
+	ImGui_ImplOpenGL3_Init("#version 460"); // 여기서 적절한 GLSL 버전을 설정하세요.
 
 }
 

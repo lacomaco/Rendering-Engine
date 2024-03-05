@@ -13,6 +13,7 @@ private:
 
 public:
 	PostProcessingFrameBuffer();
+	void PutExposure(const char* programName);
 
 	unsigned int msaaFrameBuffer;
 	unsigned int msaaTexture; // 컬러버퍼 텍스처, MSAA

@@ -17,10 +17,15 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 {
 
 	auto shader = Shader::getInstance();
-	// msaaFrameBuffer -> intermediateFrameBuffer로 데이터 복사.
+	
+	bloom->CopySceneTexture(msaaFrameBuffer);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
-	glBlitFramebuffer(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	glBlitFramebuffer(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
+		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
+		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 	// 기본 컬러버퍼 사용.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -31,7 +36,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(Shader::getInstance()->getShaderProgram(programName));
-	shader->setFloat(programName, "exposure", exposure);
+	PutExposure(programName);
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
@@ -47,14 +52,13 @@ void PostProcessingFrameBuffer::use()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+}
 
-	/*
-	* 2 모두 MSAA 텍스처
-	* 0: FrameBuffer
-	* 1: Bloom FrameBuffer
-	*/
-	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
+void PostProcessingFrameBuffer::PutExposure(const char* programName) {
+	auto shader = Shader::getInstance();
+	auto progrma = shader->getShaderProgram(programName);
+	glUseProgram(progrma);
+	shader->setFloat(programName, "exposure", exposure);
 }
 
 void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
@@ -94,6 +98,7 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_TRUE
 	);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
 	// 프레임버퍼 - 텍스처 연결할때 사용하는 함수.
 	// target: 연결 대상 프레임버퍼
 	// attachment: 텍스처 종료, COLOR_ATTACHMENT0 <- 컬러버퍼
@@ -105,6 +110,15 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_COLOR_ATTACHMENT0,
 		GL_TEXTURE_2D_MULTISAMPLE,
 		msaaTexture,
+		0
+	);
+
+	// Bloom 텍스처 바인딩
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT1,
+		GL_TEXTURE_2D_MULTISAMPLE,
+		bloom->sceneTexture,
 		0
 	);
 
@@ -125,20 +139,21 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_RENDERBUFFER,
 		rbo
 	);
+	/*
+	* 2 모두 MSAA 텍스처
+	* 0: FrameBuffer
+	* 1: Bloom FrameBuffer
+	*/
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
 
-	// Bloom 텍스처 바인딩
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT1,
-		GL_TEXTURE_2D_MULTISAMPLE,
-		bloom->sceneTexture,
-		0
-	);
 
 	// opengl 에러 체크
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void PostProcessingFrameBuffer::CreateVAO()

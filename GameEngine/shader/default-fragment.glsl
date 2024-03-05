@@ -5,6 +5,8 @@
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BloomColor;
 
+uniform float exposure;
+
 in vec2 TexCoord;
 in vec3 normalWorld;
 in vec3 posWorld;
@@ -17,6 +19,7 @@ in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
 vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords);
+vec3 linearToSrgb(vec3 color);
 
 void main() {
 
@@ -113,6 +116,18 @@ void main() {
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 
 	FragColor = colorWithAlpha;
+
+	vec3 srgbColor = linearToSrgb(FragColor.rgb);
+
+	// TMI: 사람은 초록색에 민감하여 초록색이 높을수록 밝다고 느낀다.
+	float brightness = dot(srgbColor, vec3(0.2126, 0.7152, 0.0722));
+
+	if(brightness > 0.8){
+		BloomColor = colorWithAlpha;
+	}
+	else{
+		BloomColor = vec4(exposure,0.0,0.0,1.0);
+	}
 }
 
 /*
@@ -141,3 +156,8 @@ vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 
 	return normalize(TBN * n);
 }
 
+vec3 linearToSrgb(vec3 color){
+	vec3 mapped = vec3(1.0) - exp(-color * exposure);
+
+	return pow(mapped, vec3(1.0/2.2));
+}
