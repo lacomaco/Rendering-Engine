@@ -3,9 +3,11 @@
 #include "../Constants.h"
 #include "../Util/Shader.h"
 #include "../Util/GLHelper.h"
+#include <memory>
 
 PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 {
+	bloom = std::make_shared<Bloom>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -45,6 +47,14 @@ void PostProcessingFrameBuffer::use()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+
+	/*
+	* 2 모두 MSAA 텍스처
+	* 0: FrameBuffer
+	* 1: Bloom FrameBuffer
+	*/
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
 }
 
 void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
@@ -114,6 +124,15 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_DEPTH_STENCIL_ATTACHMENT,
 		GL_RENDERBUFFER,
 		rbo
+	);
+
+	// Bloom 텍스처 바인딩
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT1,
+		GL_TEXTURE_2D_MULTISAMPLE,
+		bloom->sceneTexture,
+		0
 	);
 
 	// opengl 에러 체크

@@ -201,6 +201,9 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+
+	imguiController->bloomCount = postProcessingFrameBuffer->bloom->bloomCount;
+	imguiController->bloomSceneTexture = postProcessingFrameBuffer->screenTexture;
 	
 	
 

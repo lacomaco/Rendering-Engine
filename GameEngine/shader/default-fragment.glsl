@@ -1,7 +1,10 @@
 #version 460 core
 #include common.glsl
 
-out vec4 FragColor;
+
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BloomColor;
+
 in vec2 TexCoord;
 in vec3 normalWorld;
 in vec3 posWorld;

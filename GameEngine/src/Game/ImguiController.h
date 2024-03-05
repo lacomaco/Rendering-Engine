@@ -44,6 +44,9 @@ public:
 	glm::vec3 directionalLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 	unsigned int directionalLightDepthMap = 0;
 
+	// Bloom ฐüทร
+	unsigned int bloomSceneTexture = 0;
+	int bloomCount = 0;
 
 };
 

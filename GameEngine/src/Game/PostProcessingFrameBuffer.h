@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <memory>
+#include "Bloom.h"
 
 class PostProcessingFrameBuffer
 {
@@ -26,5 +28,7 @@ public:
 	void Draw(const char* programName);
 
 	float exposure = 1.0f;
+
+	std::shared_ptr<Bloom> bloom;
 };
 
