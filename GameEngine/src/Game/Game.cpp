@@ -56,7 +56,7 @@ void Game::GenerateOutput() {
 		meshRenderer->Draw("normal");
 	}
 
-	postProcessingFrameBuffer->Draw("framebuffer-example");
+	postProcessingFrameBuffer->Draw("hdr");
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);
@@ -353,9 +353,9 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadShaderProgram(
-		"./shader/framebuffer-example-vertex.glsl",
-		"./shader/framebuffer-example-fragment.glsl",
-		"framebuffer-example"
+		"./shader/hdr-vertex.glsl",
+		"./shader/hdr-fragment.glsl",
+		"hdr"
 	);
 
 	shader->loadShaderProgram(
