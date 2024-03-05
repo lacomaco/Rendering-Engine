@@ -1399,6 +1399,7 @@
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\simple-shading-vertex.glsl" />
     <None Include="shader\simple-shading-fragment.glsl" />
+    <None Include="shader\bloom-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

@@ -619,6 +619,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="libs\glm\gtx\wrap.inl" />
     <None Include="libs\glm\LICENSE" />
     <None Include="libs\imgui\LICENSE" />
+    <None Include="shader\bloom-fragment.glsl" />
     <None Include="shader\common.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>

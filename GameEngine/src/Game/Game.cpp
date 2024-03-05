@@ -360,6 +360,12 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/bloom-fragment.glsl",
+		"bloom"
+	);
+
+	shader->loadShaderProgram(
 		"./shader/cubemap-vertex.glsl",
 		"./shader/cubemap-fragment.glsl",
 		"cubemap"
