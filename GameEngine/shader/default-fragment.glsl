@@ -122,11 +122,11 @@ void main() {
 	// TMI: 사람은 초록색에 민감하여 초록색이 높을수록 밝다고 느낀다.
 	float brightness = dot(srgbColor, vec3(0.2126, 0.7152, 0.0722));
 
-	if(brightness > 0.8){
+	if(brightness > 0.94){
 		BloomColor = colorWithAlpha;
 	}
 	else{
-		BloomColor = vec4(exposure,0.0,0.0,1.0);
+		BloomColor = vec4(0.0,0.0,0.0,1.0);
 	}
 }
 

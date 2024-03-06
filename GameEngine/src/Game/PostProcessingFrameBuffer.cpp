@@ -27,6 +27,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
+	bloom->Draw();
 	// 기본 컬러버퍼 사용.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -40,6 +41,10 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
+	shader->setInt(programName, "screenTexture", 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, bloom->TextureId());
+	shader->setInt(programName, "bloomTexture", 1);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_FRAMEBUFFER_SRGB);

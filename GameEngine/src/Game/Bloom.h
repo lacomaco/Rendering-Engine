@@ -13,6 +13,9 @@ public:
 
 	void CreateSceneTexture();
 	void CopySceneTexture(unsigned int msaaFB);
+	void Draw();
+	void Merge();
+	unsigned int TextureId();
 
 };
 

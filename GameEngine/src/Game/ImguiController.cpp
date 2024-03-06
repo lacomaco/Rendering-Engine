@@ -89,7 +89,6 @@ void ImguiController::Update() {
 			ImVec2(1,0)
 		);
 
-
 		ImGui::TreePop();
 	}
 

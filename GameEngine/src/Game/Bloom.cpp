@@ -3,6 +3,7 @@
 #include <glew.h>
 #include "../Constants.h"
 #include <iostream>
+#include "../Util/Shader.h"
 
 Bloom::Bloom() {
 
@@ -71,6 +72,15 @@ void Bloom::CreateSceneTexture() {
 
 void Bloom::CopySceneTexture(unsigned int msaaFB) {
 	
+	// 프레임버퍼 청소
+	glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[1]);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFB);
 	glReadBuffer(GL_COLOR_ATTACHMENT1);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, pingpongFBO[1]);
@@ -87,4 +97,39 @@ void Bloom::CopySceneTexture(unsigned int msaaFB) {
 
 	// read,draw 복구
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Bloom::Draw() {
+	bool horizontal = true;
+	auto shader = Shader::getInstance();
+	auto progrma = shader->getShaderProgram("bloom");
+	glUseProgram(progrma);
+
+	for (int i = 0; i < bloomCount; i++) {
+		int index = horizontal ? 0 : 1;
+		shader->setBool("bloom", "horizontal", horizontal);
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[index]);
+		glBindVertexArray(vao);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(
+			GL_TEXTURE_2D,
+			pingpongColorbuffers[(index+1)%2]
+		);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		horizontal = !horizontal;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+unsigned int Bloom::TextureId() {
+	if(bloomCount % 2 == 0)
+		return pingpongColorbuffers[0];
+	else
+		return pingpongColorbuffers[1];
+}
+
+void Bloom::Merge() {
+
 }
