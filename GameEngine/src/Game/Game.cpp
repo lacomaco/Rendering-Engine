@@ -33,8 +33,6 @@ void Game::GenerateOutput() {
 	lightManager->MakeShadow(meshRenderer);
 
 	postProcessingFrameBuffer->use();
-
-	// TODO: simple-shading -> default 로 변경
 	
 	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
@@ -202,10 +200,6 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-	imguiController->bloomCount = postProcessingFrameBuffer->bloom->bloomCount;
-	imguiController->bloomSceneTexture = postProcessingFrameBuffer->bloom->pingpongColorbuffers[1];
-	
-	
 
 	// 포인트.
 	
@@ -286,8 +280,6 @@ void Game::UpdateGame() {
 	lightManager->lights[0]->CalculateLightSpaceMatrix();
 	*/
 
-
-	postProcessingFrameBuffer->bloom->bloomCount = imguiController->bloomCount;
 }
 
 void Game::RunLoop() {
@@ -361,8 +353,14 @@ void Game::CreateShaderProgram() {
 
 	shader->loadShaderProgram(
 		"./shader/hdr-vertex.glsl",
-		"./shader/bloom-fragment.glsl",
-		"bloom"
+		"./shader/up-sample-fragment.glsl",
+		"up-sample"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/down-sample-fragment.glsl",
+		"down-sample"
 	);
 
 	shader->loadShaderProgram(

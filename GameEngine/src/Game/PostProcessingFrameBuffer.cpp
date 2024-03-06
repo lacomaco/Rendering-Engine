@@ -7,7 +7,6 @@
 
 PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 {
-	bloom = std::make_shared<Bloom>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -18,7 +17,6 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 
 	auto shader = Shader::getInstance();
 	
-	bloom->CopySceneTexture(msaaFrameBuffer);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
@@ -27,7 +25,8 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-	bloom->Draw();
+	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
+
 	// 기본 컬러버퍼 사용.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -42,9 +41,6 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
 	shader->setInt(programName, "screenTexture", 0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, bloom->TextureId());
-	shader->setInt(programName, "bloomTexture", 1);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_FRAMEBUFFER_SRGB);
@@ -118,15 +114,6 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		0
 	);
 
-	// Bloom 텍스처 바인딩
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT1,
-		GL_TEXTURE_2D_MULTISAMPLE,
-		bloom->sceneTexture,
-		0
-	);
-
 	// rbo 생성
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -144,14 +131,6 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 		GL_RENDERBUFFER,
 		rbo
 	);
-	/*
-	* 2 모두 MSAA 텍스처
-	* 0: FrameBuffer
-	* 1: Bloom FrameBuffer
-	*/
-	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
-
 
 	// opengl 에러 체크
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
