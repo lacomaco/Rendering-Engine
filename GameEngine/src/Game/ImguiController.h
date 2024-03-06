@@ -45,8 +45,7 @@ public:
 	unsigned int directionalLightDepthMap = 0;
 
 	// Bloom ฐüทร
-	unsigned int bloomSceneTexture = 0;
-	int bloomCount = 0;
+	float bloomThreshold = 0.04;
 
 };
 

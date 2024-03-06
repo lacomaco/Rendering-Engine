@@ -77,18 +77,8 @@ void ImguiController::Update() {
 	}
 
 	if (ImGui::TreeNode("Bloom")) {
-		ImGui::Text("BloomCount");
-		ImGui::SliderInt("bloomCount", &bloomCount, 0, 20);
-
-		ImGui::Text("BloomSceneTexture");
-		ImGui::Image(
-			(void*)(intptr_t)bloomSceneTexture,
-			ImVec2(200, 200),
-			// y축 뒤집기
-			ImVec2(0,1),
-			ImVec2(1,0)
-		);
-
+		ImGui::Text("bloomThreshold");
+		ImGui::SliderFloat("bloomCount", &bloomThreshold, 0, 1.0);
 		ImGui::TreePop();
 	}
 

@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 
+
+extern std::vector<float> quadVertices;
+
 // PostProcessing에 사용되는 Quad 생성 결과.
 struct SimpleQuad {
 	unsigned int VAO;

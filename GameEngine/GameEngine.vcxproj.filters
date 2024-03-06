@@ -858,10 +858,16 @@
     <ClInclude Include="src\Util\DummyTexture2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Bloom.h">
+    <ClInclude Include="src\Util\GLHelper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\GLHelper.h">
+    <ClInclude Include="src\Game\BloomTexture.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\BloomFBO.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Bloom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -968,10 +974,16 @@
     <ClCompile Include="src\Util\DummyTexture2D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Bloom.cpp">
+    <ClCompile Include="src\Util\GLHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\GLHelper.cpp">
+    <ClCompile Include="src\Game\BloomTexture.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\BloomFBO.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bloom.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1399,7 +1411,8 @@
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\simple-shading-vertex.glsl" />
     <None Include="shader\simple-shading-fragment.glsl" />
-    <None Include="shader\bloom-fragment.glsl" />
+    <None Include="shader\up-sample-fragment.glsl" />
+    <None Include="shader\down-sample-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

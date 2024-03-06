@@ -3,6 +3,17 @@
 #include <iostream>
 #include "../Constants.h"
 
+std::vector<float> quadVertices = {
+	// positions   // texCoords
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	 1.0f,  1.0f,  1.0f, 1.0f
+};
+
 SimpleQuad CreateSimpleQuad() {
 	unsigned int vao, vbo;
 	SimpleQuad result = { 0, 0 };

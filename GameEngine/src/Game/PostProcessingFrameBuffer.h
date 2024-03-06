@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "Bloom.h"
 
 class PostProcessingFrameBuffer
 {
@@ -27,6 +28,10 @@ public:
 
 	void Draw(const char* programName);
 
+	std::shared_ptr<Bloom> bloom;
+
 	float exposure = 1.0f;
+
+	float bloomThreshold = 0.04f;
 };
 

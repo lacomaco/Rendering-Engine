@@ -272,6 +272,8 @@ void Game::UpdateGame() {
 	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
 	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
 
+	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
+
 	//lightManager->UpdateLight(deltaTime);
 	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
 	/*

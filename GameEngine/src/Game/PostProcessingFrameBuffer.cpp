@@ -7,6 +7,7 @@
 
 PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 {
+	bloom = std::make_shared<Bloom>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -25,6 +26,8 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
+	bloom->Draw(screenTexture);
+
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
 	// 기본 컬러버퍼 사용.
@@ -41,6 +44,11 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, screenTexture);
 	shader->setInt(programName, "screenTexture", 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, bloom->fbo->textures[0]->texture);
+	shader->setInt(programName, "bloomTexture", 1);
+	shader->setFloat(programName, "bloomThreshold", bloomThreshold);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_FRAMEBUFFER_SRGB);

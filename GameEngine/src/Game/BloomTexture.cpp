@@ -3,7 +3,7 @@
 #include <iostream>
 
 BloomTexture::BloomTexture(glm::vec2 size, glm::vec2 intSize) {
-	this->size = size;
+ 	this->size = size;
 	this->intSize = intSize;
 
 	glGenTextures(1, &texture);
