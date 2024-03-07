@@ -27,7 +27,8 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
-	meshRenderer->AddMesh(backPack);
+	//meshRenderer->AddMesh(backPack);
+	meshRenderer->AddMesh(circle[0]);
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
@@ -36,6 +37,7 @@ void Game::GenerateOutput() {
 	
 	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
+
 
 	postProcessingFrameBuffer->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
@@ -165,15 +167,17 @@ bool Game::Initialize() {
 	}
 
 	auto _circle = make_shared<Circle>();
-	_circle->SetTexture("./assets/images/white.png", "albedo");
+	_circle->SetTexture("./assets/pbr-test/rustediron2_basecolor.png", "albedo");
+	_circle->SetTexture("./assets/pbr-test/rustediron2_normal.png", "normal");
+	_circle->SetTexture("./assets/pbr-test/rustediron2_metallic.png", "metallic");
+	_circle->SetTexture("./assets/pbr-test/rustediron2_roughness.png", "roughness");
 	_circle->SetupMesh();
 
 
 
 	this->circle.push_back(_circle);
 
-	//backPack = make_shared<Model>("./assets/zeldaPosed001/zeldaPosed001.fbx");
-	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
@@ -281,6 +285,9 @@ void Game::UpdateGame() {
 	lightManager->lights[0]->direction = camera->cameraFront;
 	lightManager->lights[0]->CalculateLightSpaceMatrix();
 	*/
+
+	cubeMap->select = imguiController->select;
+	cubeMap->lodLevel = imguiController->lodLevel;
 
 }
 

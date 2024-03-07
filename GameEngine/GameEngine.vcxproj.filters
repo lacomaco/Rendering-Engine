@@ -837,9 +837,6 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util\dds_loader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Shadow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -954,9 +951,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Util\dds_loader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Shadow.cpp">

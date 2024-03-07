@@ -47,5 +47,8 @@ public:
 	// Bloom °ü·Ã
 	float bloomThreshold = 0.04;
 
+	// cube¸Ê °ü·Ã
+	int select = 0; // 0: skybox, 1: radiance, 2: irradiance
+	float lodLevel = 0.0f;
 };
 

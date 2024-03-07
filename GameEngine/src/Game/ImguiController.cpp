@@ -76,6 +76,24 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
+	if (ImGui::TreeNode("CubeMap Test")) {
+		if (ImGui::RadioButton("skybox", select == 0)) {
+			select = 0;
+		}
+
+		if (ImGui::RadioButton("radiance", select == 1)) {
+			select = 1;
+		}
+
+		if (ImGui::RadioButton("irradiance", select == 2)) {
+			select = 2;
+		}
+
+		ImGui::SliderFloat("lodLevel", &lodLevel, 0.0f, 6.0f);
+
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("Bloom")) {
 		ImGui::Text("bloomThreshold");
 		ImGui::SliderFloat("bloomCount", &bloomThreshold, 0, 1.0);

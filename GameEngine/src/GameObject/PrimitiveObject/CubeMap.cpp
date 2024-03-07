@@ -1,5 +1,4 @@
 #include "CubeMap.h"
-#include "../../Util/dds_loader.h"
 #include <memory>
 #include <gli/gli.hpp>
 
@@ -71,18 +70,18 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
         GL_FLOAT,
         Texture.data()
     );
-
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);    
 }
+
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-
-    bool do_flip = true;
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 6);
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
@@ -91,7 +90,6 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 
     for (unsigned int i = 0; i < maps.size(); i++)
     {
-
         gli::texture2d Texture(gli::load_dds(maps[i].c_str()));
 
         gli::gl GL(gli::gl::PROFILE_GL33);
@@ -112,11 +110,17 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
             std::cout << "Error loading texture: " << error << std::endl;
         }
     }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cout << "mipmapFalse : " << error << std::endl;
+    }
 }
 
 
@@ -140,6 +144,9 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
     shader->setInt(shaderProgramName, "brdfLUT", 3);
+
+    shader->setFloat(shaderProgramName, "lodLevel", lodLevel);
+    shader->setInt(shaderProgramName, "select", select);
 }
 
 void CubeMap::Draw(const char* shaderProgramName,Camera* camera) {

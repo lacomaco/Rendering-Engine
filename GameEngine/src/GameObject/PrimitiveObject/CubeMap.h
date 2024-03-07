@@ -76,5 +76,8 @@ public:
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
     };
+
+    int select = 0; // 0: skybox, 1: radiance, 2: irradiance
+    float lodLevel = 0.0f;
 };
 
