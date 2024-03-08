@@ -13,7 +13,6 @@ in vec3 tangentWorld;
 in vec3 bitangentWorld;
 in mat3 TBN;
 
-
 in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
@@ -23,7 +22,6 @@ void main() {
 
 	vec3 toEye = normalize(cameraPos - posWorld);
 
-	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
 	vec3 diffuseColor = texture(albedo0,TexCoord).rgb;
 	vec3 specularColor = texture(specular0,TexCoord).rgb;
 
@@ -36,6 +34,34 @@ void main() {
 	if(use_normal0){
 	    normal = getNormal(normalWorld, tangentWorld, bitangentWorld, normal0, TexCoord);
 	}
+
+	PBRValue pbrMaterial;
+
+	vec3 pixelToEye = normalize(cameraPos - posWorld);
+	vec3 normalWorld = normal;
+	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
+	float metallic = use_metallic0 ? texture(metallic0, TexCoord).r : 0.0;
+	float roughness = use_roughness0 ? texture(roughness0, TexCoord).r : 0.0;
+	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
+
+	// halfWayVector 계산은 라이트 처리에서 다룸.
+	float ndotO = max(dot(normalWorld, pixelToEye), 0.0);
+
+	pbrMaterial.albedo = ambientColor;
+	pbrMaterial.metallic = metallic;
+	pbrMaterial.roughness = roughness;
+	pbrMaterial.ao = ao;
+	pbrMaterial.normalWorld = normalWorld;
+	pbrMaterial.pixelToEye = pixelToEye;
+	pbrMaterial.ndotO = ndotO;
+	// ndotH, ndotl, halfWay는 라이트처리에서 핸들링.
+	// 라이트 처리에서 lightStrength도 개별적으로 처리해주어야함.
+
+	vec3 ambientLight = ambientIBL(ambientColor, normalWorld, pixelToEye, ao, metallic, roughness);
+
+
+	float countLight = 0.0;
+
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
@@ -50,16 +76,14 @@ void main() {
 				normalize(light.position - posWorld)
 			);
 
+			if(shadow == 0.0){
+			    countLight += 1.0;
+			}
+
 			color += directionalLight(
 				light,
-				material,
-				posWorld,
-				normal,
-				toEye,
 				shadow,
-				ambientColor,
-				diffuseColor,
-				specularColor
+				pbrMaterial
 			);
 		}
 		else if(light.lightType == 2){
@@ -71,18 +95,16 @@ void main() {
 				normalize(light.position - posWorld)
 			);
 
+			if(shadow == 0.0){
+			    countLight += 1.0;
+			}
+
 			spotLightCount++;
 
 			color += spotLight(
 				light,
-				material,
-				posWorld,
-				normal,
-				toEye,
 				shadow,
-				ambientColor,
-				diffuseColor,
-				specularColor
+				pbrMaterial
 			);
 		}
 	}
@@ -97,20 +119,23 @@ void main() {
 			pointShadowDepthMap[i]
 		);
 
+			if(shadow == 0.0){
+			    countLight += 1.0;
+			}
+
 		color += pointLight(
 			light,
-			material,
-			posWorld,
-			normal,
-			toEye,
 			shadow,
-			ambientColor,
-			diffuseColor,
-			specularColor
+			pbrMaterial
 		);
 	}
-	
 
+	if(countLight == 0.0){
+	    // 나중에 uniform으로 빼든가 Material을 체계적으로 관리하는 매니저를 만들자..
+	    ambientLight *= 0.1;
+	}
+
+	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 
 	FragColor = colorWithAlpha;

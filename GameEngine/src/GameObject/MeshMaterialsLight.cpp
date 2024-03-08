@@ -86,7 +86,6 @@ void Mesh::Draw(const char* shaderProgramName) {
 
 		else if (name == "normal") {
 			number = std::to_string(normalNr++);
-			shader->setInt(shaderProgramName, ("use_"+name + number).c_str(), textureNumber);
 		}
 
 		else if (name == "height") {
@@ -108,6 +107,7 @@ void Mesh::Draw(const char* shaderProgramName) {
 		
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		shader->setInt(shaderProgramName, (name + number).c_str(), textureNumber);
+		shader->setInt(shaderProgramName, ("use_" + name + number).c_str(), textureNumber);
 	}
 
 	// draw mesh
