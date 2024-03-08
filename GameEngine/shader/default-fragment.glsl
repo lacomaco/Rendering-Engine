@@ -76,9 +76,7 @@ void main() {
 				normalize(light.position - posWorld)
 			);
 
-			if(shadow == 0.0){
-			    countLight += 1.0;
-			}
+			countLight = 1.0 - shadow;
 
 			color += directionalLight(
 				light,
@@ -95,9 +93,7 @@ void main() {
 				normalize(light.position - posWorld)
 			);
 
-			if(shadow == 0.0){
-			    countLight += 1.0;
-			}
+			countLight = 1.0 - shadow;
 
 			spotLightCount++;
 
@@ -118,10 +114,8 @@ void main() {
 			light,
 			pointShadowDepthMap[i]
 		);
-
-			if(shadow == 0.0){
-			    countLight += 1.0;
-			}
+		
+		countLight = 1.0 - shadow;
 
 		color += pointLight(
 			light,
@@ -131,8 +125,7 @@ void main() {
 	}
 
 	if(countLight == 0.0){
-	    // 나중에 uniform으로 빼든가 Material을 체계적으로 관리하는 매니저를 만들자..
-	    ambientLight *= 0.1;
+	    ambientLight *= countLight;
 	}
 
 	color += ambientLight;
