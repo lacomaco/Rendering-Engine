@@ -9,14 +9,14 @@ uniform mat4 invTranspose;
 
 
 uniform sampler2D albedo0;
-uniform sampler2D albedo1;
-uniform sampler2D specular0;
 
 uniform bool use_metallic0;
 uniform sampler2D metallic0;
 
+
 uniform bool use_roughness0;
 uniform sampler2D roughness0;
+
 
 uniform bool use_ao0;
 uniform sampler2D ao0;
@@ -86,8 +86,6 @@ uniform Light pointLights[2];
 
 uniform vec3 cameraPos;
 
-vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye); // 전방선언
-
 float calcAttenuation(float distance,Light l) {
 	return 1.0 / distance;
 }
@@ -117,18 +115,18 @@ vec3 diffuseIBL(vec3 albedo,vec3 normalWorld,vec3 pixelToEye,float metallic) {
     vec3 F = SchlickFresnel(F0, max(dot(normalWorld,pixelToEye),0.0));
     vec3 kd = mix(1.0 - F, vec3(0.0), metallic);
 
-    vec3 irradiance = texture(irradianceMap, normalWorld).rgb;
+    vec3 irradiance = textureLod(irradianceMap, normalWorld,0.0).rgb;
 
-    return kd * albedo;
+    return kd * albedo * irradiance;
 }
 
 vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,float roughness) {
     vec2 brdf = texture(
-    brdfTexture, 
-    vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
+        brdfTexture, 
+        vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
     ).rg;
 
-    vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), roughness * 6.0f).rgb;
+    vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 1.0 + roughness * 5.0f).rgb;
     vec3 F0 = mix(Fdielectric, albedo, metallic);
 
     return (F0 * brdf.x  + brdf.y) * specularIrradiance;
@@ -144,7 +142,11 @@ vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float meta
 
 float NdfGGX(float ndotH, float roughness) {
     float pi = 3.141592;
-    return pow(roughness, 2) / (pi * pow(pow(ndotH, 2) * (pow(roughness, 2) - 1) + 1, 2));
+    float alpha = pow(roughness, 2);
+    float alpha2 = pow(alpha, 2);
+    float denom = pow(ndotH,2) * (alpha2 - 1) + 1;
+
+    return alpha2 / pi * pow(denom, 2);
 }
 
 float SchlickG1(float ndotV, float k) {
@@ -321,18 +323,3 @@ float pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
 
     return shadow;
 }
-
-/*
-https://psgraphics.blogspot.com/2020/03/fresnel-equations-schlick-approximation.html
-
-vec3 R0 = (guess by looking)
-vec3 R = R0 + (1-R0)*pow(1-cosine,5)
-*/
-vec3 schlickFresnel(vec3 iro, vec3 normal, vec3 toEye) {
-    float lookAngle = dot(normal,toEye);
-    // 90도에 가까우면 본연의 색을, 0도에 가까우면 반사색을 반환.
-    lookAngle = 1.0 - clamp(lookAngle,0.0,1.0);
-
-    return iro + (1.0f - iro) * pow(lookAngle,5.0);
-}
-

@@ -262,11 +262,11 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			dataFormat = GL_RG;
 		}
 		else if (nrComponents == 3) {
-			internalFormat = GL_SRGB;
+			internalFormat = GL_RGB8;
 			dataFormat = GL_RGB;
 		}
 		else if (nrComponents == 4) {
-			internalFormat = GL_SRGB_ALPHA;
+			internalFormat = GL_RGBA8;
 			dataFormat = GL_RGBA;
 
 			int pixelCount = width * height;

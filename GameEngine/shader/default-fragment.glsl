@@ -1,5 +1,7 @@
 #version 460 core
+precision highp float;
 #include common.glsl
+
 
 
 out vec4 FragColor;
@@ -22,9 +24,6 @@ void main() {
 
 	vec3 toEye = normalize(cameraPos - posWorld);
 
-	vec3 diffuseColor = texture(albedo0,TexCoord).rgb;
-	vec3 specularColor = texture(specular0,TexCoord).rgb;
-
 	vec3 color = vec3(0.0);
 
 	int spotLightCount = 0;
@@ -39,9 +38,13 @@ void main() {
 
 	vec3 pixelToEye = normalize(cameraPos - posWorld);
 	vec3 normalWorld = normal;
+
 	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
+
 	float metallic = use_metallic0 ? texture(metallic0, TexCoord).r : 0.0;
+
 	float roughness = use_roughness0 ? texture(roughness0, TexCoord).r : 0.0;
+
 	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
 
 	// halfWayVector 계산은 라이트 처리에서 다룸.
@@ -58,7 +61,6 @@ void main() {
 	// 라이트 처리에서 lightStrength도 개별적으로 처리해주어야함.
 
 	vec3 ambientLight = ambientIBL(ambientColor, normalWorld, pixelToEye, ao, metallic, roughness);
-
 
 	float countLight = 0.0;
 

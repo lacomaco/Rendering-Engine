@@ -34,7 +34,8 @@ CubeMap::CubeMap(std::string filePath) {
     CreateCubeMapTexture(skyBoxId, skyBox);
     CreateCubeMapTexture(radianceId, skyBoxRadiance);
     CreateCubeMapTexture(irradianceId, skyBoxIrradiance);
-    CreateBrdfLutTexture(filePath + "envbrdf.dds");
+    // TODO: test 말고 envbrdf.dds로 바꾸자.
+    CreateBrdfLutTexture(filePath + "test.dds");
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -55,26 +56,29 @@ CubeMap::CubeMap(std::string filePath) {
 void CubeMap::CreateBrdfLutTexture(std::string map) {
     glGenTextures(1, &brdfLUTTextureId);
     glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     gli::texture2d Texture(gli::load_dds(map.c_str()));
 
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
 
+    std::cout << Format.Internal << std::endl;
+
     glTexImage2D(GL_TEXTURE_2D,
         0,
-        GL_RG32F,
+        Format.Internal,
         Texture.extent().x,
         Texture.extent().y,
        	0,
-        GL_RG,
-        GL_FLOAT,
+        Format.External,
+        Format.Type,
         Texture.data()
     );
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);    
 }
 
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
@@ -143,7 +147,7 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
 
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
-    shader->setInt(shaderProgramName, "brdfLUT", 3);
+    shader->setInt(shaderProgramName, "brdfTexture", 3);
 
     shader->setFloat(shaderProgramName, "lodLevel", lodLevel);
     shader->setInt(shaderProgramName, "select", select);

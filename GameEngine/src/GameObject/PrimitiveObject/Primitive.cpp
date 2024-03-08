@@ -81,11 +81,11 @@ void Primitive::SetTexture(std::string path, std::string type) {
         dataFormat = GL_RG;
     }
     else if (nrChannels == 3) {
-        internalFormat = GL_SRGB;
+        internalFormat = GL_RGB8;
         dataFormat = GL_RGB;
     }
     else if (nrChannels == 4) {
-        internalFormat = GL_SRGB_ALPHA;
+        internalFormat = GL_RGBA8;
         dataFormat = GL_RGBA;
         if (type == "albedo") {
             texture.isAlpha = true;
@@ -106,7 +106,6 @@ void Primitive::SetTexture(std::string path, std::string type) {
         GL_UNSIGNED_BYTE, // 픽셀 데이터 타입
         data // 픽셀 데이터 포인터.
     );
-    glGenerateMipmap(GL_TEXTURE_2D);
 
     /*
     * S: 수평축 (x축)
@@ -118,6 +117,9 @@ void Primitive::SetTexture(std::string path, std::string type) {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
 
     stbi_image_free(data);
 
