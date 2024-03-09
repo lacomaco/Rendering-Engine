@@ -133,9 +133,13 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
 }
 
 
-vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness){
+// 나중에 GI 구현하게되면 diffuseIBL에 ndotl을 곱하는 코드는 제거해야함.
+vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness,float shadow,float ndotl){
     vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic);
     vec3 specularIBL = specularIBL(albedo,normalW,pixelToEye,metallic,roughness);
+
+    specularIBL *= shadow;
+    diffuseIBL *= ndotl < 0.2 ? 0.2 : ndotl;
 
     return (diffuseIBL + specularIBL) * ao;
 }

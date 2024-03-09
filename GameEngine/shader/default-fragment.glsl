@@ -60,8 +60,6 @@ void main() {
 	// ndotH, ndotl, halfWay는 라이트처리에서 핸들링.
 	// 라이트 처리에서 lightStrength도 개별적으로 처리해주어야함.
 
-	vec3 ambientLight = ambientIBL(ambientColor, normalWorld, pixelToEye, ao, metallic, roughness);
-
 	float countLight = 0.0;
 
 
@@ -125,6 +123,9 @@ void main() {
 			pbrMaterial
 		);
 	}
+
+	vec3 ambientLight = ambientIBL(ambientColor, normalWorld, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
+
 
 	if(countLight == 0.0){
 	    ambientLight *= vec3(0.1);
