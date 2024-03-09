@@ -50,6 +50,7 @@ struct Texture {
 	std::string type;
 	std::string path;
 	bool isAlpha = false;
+	std::string signature; // path+type
 };
 
 extern std::vector<Texture> textures_loaded;

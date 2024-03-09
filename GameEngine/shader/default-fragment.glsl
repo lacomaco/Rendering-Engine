@@ -43,7 +43,7 @@ void main() {
 
 	float metallic = use_metallic0 ? texture(metallic0, TexCoord).r : 0.0;
 
-	float roughness = use_roughness0 ? texture(roughness0, TexCoord).r : 0.0;
+	float roughness = use_roughness0 ? texture(roughness0, TexCoord).g : 0.0;
 
 	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
 
@@ -131,7 +131,7 @@ void main() {
 	    ambientLight *= vec3(0.1);
 	}
 
-	color += ambientLight * vec3(0.7);
+	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 
 	FragColor = colorWithAlpha;

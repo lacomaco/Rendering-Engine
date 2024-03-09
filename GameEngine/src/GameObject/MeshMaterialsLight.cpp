@@ -76,32 +76,53 @@ void Mesh::Draw(const char* shaderProgramName) {
 			number = std::to_string(specularNr++);
 		} 
 
-		else if (name == "albedo") {
+		if (name == "albedo") {
 			number = std::to_string(albedoNr++);
 		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("albedo") + number).c_str(), 0);
+		}
 
-		else if (name == "emissive") {
+		if (name == "emissive") {
 			number = std::to_string(emissiveNr++);
 		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("emissive") + number).c_str(), 0);
+		}
 
-		else if (name == "normal") {
+		if (name == "normal") {
 			number = std::to_string(normalNr++);
 		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("normal") + number).c_str(), 0);
+		}
 
-		else if (name == "height") {
+		if (name == "height") {
 			number = std::to_string(heightNr++);
 		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("height") + number).c_str(), 0);
+		}
 
-		else if (name == "metallic") {
+		if (name == "metallic") {
 			number = std::to_string(metallicNr++);
 		}
-
-		else if (name == "ao") {
-			number = std::to_string(aoNr++);
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("metallic") + number).c_str(), 0);
 		}
 
-		else if (name == "roughness") {
+		if (name == "ao") {
+			number = std::to_string(aoNr++);
+		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("ao") + number).c_str(), 0);
+		}
+
+		if (name == "roughness") {
 			number = std::to_string(roughnessNr++);
+		}
+		else {
+			shader->setInt(shaderProgramName, ("use_" + std::string("roughness") + number).c_str(), 0);
 		}
 
 		

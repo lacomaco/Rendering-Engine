@@ -207,9 +207,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 		auto fileName = ExtractFileName(str.C_Str());
 
+		auto signature = fileName + textureType;
+
 		for (unsigned int j = 0; j < textures_loaded.size(); j++)
 		{
-			if (std::strcmp(textures_loaded[j].path.data(), fileName.c_str()) == 0)
+			if (std::strcmp(textures_loaded[j].signature.data(), signature.c_str()) == 0)
 			{
 				textures.push_back(textures_loaded[j]);
 				skip = true;
@@ -221,8 +223,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			Texture texture;
 			bool hasAlpha = false;
 			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha, textureType == "albedo");
+			std::cout << textureType << std::endl;
 			texture.type = textureType;
 			texture.path = fileName;
+			texture.signature = signature;
+			
 
 			std::vector<std::string> notAlphaTexture = {
 				"Walls_baseColor.png",

@@ -122,7 +122,7 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
-	cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
+	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -168,10 +168,12 @@ bool Game::Initialize() {
 	}
 
 	auto _circle = make_shared<Circle>();
-	_circle->SetTexture("./assets/pbr-test/rustediron2_basecolor.png", "albedo");
-	_circle->SetTexture("./assets/pbr-test/rustediron2_normal.png", "normal");
-	_circle->SetTexture("./assets/pbr-test/rustediron2_metallic.png", "metallic");
-	_circle->SetTexture("./assets/pbr-test/rustediron2_roughness.png", "roughness");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_albedo.png", "albedo");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_metallic.png", "metallic");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_roughness.png", "roughness");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_normal-ogl.png", "normal");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_ao.png", "ao");
+	_circle->SetTexture("./assets/pbr-test/knotty-plywood_height.png", "height");
 	_circle->SetupMesh();
 
 
@@ -194,6 +196,7 @@ bool Game::Initialize() {
 
 	auto imguiController = ImguiController::getInstance();
 	
+	
 	lightManager->CreateLight
 	(
 		0,
@@ -205,10 +208,9 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	
 
 	// 포인트.
-	
-	
 	/*
 	lightManager->CreateLight
 	(
@@ -216,9 +218,10 @@ bool Game::Initialize() {
 		//glm::vec3(0.0f, 3.0f, 5.0f),
 		glm::vec3(-3, 3, -0.05),
 		glm::vec3(-0.042, -0.390, 0.952),
-		12
+		2
 	);
 	*/
+	
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 
@@ -274,9 +277,10 @@ void Game::UpdateGame() {
 
 	postProcessingFrameBuffer->exposure = exposure;
 
-	
+
 	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
 	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
+	
 
 	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
 
