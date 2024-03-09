@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
+#include "../Util/Shader.h"
 class ImguiController
 {
 
@@ -50,5 +51,12 @@ public:
 	// cube맵 관련
 	int select = 0; // 0: skybox, 1: radiance, 2: irradiance
 	float lodLevel = 0.0f;
+
+	// PBR 테스트용.
+	// TODO: 나중에 지우기.
+	float metallic = 0.78f;
+	float roughness = 0.0f;
+
+	void PutPBRUniform(const char* programName);
 };
 

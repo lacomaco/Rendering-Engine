@@ -27,7 +27,7 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
-	//meshRenderer->AddMesh(backPack);
+	meshRenderer->AddMesh(backPack);
 	meshRenderer->AddMesh(circle[0]);
 	meshRenderer->MeshAlignment(camera.get());
 
@@ -37,7 +37,8 @@ void Game::GenerateOutput() {
 	
 	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
-
+	auto imguiController = ImguiController::getInstance();
+	imguiController->PutPBRUniform(shaderName);
 
 	postProcessingFrameBuffer->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
@@ -177,7 +178,7 @@ bool Game::Initialize() {
 
 	this->circle.push_back(_circle);
 
-	//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
@@ -273,6 +274,7 @@ void Game::UpdateGame() {
 
 	postProcessingFrameBuffer->exposure = exposure;
 
+	
 	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
 	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
 

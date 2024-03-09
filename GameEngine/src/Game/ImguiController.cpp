@@ -94,6 +94,17 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
+	// TODO: 나중에 지우기.
+	if (ImGui::TreeNode("PBR Test")) {
+		ImGui::Text("Metallic");
+		ImGui::SliderFloat("metallic", &metallic, 0.0f, 1.0f);
+
+		ImGui::Text("Roughness");
+		ImGui::SliderFloat("roughness", &roughness, 0.0f, 1.0f);
+
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("Bloom")) {
 		ImGui::Text("bloomThreshold");
 		ImGui::SliderFloat("bloomCount", &bloomThreshold, 0, 1.0);
@@ -109,6 +120,16 @@ void ImguiController::Update() {
 void ImguiController::Render() {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+// TODO: 나중에 지우기.
+void ImguiController::PutPBRUniform(const char* programName) {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram(programName);
+	glUseProgram(program);
+	shader->setFloat(programName, "metallicValue", metallic);
+	shader->setFloat(programName, "roughnessValue", roughness);
+
 }
 
 

@@ -127,10 +127,10 @@ void main() {
 	}
 
 	if(countLight == 0.0){
-	    ambientLight *= countLight;
+	    ambientLight *= vec3(0.1);
 	}
 
-	color += ambientLight;
+	color += ambientLight * vec3(0.7);
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 
 	FragColor = colorWithAlpha;

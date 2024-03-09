@@ -220,7 +220,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		{
 			Texture texture;
 			bool hasAlpha = false;
-			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha);
+			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha, textureType == "albedo");
 			texture.type = textureType;
 			texture.path = fileName;
 
@@ -262,11 +262,11 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			dataFormat = GL_RG;
 		}
 		else if (nrComponents == 3) {
-			internalFormat = GL_RGB8;
+			internalFormat = gamma ? GL_SRGB : GL_RGB;
 			dataFormat = GL_RGB;
 		}
 		else if (nrComponents == 4) {
-			internalFormat = GL_RGBA8;
+			internalFormat = gamma ? GL_SRGB_ALPHA : GL_RGBA8;
 			dataFormat = GL_RGBA;
 
 			int pixelCount = width * height;
