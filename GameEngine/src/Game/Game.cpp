@@ -211,7 +211,7 @@ bool Game::Initialize() {
 	
 
 	// Æ÷ÀÎÆ®.
-	/*
+	
 	lightManager->CreateLight
 	(
 		1,
@@ -220,7 +220,8 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		2
 	);
-	*/
+	
+	
 	
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;

@@ -41,9 +41,8 @@ void main() {
 
 	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
 
-	float metallic = use_metallic0 ? texture(metallic0, TexCoord).r : 0.0;
-
 	float roughness = use_roughness0 ? texture(roughness0, TexCoord).g : 0.0;
+	float metallic = use_metallic0 ? texture(metallic0, TexCoord).b : 0.0;
 
 	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
 

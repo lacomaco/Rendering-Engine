@@ -25,6 +25,8 @@ void MeshRenderer::MeshAlignment(Camera* camera) {
 
 void MeshRenderer::AddMesh(std::shared_ptr<Model> model
 ) {
+	if(model == nullptr) return;
+
 	for (auto& mesh : model->meshes) {
 		if (mesh->isAlphaMesh) {
 			transparentMesh.push_back({

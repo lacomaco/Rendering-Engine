@@ -62,6 +62,15 @@ void Mesh::Draw(const char* shaderProgramName) {
 	unsigned int aoNr = 0;
 	unsigned int roughnessNr = 0;
 
+	// turoOff all Type Texture
+	shader->setInt(shaderProgramName, "use_albedo0", 0);
+	shader->setInt(shaderProgramName, "use_emissive0", 0);
+	shader->setInt(shaderProgramName, "use_normal0", 0);
+	shader->setInt(shaderProgramName, "use_height0", 0);
+	shader->setInt(shaderProgramName, "use_metallic0", 0);
+	shader->setInt(shaderProgramName, "use_ao0", 0);
+	shader->setInt(shaderProgramName, "use_roughness0", 0);
+
 
 	// 0,1,2 텍스처는 큐브매핑의 스카이박스, 라디언스, 이리디언스 맵이 예약중.
 	for (unsigned int i = 0; i < textures.size(); i++) {
@@ -79,56 +88,34 @@ void Mesh::Draw(const char* shaderProgramName) {
 		if (name == "albedo") {
 			number = std::to_string(albedoNr++);
 		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("albedo") + number).c_str(), 0);
-		}
 
 		if (name == "emissive") {
 			number = std::to_string(emissiveNr++);
-		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("emissive") + number).c_str(), 0);
 		}
 
 		if (name == "normal") {
 			number = std::to_string(normalNr++);
 		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("normal") + number).c_str(), 0);
-		}
 
 		if (name == "height") {
 			number = std::to_string(heightNr++);
-		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("height") + number).c_str(), 0);
 		}
 
 		if (name == "metallic") {
 			number = std::to_string(metallicNr++);
 		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("metallic") + number).c_str(), 0);
-		}
 
 		if (name == "ao") {
 			number = std::to_string(aoNr++);
-		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("ao") + number).c_str(), 0);
 		}
 
 		if (name == "roughness") {
 			number = std::to_string(roughnessNr++);
 		}
-		else {
-			shader->setInt(shaderProgramName, ("use_" + std::string("roughness") + number).c_str(), 0);
-		}
-
 		
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		shader->setInt(shaderProgramName, (name + number).c_str(), textureNumber);
-		shader->setInt(shaderProgramName, ("use_" + name + number).c_str(), textureNumber);
+		shader->setBool(shaderProgramName, ("use_" + name + number).c_str(), 1);
 	}
 
 	// draw mesh
