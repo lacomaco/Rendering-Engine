@@ -1,7 +1,8 @@
 #define MAX_LIGHTS 5
 #define MAX_SPOT_LIGHT 2
 #define MAX_POINT_LIGHT 2
-const float Epsilon = 0.00001;
+#define Epsilon 0.00001
+#define PI 3.141592
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -88,7 +89,7 @@ uniform Light pointLights[2];
 uniform vec3 cameraPos;
 
 float calcAttenuation(float distance,Light l) {
-	return 1.0 / distance;
+	return 1.0 / (l.constant + l.linear * distance + l.quadratic * distance);
 }
 
 // 나중에 uniform으로 바꿀 수 있도록 변경해도 괜찮을듯.
@@ -102,6 +103,7 @@ struct PBRValue {
 	vec3 albedo;
 	vec3 normalWorld;
 	vec3 pixelToEye;
+    vec3 posWorld;
 	float metallic;
 	float roughness;
 	float ao;
@@ -204,9 +206,9 @@ vec3 pointLight(
     float shadow,
     PBRValue value
 ) {
-	vec3 toLight = normalize(l.position - value.pixelToEye);
+	vec3 toLight = normalize(l.position - value.posWorld);
     float lightStrength = max(dot(value.normalWorld, toLight), 0.0);
-    float distance = length(l.position - value.pixelToEye);
+    float distance = length(l.position - value.posWorld);
     vec3 attenuation = vec3(calcAttenuation(distance,l));
 
     // ndotH, ndotL, halfWayDir
@@ -283,21 +285,27 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal, vec3 lightDir) {
+struct ShadowStruct {
+    bool isShadow;
+    float shadow;
+};
+
+ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal, vec3 lightDir) {
+    ShadowStruct result;
+
     float bias = 0.001;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    // z값을 조금 높여 색을 가져온다. 큐브와 바닥이 바짝 붙어있으면 그림자가 생기지 않는 이슈가 있다.
-    //projCoords.z = projCoords.z + 0.01;
-    //projCoords.y = projCoords.y + 0.0001;
-
+    // 좌표를 조금 높혀서 가져온다. 큐브와 바닥이 바짝 붙어있으면 그림자가 생기지 않는 이슈가 있다.
     projCoords += lightDir * 0.0001;
 
     float closestDepth = texture(shadowMap, projCoords.xy).r;
 
     float currentDepth = projCoords.z;
+
+    result.isShadow = currentDepth - bias > closestDepth;
 
     float shadow = 0.0;
 
@@ -311,10 +319,13 @@ float shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,
         }
     }
 
-    return shadow / ((halfkernelWidth * 2 + 1) * (halfkernelWidth * 2 + 1));
+    result.shadow = shadow / ((halfkernelWidth * 2 + 1) * (halfkernelWidth * 2 + 1));
+
+    return result;
 }
 
-float pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
+ShadowStruct pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
+	ShadowStruct result;
     vec3 posToLight = posWorld - light.position;
 
     float closestDepth = texture(map, posToLight).r;
@@ -325,7 +336,9 @@ float pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
 
     float bias = 0.05;
 
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    // 나중에 시간이 되면 여기에도 PCF, PCSS를 적용하자.
+    result.isShadow = currentDepth - bias > closestDepth ? true : false;
+    result.shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
-    return shadow;
+    return result;
 }

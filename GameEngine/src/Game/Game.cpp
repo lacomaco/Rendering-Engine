@@ -197,6 +197,7 @@ bool Game::Initialize() {
 	auto imguiController = ImguiController::getInstance();
 	
 	
+	
 	lightManager->CreateLight
 	(
 		0,
@@ -208,21 +209,20 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-	
+		
 
 	// Æ÷ÀÎÆ®.
 	
+	/*
 	lightManager->CreateLight
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-3, 3, -0.05),
+		glm::vec3(-3, 2, -0.05),
 		glm::vec3(-0.042, -0.390, 0.952),
-		2
+		4
 	);
-	
-	
-	
+	*/
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 
@@ -281,7 +281,6 @@ void Game::UpdateGame() {
 
 	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
 	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
-	
 
 	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
 

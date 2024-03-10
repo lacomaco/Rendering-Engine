@@ -20,6 +20,22 @@ in vec4 spotLightShadowSpace[2];
 
 vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords);
 
+Light getNearestLight(Light nearestLight, Light light,bool isShadow,bool isInit){
+    if(!isInit){
+	    return light;
+	}
+
+	if(isShadow){
+	    return nearestLight;
+	}
+
+	vec3 pixelToEye = normalize(cameraPos - posWorld);
+	float lightDistance = length(light.position - posWorld);
+	float nearestLightDistance = length(nearestLight.position - posWorld);
+
+	return lightDistance < nearestLightDistance ? light : nearestLight;
+}
+
 void main() {
 
 	vec3 toEye = normalize(cameraPos - posWorld);
@@ -56,69 +72,93 @@ void main() {
 	pbrMaterial.normalWorld = normalWorld;
 	pbrMaterial.pixelToEye = pixelToEye;
 	pbrMaterial.ndotO = ndotO;
+	pbrMaterial.posWorld = posWorld;
 	// ndotH, ndotl, halfWay는 라이트처리에서 핸들링.
 	// 라이트 처리에서 lightStrength도 개별적으로 처리해주어야함.
 
+	// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
 	float countLight = 0.0;
+	bool isInit = false;
+	Light nearestLight;
 
+	bool isDirectionalLightHit = false;
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
-		float shadow = 0.0;
-
 		if(light.lightType == 0){
 
-			shadow = shadowCalculation(
+			ShadowStruct shadow = shadowCalculation(
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
 				normal,
 				normalize(light.position - posWorld)
 			);
 
-			countLight = 1.0 - shadow;
+			countLight = 1.0 - shadow.shadow;
+
+			// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
+			if(!shadow.isShadow){
+				nearestLight = getNearestLight(nearestLight, light,shadow.isShadow, isInit);
+				isInit = true;
+			} else {
+				isDirectionalLightHit = true;
+			}
 
 			color += directionalLight(
 				light,
-				shadow,
+				shadow.shadow,
 				pbrMaterial
 			);
 		}
 		else if(light.lightType == 2){
 
-			shadow = shadowCalculation(
+			ShadowStruct shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
 				spotShadowDepthMap[spotLightCount],
 				normal,
 				normalize(light.position - posWorld)
 			);
 
-			countLight = 1.0 - shadow;
+			countLight = 1.0 - shadow.shadow;
+
+			// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
+			if(!shadow.isShadow){
+				nearestLight = getNearestLight(nearestLight, light, shadow.isShadow, isInit);
+				isInit = true;
+			}
 
 			spotLightCount++;
 
 			color += spotLight(
 				light,
-				shadow,
+				shadow.shadow,
 				pbrMaterial
 			);
 		}
 	}
 	
 	for(int i = 0; i < pointLightCount; i++) {
-		float shadow = 0.0;
 		Light light = pointLights[i]; // 현재 조명
 
-	    shadow = pointShadowCalculation(
+	    ShadowStruct shadow = pointShadowCalculation(
 		    posWorld,
 			light,
 			pointShadowDepthMap[i]
 		);
+
+		// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
+
+		if(!shadow.isShadow){
+			nearestLight = getNearestLight(nearestLight, light, shadow.isShadow,isInit);
+			isInit = true;
+		}
+
 		
-		countLight = 1.0 - shadow;
+		countLight = 1.0 - shadow.shadow;
 
 		color += pointLight(
 			light,
-			shadow,
+			shadow.shadow,
 			pbrMaterial
 		);
 	}
@@ -128,6 +168,14 @@ void main() {
 
 	if(countLight == 0.0){
 	    ambientLight *= vec3(0.1);
+	} else {
+	    if(isDirectionalLightHit){
+	        ambientLight *= vec3(0.9);
+	    } else {
+		   float distance = length(nearestLight.position - posWorld);
+		   float attenuation = calcAttenuation(distance,nearestLight);
+		   ambientLight *= attenuation;
+		}
 	}
 
 	color += ambientLight;
