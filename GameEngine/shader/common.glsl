@@ -1,6 +1,7 @@
 #define MAX_LIGHTS 5
 #define MAX_SPOT_LIGHT 2
 #define MAX_POINT_LIGHT 2
+const float Epsilon = 0.00001;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -126,7 +127,7 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
         vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
     ).rg;
 
-    vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 1.0 + roughness * 5.0f).rgb;
+    vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
     vec3 F0 = mix(Fdielectric, albedo, metallic);
 
     return (F0 * brdf.x  + brdf.y) * specularIrradiance;
@@ -171,7 +172,8 @@ vec3 PBR(PBRValue value,vec3 lightStrength,float shadow){
     float D = NdfGGX(value.ndotH, value.roughness);
     float G = SchlickGGX(value.ndotl, value.ndotO, value.roughness);
 
-    vec3 specularBRDF = (D * G * F) / max((4 * value.ndotl * value.ndotO),0.00001);
+    vec3 specularBRDF = (D * G * F) / max((4 * value.ndotl * value.ndotO),Epsilon);
+
     vec3 radiance = lightStrength * value.ndotl;
 
     return (diffuseBRDF + specularBRDF) * radiance * (1.0 - shadow);

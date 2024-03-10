@@ -85,7 +85,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 6);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 12);
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
