@@ -49,14 +49,12 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
 
 
 // 나중에 GI 구현하게되면 diffuseIBL에 ndotl을 곱하는 코드는 제거해야함.
-vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness,float shadow,float ndotl){
+vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness,float shadow, float ndotl){
     vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic);
     vec3 specularIBL = specularIBL(albedo,normalW,pixelToEye,metallic,roughness);
 
-    specularIBL *= shadow;
-    diffuseIBL *= ndotl < 0.2 ? 0.2 : ndotl;
 
-    return (diffuseIBL + specularIBL) * ao;
+    return (diffuseIBL + specularIBL) * ao * max(shadow,0.1);
 }
 
 float NdfGGX(float ndotH, float roughness) {
@@ -202,16 +200,14 @@ struct ShadowStruct {
     float shadow;
 };
 
-ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal, vec3 lightDir) {
+ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal) {
     ShadowStruct result;
 
-    float bias = 0.001;
+    float bias = 0.005;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    // 좌표를 조금 높혀서 가져온다. 큐브와 바닥이 바짝 붙어있으면 그림자가 생기지 않는 이슈가 있다.
-    projCoords += lightDir * 0.0001;
 
     float closestDepth = texture(shadowMap, projCoords.xy).r;
 
@@ -222,7 +218,7 @@ ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 
     float shadow = 0.0;
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    const int halfkernelWidth = 2;
+    const int halfkernelWidth = 5;
 
     for(int x = -halfkernelWidth; x <= halfkernelWidth; ++x) {
         for(int y = -halfkernelWidth; y <= halfkernelWidth; ++y){

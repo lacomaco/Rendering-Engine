@@ -100,9 +100,7 @@ void Shadow::WriteDepthMap(shared_ptr<MeshRenderer> meshRenderer, glm::mat4 ligh
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFrameBuffer);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		glCullFace(GL_FRONT);
 		meshRenderer->Draw("shadow");
-		glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

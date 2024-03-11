@@ -177,6 +177,7 @@ bool Game::Initialize() {
 	_circle->SetTexture("./assets/pbr-test/knotty-plywood_ao.png", "ao");
 	_circle->SetTexture("./assets/pbr-test/knotty-plywood_height.png", "height");
 	_circle->SetupMesh();
+	_circle->position = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
 
@@ -205,7 +206,7 @@ bool Game::Initialize() {
 	(
 		0,
 		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
-		glm::vec3(0, 20, -0.001),
+		glm::vec3(0, 15, -0.001),
 		glm::vec3(0, -1, 0.005),
 		12
 	);

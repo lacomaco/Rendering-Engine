@@ -92,8 +92,7 @@ void main() {
 			ShadowStruct shadow = shadowCalculation(
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
-				normal,
-				normalize(-light.direction)
+				normal
 			);
 
 			countLight = 1.0 - shadow.shadow;
@@ -117,8 +116,7 @@ void main() {
 			ShadowStruct shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
 				spotShadowDepthMap[spotLightCount],
-				normal,
-				normalize(light.position - posWorld)
+				normal
 			);
 
 			countLight = 1.0 - shadow.shadow;
@@ -168,6 +166,7 @@ void main() {
 			pbrMaterial
 		);
 	}
+
 
 	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
 
