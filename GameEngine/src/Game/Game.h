@@ -64,5 +64,7 @@ private:
 	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
 
 	float accTime;
+
+	bool modelOn = true;
 };
 

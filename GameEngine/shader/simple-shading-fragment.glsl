@@ -19,6 +19,8 @@ in mat3 TBN;
 in vec2 TexCoords;
 in vec3 FragPos;
 
+
+
 void main() {
     vec3 n = texture(normal0, TexCoords).rgb;
 	n = n * 2.0 - 1.0;

@@ -111,6 +111,12 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
+	if (ImGui::TreeNode("light")) {
+		ImGui::Checkbox("useSun", &useSun);
+		ImGui::Checkbox("usePointLight", &usePointLight);
+		ImGui::TreePop();
+	}
+
 
 	ImGui::End();
 
@@ -127,8 +133,8 @@ void ImguiController::PutPBRUniform(const char* programName) {
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(programName);
 	glUseProgram(program);
-	shader->setFloat(programName, "metallicValue", metallic);
-	shader->setFloat(programName, "roughnessValue", roughness);
+	shader->setFloat(programName, "metallicTest", metallic);
+	shader->setFloat(programName, "roughnessTest", roughness);
 
 }
 

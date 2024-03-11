@@ -43,6 +43,8 @@ public:
 	// 선택함.
 	int lightPower = 3;
 
+	bool isDisable = false;
+
 	// directional light, spot light 에 사용.
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f);
 

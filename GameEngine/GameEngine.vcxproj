@@ -642,6 +642,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\default-vertex.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="shader\pbr.glsl" />
+    <None Include="shader\simple-pbr-shading-fragment.glsl" />
     <None Include="shader\simple-shading-fragment.glsl" />
     <None Include="shader\simple-shading-vertex.glsl" />
     <None Include="shader\point-shadow-fragment.glsl" />
@@ -651,7 +653,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-vertex.glsl" />
-    <None Include="shader\todo.md" />
+    <None Include="todo.md" />
     <None Include="shader\up-sample-fragment.glsl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>

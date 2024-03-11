@@ -59,8 +59,25 @@ void LightManager::PutLightUniform(const char* programName) {
 	auto program = shader->getShaderProgram(programName);
 	glUseProgram(program);
 
-	shader->setInt(programName, "lightCount", directionLights.size());
-	shader->setInt(programName, "pointLightCount", pointLights.size());
+	int activeDirecitonalLight = 0;
+
+	for (int i = 0; i < directionLights.size(); i++) {
+		auto light = directionLights[i];
+		if (!light->isDisable) {
+			activeDirecitonalLight++;
+		}
+	}
+
+	int activePointLight = 0;
+	for (int i = 0; i < pointLights.size(); i++) {
+		auto light = pointLights[i];
+		if (!light->isDisable) {
+			activePointLight++;
+		}
+	}
+
+	shader->setInt(programName, "lightCount", activeDirecitonalLight);
+	shader->setInt(programName, "pointLightCount", activePointLight);
 
 
 	// set 0 to all shadows.
@@ -78,7 +95,7 @@ void LightManager::PutLightUniform(const char* programName) {
 	int putDirectionCount = 0;
 	for (int i = 0; i < directionLights.size(); i++) {
 		auto& light = directionLights[i];
-		if (light->lightType == 0) {
+		if (light->lightType == 0 && !light->isDisable) {
 			light->PutLightUniform(programName, putDirectionCount);
 			light->PutShadowMap(programName, putDirectionCount, textureOffset);
 			textureOffset++;
@@ -102,7 +119,7 @@ void LightManager::PutLightUniform(const char* programName) {
 
 	for (int i = 0; i < directionLights.size(); i++) {
 		auto& light = directionLights[i];
-		if (light->lightType == 2) {
+		if (light->lightType == 2 && !light->isDisable) {
 			light->PutLightUniform(programName, spotCount);
 			light->PutShadowMap(programName, spotCount, textureOffset);
 			textureOffset++;
@@ -125,6 +142,10 @@ void LightManager::PutLightUniform(const char* programName) {
 
 	for (int i = 0; i < pointLights.size(); i++) {
 		auto& light = pointLights[i];
+		if (light->isDisable) {
+			continue;
+		}
+
 		light->PutLightUniform(programName, i);
 		// 쉐도우 깊이맵 텍스처 바인딩 겹치는걸 피하기 위해서 index를 directionLight 다음으로 설정함.
 		light->PutShadowMap(programName, i,textureOffset);
@@ -147,12 +168,18 @@ void LightManager::DrawLight(shared_ptr<Camera> camera) {
 	camera->putCameraUniform("light");
 	for (int i = 0; i < directionLights.size(); i++) {
 		auto& light = directionLights[i];
+
+		if (light->isDisable) continue;
+
 		light->PutLightUniform("light", i);
 		light->Draw("light");
 	}
 
 	for (int i = 0; i < pointLights.size(); i++) {
 		auto& light = pointLights[i];
+
+		if(light->isDisable) continue;
+
 		light->PutLightUniform("light", i);
 		light->Draw("light");
 	}
@@ -190,10 +217,29 @@ void LightManager::SetRandomLight(shared_ptr<Camera> camera) {
 
 void LightManager::MakeShadow(shared_ptr<MeshRenderer> meshRenderer) {
 	for (auto& light : directionLights) {
+		if(light->isDisable) continue;
+
 		light->MakeShadow(meshRenderer);
 	}
 
 	for (auto& light : pointLights) {
+		if(light->isDisable) continue;
 		light->MakeShadow(meshRenderer);
 	}
+}
+
+void LightManager::DisablePointLight(int index) {
+	pointLights[index]->isDisable = true;
+}
+
+void LightManager::DisableDirectionalLight(int index) {
+	directionLights[index]->isDisable = true;
+}
+
+void LightManager::EnablePointLight(int index) {
+	pointLights[index]->isDisable = false;
+}
+
+void LightManager::EnableDirectionalLight(int index) {
+	directionLights[index]->isDisable = false;
 }

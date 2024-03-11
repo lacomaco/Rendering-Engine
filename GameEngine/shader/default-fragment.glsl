@@ -1,6 +1,7 @@
 #version 460 core
 precision highp float;
 #include common.glsl
+#include pbr.glsl
 
 
 
@@ -53,7 +54,6 @@ void main() {
 	PBRValue pbrMaterial;
 
 	vec3 pixelToEye = normalize(cameraPos - posWorld);
-	vec3 normalWorld = normal;
 
 	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
 
@@ -63,13 +63,13 @@ void main() {
 	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
 
 	// halfWayVector 계산은 라이트 처리에서 다룸.
-	float ndotO = max(dot(normalWorld, pixelToEye), 0.0);
+	float ndotO = max(dot(normal, pixelToEye), 0.0);
 
 	pbrMaterial.albedo = ambientColor;
 	pbrMaterial.metallic = metallic;
 	pbrMaterial.roughness = roughness;
 	pbrMaterial.ao = ao;
-	pbrMaterial.normalWorld = normalWorld;
+	pbrMaterial.normalWorld = normal;
 	pbrMaterial.pixelToEye = pixelToEye;
 	pbrMaterial.ndotO = ndotO;
 	pbrMaterial.posWorld = posWorld;
@@ -81,7 +81,9 @@ void main() {
 	bool isInit = false;
 	Light nearestLight;
 
-	bool isDirectionalLightHit = false;
+	// 이 그림자가 태양 빛인지, 아닌지 구분해야함.
+	bool isDirectionalShadow = false;
+	bool isShadow = false;
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
@@ -91,7 +93,7 @@ void main() {
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
 				normal,
-				normalize(light.position - posWorld)
+				normalize(-light.direction)
 			);
 
 			countLight = 1.0 - shadow.shadow;
@@ -101,7 +103,7 @@ void main() {
 				nearestLight = getNearestLight(nearestLight, light,shadow.isShadow, isInit);
 				isInit = true;
 			} else {
-				isDirectionalLightHit = true;
+			    isDirectionalShadow = true;
 			}
 
 			color += directionalLight(
@@ -125,6 +127,8 @@ void main() {
 			if(!shadow.isShadow){
 				nearestLight = getNearestLight(nearestLight, light, shadow.isShadow, isInit);
 				isInit = true;
+			} else {
+			  isDirectionalShadow = false;
 			}
 
 			spotLightCount++;
@@ -151,6 +155,8 @@ void main() {
 		if(!shadow.isShadow){
 			nearestLight = getNearestLight(nearestLight, light, shadow.isShadow,isInit);
 			isInit = true;
+		} else {
+			isDirectionalShadow = false;
 		}
 
 		
@@ -163,19 +169,14 @@ void main() {
 		);
 	}
 
-	vec3 ambientLight = ambientIBL(ambientColor, normalWorld, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
-
+	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
 
 	if(countLight == 0.0){
 	    ambientLight *= vec3(0.1);
-	} else {
-	    if(isDirectionalLightHit){
-	        ambientLight *= vec3(0.9);
-	    } else {
-		   float distance = length(nearestLight.position - posWorld);
-		   float attenuation = calcAttenuation(distance,nearestLight);
-		   ambientLight *= attenuation;
-		}
+	} else if(!isDirectionalShadow) {
+		float distance = length(nearestLight.position - posWorld);
+		float attenuation = calcAttenuation(distance,nearestLight);
+		ambientLight *= attenuation;
 	}
 
 	color += ambientLight;

@@ -229,11 +229,12 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			texture.signature = signature;
 			
 
-			std::vector<std::string> notAlphaTexture = {
-				"Walls_baseColor.png",
+			std::vector<std::string> nonAlphaTexture = {
+				"이곳에 알파값이 필요한 텍스처를 넣어주세요 example) alpha.png",
 			};
 
-			texture.isAlpha = hasAlpha && notAlphaTexture.end() == std::find(notAlphaTexture.begin(), notAlphaTexture.end(), fileName);
+			texture.isAlpha = hasAlpha && nonAlphaTexture.end() == std::find(nonAlphaTexture.begin(), nonAlphaTexture.end(), fileName);
+
 			textures.push_back(texture);
 			textures_loaded.push_back(texture);
 		}

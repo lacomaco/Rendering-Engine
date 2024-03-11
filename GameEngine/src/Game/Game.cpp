@@ -27,7 +27,9 @@ void Game::GenerateOutput() {
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
-	meshRenderer->AddMesh(backPack);
+	if (modelOn) {
+		meshRenderer->AddMesh(backPack);
+	}
 	meshRenderer->AddMesh(circle[0]);
 	meshRenderer->MeshAlignment(camera.get());
 
@@ -35,7 +37,7 @@ void Game::GenerateOutput() {
 
 	postProcessingFrameBuffer->use();
 	
-	// const char* shaderName = "simple-shading";
+	// const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
 	auto imguiController = ImguiController::getInstance();
 	imguiController->PutPBRUniform(shaderName);
@@ -180,7 +182,9 @@ bool Game::Initialize() {
 
 	this->circle.push_back(_circle);
 
-	backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	if (modelOn) {
+		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+	}
 	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
 	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
@@ -197,7 +201,6 @@ bool Game::Initialize() {
 	auto imguiController = ImguiController::getInstance();
 	
 	
-	
 	lightManager->CreateLight
 	(
 		0,
@@ -209,11 +212,9 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-		
+
 
 	// 포인트.
-	
-	/*
 	lightManager->CreateLight
 	(
 		1,
@@ -222,7 +223,6 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		4
 	);
-	*/
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
 
@@ -279,8 +279,22 @@ void Game::UpdateGame() {
 	postProcessingFrameBuffer->exposure = exposure;
 
 
-	lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
-	lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
+	if (imguiController->useSun) {
+		lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
+		lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
+
+		lightManager->EnableDirectionalLight(0);
+	}
+	else {
+		lightManager->DisableDirectionalLight(0);
+	}
+
+	if (imguiController->usePointLight) {
+		lightManager->EnablePointLight(0);
+	}
+	else {
+		lightManager->DisablePointLight(0);
+	}
 
 	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
 
@@ -407,5 +421,11 @@ void Game::CreateShaderProgram() {
 		"./shader/simple-shading-vertex.glsl",
 		"./shader/simple-shading-fragment.glsl",
 		"simple-shading"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/simple-shading-vertex.glsl",
+		"./shader/simple-pbr-shading-fragment.glsl",
+		"simple-pbr-shading"
 	);
 }

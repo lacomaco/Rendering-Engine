@@ -57,6 +57,10 @@ public:
 	float metallic = 0.78f;
 	float roughness = 0.0f;
 
+	// ∂Û¿Ã∆Æ
+	bool useSun = true;
+	bool usePointLight = false;
+
 	void PutPBRUniform(const char* programName);
 };
 

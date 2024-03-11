@@ -31,6 +31,7 @@ public:
 	void UpdateLight(float deltaTime);
 	void SetRandomLight(shared_ptr<Camera> camera);
 	vector<shared_ptr<Light>> directionLights;
+
 	vector<shared_ptr<Light>> pointLights;
 
 	int getTotalLightCount() {
@@ -47,6 +48,12 @@ public:
 		float cutOff = glm::cos(glm::radians(12.5f)),
 		float outerCutOff = glm::cos(glm::radians(17.5f))
 	);
+
+	void DisablePointLight(int index);
+	void DisableDirectionalLight(int index);
+
+	void EnablePointLight(int index);
+	void EnableDirectionalLight(int index);
 
 	void MakeShadow(shared_ptr<MeshRenderer> meshRenderer);
 };
