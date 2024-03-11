@@ -206,7 +206,7 @@ bool Game::Initialize() {
 	(
 		0,
 		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
-		glm::vec3(0, 15, -0.001),
+		glm::vec3(0, 20, -0.001),
 		glm::vec3(0, -1, 0.005),
 		12
 	);
@@ -220,9 +220,18 @@ bool Game::Initialize() {
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-3, 2, -0.05),
+		glm::vec3(-2.767, 1.358, 3.016),
 		glm::vec3(-0.042, -0.390, 0.952),
-		4
+		1
+	);
+
+	lightManager->CreateLight
+	(
+		1,
+		//glm::vec3(0.0f, 3.0f, 5.0f),
+		glm::vec3(-2.123, 1.358, -4.378),
+		glm::vec3(-0.042, -0.390, 0.952),
+		1
 	);
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
@@ -292,9 +301,11 @@ void Game::UpdateGame() {
 
 	if (imguiController->usePointLight) {
 		lightManager->EnablePointLight(0);
+		lightManager->EnablePointLight(1);
 	}
 	else {
 		lightManager->DisablePointLight(0);
+		lightManager->DisablePointLight(1);
 	}
 
 	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;

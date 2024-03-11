@@ -59,12 +59,16 @@ void ImguiController::Update() {
 	if (ImGui::TreeNode("DirectionalLight")) {
 		ImGui::Text("Position");
 		ImGui::SliderFloat("x", &directionalLightPosition.x, -20.0f, 20.0f);
+		ImGui::BeginDisabled();
 		ImGui::SliderFloat("y", &directionalLightPosition.y, -20.0f, 20.0f);
+		ImGui::EndDisabled();
 		ImGui::SliderFloat("z", &directionalLightPosition.z, -20.0f, 20.0f);
 
 		ImGui::Text("Direction");
 		ImGui::SliderFloat("x", &directionalLightDirection.x, -1.0f, 1.0f);
+		ImGui::BeginDisabled();
 		ImGui::SliderFloat("y", &directionalLightDirection.y, -1.0f, 1.0f);
+		ImGui::EndDisabled();
 		ImGui::SliderFloat("z", &directionalLightDirection.z, -1.0f, 1.0f);
 
 		ImGui::Text("shadow depthMap");

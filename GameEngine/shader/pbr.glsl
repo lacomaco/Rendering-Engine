@@ -18,7 +18,7 @@ struct PBRValue {
 
 
 float calcAttenuation(float distance,Light l) {
-	return 1.0 / (l.constant + l.linear * distance + l.quadratic * distance);
+	return 1.0 / (l.constant + l.linear * distance + l.quadratic * distance * distance);
 }
 
 vec3 SchlickFresnel(vec3 F0, float ndotH){
