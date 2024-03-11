@@ -92,7 +92,8 @@ void main() {
 			ShadowStruct shadow = shadowCalculation(
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
-				normal
+				normal,
+				-light.direction
 			);
 
 			countLight = 1.0 - shadow.shadow;
@@ -116,7 +117,8 @@ void main() {
 			ShadowStruct shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
 				spotShadowDepthMap[spotLightCount],
-				normal
+				normal,
+				normalize(light.position - posWorld)
 			);
 
 			countLight = 1.0 - shadow.shadow;

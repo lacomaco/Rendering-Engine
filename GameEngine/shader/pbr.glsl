@@ -200,10 +200,13 @@ struct ShadowStruct {
     float shadow;
 };
 
-ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal) {
+ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,vec3 lightDir) {
     ShadowStruct result;
 
-    float bias = 0.005;
+    // weird... 내 프로젝트에선 1.0 - 보다 1.0 + 이 더 잘들어맞는다.
+    // 이거에 대해선 한번 수학적으로 증명해봐야한다.
+    // 증명해서 블로그에 올려보자.
+    float bias = max(0.01 * (1.0 +  dot(normal,lightDir)),0.006);
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
@@ -218,7 +221,7 @@ ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 
     float shadow = 0.0;
 
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    const int halfkernelWidth = 5;
+    const int halfkernelWidth = 4;
 
     for(int x = -halfkernelWidth; x <= halfkernelWidth; ++x) {
         for(int y = -halfkernelWidth; y <= halfkernelWidth; ++y){
