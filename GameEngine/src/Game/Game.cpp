@@ -23,6 +23,7 @@ void Game::GenerateOutput() {
 	imguiController->Update();
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
+	auto shader = Shader::getInstance();
 
 	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
@@ -30,7 +31,7 @@ void Game::GenerateOutput() {
 	if (modelOn) {
 		meshRenderer->AddMesh(backPack);
 	}
-	meshRenderer->AddMesh(circle[0]);
+	//meshRenderer->AddMesh(circle[0]);
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
@@ -48,6 +49,19 @@ void Game::GenerateOutput() {
 	lightManager->PutLightUniform(shaderName);
 	meshRenderer->Draw(shaderName);
 
+	/*
+	pbr 테스트용.
+	for (int i = 0; i < pbrTestCircle.size(); i++) {
+		auto circle = pbrTestCircle[i];
+		auto metallic = pbrTestMetallic[i];
+		auto roughness = pbrTestRoughness[i];
+
+		shader->setFloat(shaderName, "metallicTest", metallic);
+		shader->setFloat(shaderName, "roughnessTest", roughness);
+		shader->setVec3(shaderName, "color", glm::vec3(1.0,1.0,1.0));
+		circle->Draw(shaderName);
+	}
+	*/
 
 	lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
@@ -124,7 +138,9 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
+	//cubeMap = make_shared<CubeMap>("./assets/skybox/");
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
+	//cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -180,14 +196,35 @@ bool Game::Initialize() {
 	_circle->position = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
+	// TODO: 나중에 고치기.
+	// this->circle.push_back(_circle);
 
-	this->circle.push_back(_circle);
+	// 위로 : metallic
+	// 오른쪽 : roughness
+	int count = 0;
+	for (float i = 0; i < 5; i++) {
+		for (float j = 0; j < 5; j++) {
+			auto forPbrTestCircle = make_shared<Circle>();
+			forPbrTestCircle->SetupMesh();
+			forPbrTestCircle->position = glm::vec3(j, i, 0.0f);
+
+			this->pbrTestCircle.push_back(forPbrTestCircle);
+
+			float metallic = (float)i / 5.0;
+			float roughness = (float)j / 5.0;
+
+			this->pbrTestMetallic.push_back(metallic);
+			this->pbrTestRoughness.push_back(roughness);
+			count++;
+		}
+		count = 0;
+	}
 
 	if (modelOn) {
-		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		//backPack = make_shared<Model>("./assets/futuristic_room/scene.gltf");
+		backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
-	//backPack = make_shared<Model>("./assets/abandoned_warehouse/scene.gltf");
-	//backPack->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	camera = make_shared<Camera>(
 		90.0f,
@@ -201,7 +238,7 @@ bool Game::Initialize() {
 
 	auto imguiController = ImguiController::getInstance();
 	
-	
+	// 라이트 
 	lightManager->CreateLight
 	(
 		0,
@@ -220,9 +257,9 @@ bool Game::Initialize() {
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-2.767, 1.358, 3.016),
+		glm::vec3(0.972, 1.360, 1.616),
 		glm::vec3(-0.042, -0.390, 0.952),
-		1
+		12
 	);
 
 	lightManager->CreateLight
@@ -311,12 +348,6 @@ void Game::UpdateGame() {
 	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
 
 	//lightManager->UpdateLight(deltaTime);
-	//lightManager->directionLights[0]->lookHere(glm::vec3(0.0f, 0.0f, 0.0f));
-	/*
-	lightManager->lights[0]->setPosition(camera->cameraPos);
-	lightManager->lights[0]->direction = camera->cameraFront;
-	lightManager->lights[0]->CalculateLightSpaceMatrix();
-	*/
 
 	cubeMap->select = imguiController->select;
 	cubeMap->lodLevel = imguiController->lodLevel;

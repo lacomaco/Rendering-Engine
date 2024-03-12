@@ -11,8 +11,6 @@ out vec3 posWorld;
 out vec3 normalWorld;
 out vec4 directionalLightShadowSpace;
 out vec4 spotLightShadowSpace[2];
-out vec3 tangentWorld;
-out vec3 bitangentWorld;
 out mat3 TBN;
 
 void main() {
@@ -23,16 +21,16 @@ void main() {
 
 	// normal은 법선벡터이기 때문에 0.0으로 설정.
 	// 4차원이 0이면 이동 변환이 적용되지 않기 때문에 법선벡터는 0.0이다.
-	normalWorld = normalize(vec3(invTranspose * vec4(aNormal,0.0f)));
+	normalWorld = normalize(vec3(model * vec4(aNormal,0.0f)));
 
-	tangentWorld = aTangentModel;
+	vec3 tangentWorld = aTangentModel;
 	
 	if(dot(cross(aNormal, aTangentModel), aBitangent) < 0.0) {
 		tangentWorld = -aTangentModel;
 	}
 
-	tangentWorld = normalize(vec3(invTranspose * vec4(tangentWorld,0.0)));
-	bitangentWorld = normalize(vec3(invTranspose * vec4(aBitangent,0.0)));
+	tangentWorld = normalize(vec3(model * vec4(tangentWorld,0.0)));
+	vec3 bitangentWorld = normalize(vec3(model * vec4(aBitangent,0.0)));
 
 	TBN = mat3(tangentWorld, bitangentWorld, normalWorld);
 

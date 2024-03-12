@@ -8,30 +8,26 @@ uniform sampler2D bloomTexture;
 uniform float exposure;
 uniform float bloomThreshold;
 
+const float gamma = 2.2;
+
+vec3 aces(vec3 x) {
+  const float a = 2.51;
+  const float b = 0.03;
+  const float c = 2.43;
+  const float d = 0.59;
+  const float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
 void main()
-{ 
+{
     vec3 color = texture(screenTexture, TexCoords).rgb;
     vec3 bloomColor = texture(bloomTexture, TexCoords).rgb;
 
     color = mix(color,bloomColor, bloomThreshold);
-
-    // Reinhard tone mapping
-    vec3 mapped = vec3(1.0) - exp(-color * exposure);
-
-
-    /*
-    glEnable(GL_FRAMEBUFFER_SRGB);를 사용하고 있어서 감마값 처리를 하고있지 않음.
-    만약 수동으로 처리하고싶다면
-
-    위에
-
-    const flaot gamma = 2.2;
-
-    ...
-
+    vec3 mapped = aces(color * log(exp2(exposure)));
     mapped = pow(mapped, vec3(1.0 / gamma));
 
-    수동 감마로 1/2.2 처리를 해줘야함.
-    */
+    //vec3 mapped = pow(color * exposure, vec3(1.0 / gamma));
     FragColor = vec4(mapped, 1.0);
 }

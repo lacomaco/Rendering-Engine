@@ -230,7 +230,8 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			
 
 			std::vector<std::string> nonAlphaTexture = {
-				"이곳에 알파값이 필요한 텍스처를 넣어주세요 example) alpha.png",
+				"이곳에 알파가 아닌 텍스처를 넣어주세요.",
+				"Walls_baseColor.png",
 			};
 
 			texture.isAlpha = hasAlpha && nonAlphaTexture.end() == std::find(nonAlphaTexture.begin(), nonAlphaTexture.end(), fileName);
@@ -268,11 +269,11 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			dataFormat = GL_RG;
 		}
 		else if (nrComponents == 3) {
-			internalFormat = gamma ? GL_SRGB : GL_RGB;
+			internalFormat = GL_RGB;
 			dataFormat = GL_RGB;
 		}
 		else if (nrComponents == 4) {
-			internalFormat = gamma ? GL_SRGB_ALPHA : GL_RGBA8;
+			internalFormat = GL_RGBA8;
 			dataFormat = GL_RGBA;
 
 			int pixelCount = width * height;

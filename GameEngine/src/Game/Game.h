@@ -47,6 +47,10 @@ private:
 
 	std::vector<std::shared_ptr<Circle>> circle;
 
+	std::vector<std::shared_ptr<Circle>> pbrTestCircle;
+	std::vector<float> pbrTestMetallic;
+	std::vector<float> pbrTestRoughness;
+
 	std::shared_ptr<Camera> camera;
 
 	Input* input;

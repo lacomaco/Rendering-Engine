@@ -63,6 +63,7 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     gli::texture2d Texture(gli::load_dds(map.c_str()));
+    gli::flip(Texture);
 
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
@@ -85,7 +86,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 12);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 8);
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
@@ -95,7 +96,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     for (unsigned int i = 0; i < maps.size(); i++)
     {
         gli::texture2d Texture(gli::load_dds(maps[i].c_str()));
-
+        gli::flip(Texture);
         gli::gl GL(gli::gl::PROFILE_GL33);
         gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
 

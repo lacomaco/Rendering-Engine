@@ -81,11 +81,11 @@ void Primitive::SetTexture(std::string path, std::string type) {
         dataFormat = GL_RG;
     }
     else if (nrChannels == 3) {
-        internalFormat = type == "albedo" ? GL_SRGB : GL_RGB;
+        internalFormat = GL_RGB;
         dataFormat = GL_RGB;
     }
     else if (nrChannels == 4) {
-        internalFormat = type == "albedo" ? GL_SRGB_ALPHA : GL_RGBA8;
+        internalFormat = GL_RGBA8;
         dataFormat = GL_RGBA;
         if (type == "albedo") {
             texture.isAlpha = true;

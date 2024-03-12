@@ -10,6 +10,8 @@ directional Light에 대해서만 동작한다.
 */
 out vec4 FragColor;
 
+uniform vec3 color;
+
 in vec3 tangent;
 in vec3 normal;
 in vec3 biTangent;
@@ -43,23 +45,17 @@ vec3 fresnelSchlick(vec3 F0,float cosTheta) {
 }
 
 void main() {
-    vec3 albedo = texture(albedo0, TexCoords).rgb;
-    // 테스트용 나중에 지우기.
-    //albedo = vec3(1.0);
-
-    float metallic = texture(metallic0, TexCoords).b;
-    //metallic = metallicTest;
-
-    float roughness = texture(roughness0, TexCoords).g;
-    //roughness = roughnessTest;
+    vec3 albedo = color;
+    float metallic = metallicTest;
+    float roughness = roughnessTest;
 
     // out going light fragment -> eye
     vec3 Lo = normalize(cameraPos - FragPos);
 
-    vec3 N = normalize(2.0 * texture(normal0, TexCoords).rgb - 1.0);
-    N = normalize(TBN * N);
+    //vec3 N = normalize(2.0 * texture(normal0, TexCoords).rgb - 1.0);
+    //N = normalize(TBN * N);
 
-    //N = normalize(normal);
+    vec3 N = normalize(normal);
 
     // normal dot out going light
     float cosLo = max(0.0, dot(N,Lo));
@@ -109,11 +105,10 @@ void main() {
 
         vec3 diffuseIBL = kd * albedo * irradiance;
         
-        int specularTextureLevels = textureQueryLevels(radianceMap);
         vec3 specularIrradiance = textureLod(
         radianceMap, 
         Lr, 
-        roughness * specularTextureLevels
+        roughness * 8.0
         ).rgb;
 
         vec2 specularBRDF = texture(brdfTexture, vec2(cosLo, roughness)).rg;
@@ -123,6 +118,12 @@ void main() {
 
         ambientLighting = diffuseIBL + specularIBL;
     }
+
+    //ambientLighting *= 0.0;
+    
+
+
     
     FragColor = vec4(directLight + ambientLighting, 1.0);
+    //FragColor = vec4(directLight,1.0);
 }

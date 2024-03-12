@@ -12,14 +12,12 @@ uniform float exposure;
 in vec2 TexCoord;
 in vec3 normalWorld;
 in vec3 posWorld;
-in vec3 tangentWorld;
-in vec3 bitangentWorld;
 in mat3 TBN;
 
 in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
-vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords);
+vec3 getNormal(sampler2D normalMap,vec2 TexCoords);
 
 Light getNearestLight(Light nearestLight, Light light,bool isShadow,bool isInit){
     if(!isInit){
@@ -48,15 +46,21 @@ void main() {
 	vec3 normal = normalWorld;
 
 	if(use_normal0){
-	    normal = getNormal(normalWorld, tangentWorld, bitangentWorld, normal0, TexCoord);
+	    normal = getNormal(normal0, TexCoord);
 	}
 
 	PBRValue pbrMaterial;
 
 	vec3 pixelToEye = normalize(cameraPos - posWorld);
 
-	vec3 ambientColor = texture(albedo0,TexCoord).rgb;
-
+	vec3 ambientColor = pow(texture(albedo0,TexCoord).rgb,vec3(2.2));
+	/*
+	조합
+	g b (흠...)
+	b r
+	b g 
+	b b
+	*/
 	float roughness = use_roughness0 ? texture(roughness0, TexCoord).g : 0.0;
 	float metallic = use_metallic0 ? texture(metallic0, TexCoord).b : 0.0;
 
@@ -173,7 +177,7 @@ void main() {
 	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
 
 	if(countLight == 0.0){
-	    ambientLight *= vec3(0.1);
+	    ambientLight *= vec3(0.3);
 	} else if(!isDirectionalShadow) {
 		float distance = length(nearestLight.position - posWorld);
 		float attenuation = calcAttenuation(distance,nearestLight);
@@ -206,7 +210,7 @@ nomalMap을 가져오는 방법엔 2가지 방법이 있다.
 
 solution: https://stackoverflow.com/questions/47620285/normal-mapping-bug
 */
-vec3 getNormal(vec3 normal,vec3 tangent,vec3 bitangent,sampler2D normalMap,vec2 TexCoords){
+vec3 getNormal(sampler2D normalMap,vec2 TexCoords){
 	vec3 n = texture(normalMap, TexCoords).rgb;
 	n = n * 2.0 - 1.0; // [-1 ~ 1] 정규화.
 	return normalize(TBN * n);
