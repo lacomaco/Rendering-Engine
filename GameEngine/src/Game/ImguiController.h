@@ -61,6 +61,9 @@ public:
 	bool useSun = true;
 	bool usePointLight = false;
 
+	// god light
+	unsigned int godLightTexture;
+
 	void PutPBRUniform(const char* programName);
 };
 

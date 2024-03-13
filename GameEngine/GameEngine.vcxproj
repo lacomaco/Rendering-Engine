@@ -161,6 +161,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\GodRays.h" />
     <ClInclude Include="src\Game\Bloom.h" />
     <ClInclude Include="src\Game\BloomFBO.h" />
     <ClInclude Include="src\Game\BloomTexture.h" />
@@ -447,6 +448,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\GodRays.cpp" />
     <ClCompile Include="src\Game\Bloom.cpp" />
     <ClCompile Include="src\Game\BloomFBO.cpp" />
     <ClCompile Include="src\Game\BloomTexture.cpp" />
@@ -628,6 +630,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\down-sample-fragment.glsl" />
+    <None Include="shader\god-ray-vertex.glsl" />
+    <None Include="shader\god-ray-fragment.glsl" />
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\hdr-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />

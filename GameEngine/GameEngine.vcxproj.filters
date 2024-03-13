@@ -867,6 +867,9 @@
     <ClInclude Include="src\Game\Bloom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\GodRays.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -978,6 +981,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Bloom.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GodRays.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1410,6 +1416,8 @@
     <None Include="todo.md" />
     <None Include="shader\simple-pbr-shading-fragment.glsl" />
     <None Include="shader\pbr.glsl" />
+    <None Include="shader\god-ray-fragment.glsl" />
+    <None Include="shader\god-ray-vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

@@ -54,13 +54,6 @@ void main() {
 	vec3 pixelToEye = normalize(cameraPos - posWorld);
 
 	vec3 ambientColor = pow(texture(albedo0,TexCoord).rgb,vec3(2.2));
-	/*
-	¡∂«’
-	g b (»Ï...)
-	b r
-	b g 
-	b b
-	*/
 	float roughness = use_roughness0 ? texture(roughness0, TexCoord).g : 0.0;
 	float metallic = use_metallic0 ? texture(metallic0, TexCoord).b : 0.0;
 

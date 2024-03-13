@@ -74,7 +74,9 @@ void ImguiController::Update() {
 		ImGui::Text("shadow depthMap");
 		ImGui::Image(
 			(void*)(intptr_t)directionalLightDepthMap,
-			ImVec2(200, 200)
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
 		);
 
 		ImGui::TreePop();
@@ -118,6 +120,16 @@ void ImguiController::Update() {
 	if (ImGui::TreeNode("light")) {
 		ImGui::Checkbox("useSun", &useSun);
 		ImGui::Checkbox("usePointLight", &usePointLight);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("for god ray debugging")) {
+		ImGui::Image(
+			(void*)(intptr_t)godLightTexture,
+			ImVec2(200,200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
 		ImGui::TreePop();
 	}
 

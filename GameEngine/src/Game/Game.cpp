@@ -36,9 +36,19 @@ void Game::GenerateOutput() {
 
 	lightManager->MakeShadow(meshRenderer);
 
+
+	// 나중에 낮에만 프로세싱 처리하도록 해야함.
+	if (true) {
+		postProcessingFrameBuffer->godRays->Draw(
+			meshRenderer,
+			lightManager->directionLights[0]->box->position,
+			camera
+		);
+	}
+
 	postProcessingFrameBuffer->use();
 	
-	// const char* shaderName = "simple-pbr-shading";
+	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
 	auto imguiController = ImguiController::getInstance();
 	imguiController->PutPBRUniform(shaderName);
@@ -221,9 +231,9 @@ bool Game::Initialize() {
 	}
 
 	if (modelOn) {
-		//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 		//backPack = make_shared<Model>("./assets/futuristic_room/scene.gltf");
-		backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
+		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
 	camera = make_shared<Camera>(
@@ -250,6 +260,7 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	imguiController->godLightTexture = postProcessingFrameBuffer->godRays->godRaySceneTexture;
 
 
 	// 포인트.
@@ -470,5 +481,11 @@ void Game::CreateShaderProgram() {
 		"./shader/simple-shading-vertex.glsl",
 		"./shader/simple-pbr-shading-fragment.glsl",
 		"simple-pbr-shading"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/god-ray-vertex.glsl",
+		"./shader/god-ray-fragment.glsl",
+		"god-ray"
 	);
 }

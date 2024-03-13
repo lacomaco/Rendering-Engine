@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Bloom.h"
+#include "GodRays.h"
 
 class PostProcessingFrameBuffer
 {
@@ -29,6 +30,7 @@ public:
 	void Draw(const char* programName);
 
 	std::shared_ptr<Bloom> bloom;
+	std::shared_ptr<GodRays> godRays;
 
 	float exposure = 1.0f;
 

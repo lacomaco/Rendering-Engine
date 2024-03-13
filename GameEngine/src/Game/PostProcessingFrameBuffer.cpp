@@ -8,6 +8,7 @@
 PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 {
 	bloom = std::make_shared<Bloom>();
+	godRays = std::make_shared<GodRays>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
