@@ -1,11 +1,11 @@
-#include "PostProcessingFrameBuffer.h"
+#include "GraphicsPipeLine.h"
 #include <glew.h>
 #include "../Constants.h"
 #include "../Util/Shader.h"
 #include "../Util/GLHelper.h"
 #include <memory>
 
-PostProcessingFrameBuffer::PostProcessingFrameBuffer()
+GraphicsPipeLine::GraphicsPipeLine()
 {
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
@@ -14,7 +14,7 @@ PostProcessingFrameBuffer::PostProcessingFrameBuffer()
 	CreateIntermediateFrameBuffer();
 }
 
-void PostProcessingFrameBuffer::Draw(const char* programName)
+void GraphicsPipeLine::Draw(const char* programName)
 {
 
 	auto shader = Shader::getInstance();
@@ -58,7 +58,7 @@ void PostProcessingFrameBuffer::Draw(const char* programName)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void PostProcessingFrameBuffer::use()
+void GraphicsPipeLine::use()
 {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
@@ -67,14 +67,14 @@ void PostProcessingFrameBuffer::use()
 	glEnable(GL_DEPTH_TEST);
 }
 
-void PostProcessingFrameBuffer::PutExposure(const char* programName) {
+void GraphicsPipeLine::PutExposure(const char* programName) {
 	auto shader = Shader::getInstance();
 	auto progrma = shader->getShaderProgram(programName);
 	glUseProgram(progrma);
 	shader->setFloat(programName, "exposure", exposure);
 }
 
-void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
+void GraphicsPipeLine::CreateIntermediateFrameBuffer() {
 	glGenFramebuffers(1, &intermediateFrameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
 
@@ -95,7 +95,7 @@ void PostProcessingFrameBuffer::CreateIntermediateFrameBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
+void GraphicsPipeLine::CreateMSAAFrameBuffer() {
 	glGenFramebuffers(1, &msaaFrameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
 
@@ -152,7 +152,7 @@ void PostProcessingFrameBuffer::CreateMSAAFrameBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void PostProcessingFrameBuffer::CreateVAO()
+void GraphicsPipeLine::CreateVAO()
 {
 	SimpleQuad result = CreateSimpleQuad();
 

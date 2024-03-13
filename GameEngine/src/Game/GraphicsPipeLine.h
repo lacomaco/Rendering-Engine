@@ -5,7 +5,7 @@
 #include "Bloom.h"
 #include "GodRays.h"
 
-class PostProcessingFrameBuffer
+class GraphicsPipeLine
 {
 private:
 	void CreateVAO();
@@ -13,7 +13,7 @@ private:
 	void CreateIntermediateFrameBuffer();
 
 public:
-	PostProcessingFrameBuffer();
+	GraphicsPipeLine();
 	void PutExposure(const char* programName);
 
 	unsigned int msaaFrameBuffer;

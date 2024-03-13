@@ -171,7 +171,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\Game\PointShadow.h" />
     <ClInclude Include="src\GameObject\FresnelIRO.hpp" />
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h" />
-    <ClInclude Include="src\Game\PostProcessingFrameBuffer.h" />
+    <ClInclude Include="src\Game\GraphicsPipeLine.h" />
     <ClInclude Include="src\Game\MeshRenderer.h" />
     <ClInclude Include="src\Game\LightManager.h" />
     <ClInclude Include="src\Game\Light.h" />
@@ -458,7 +458,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\Game\PointShadow.cpp" />
     <ClCompile Include="src\GameObject\FresnelIRO.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp" />
-    <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp" />
+    <ClCompile Include="src\Game\GraphicsPipeLine.cpp" />
     <ClCompile Include="src\Game\MeshRenderer.cpp" />
     <ClCompile Include="src\Game\LightManager.cpp" />
     <ClCompile Include="src\Game\Light.cpp" />

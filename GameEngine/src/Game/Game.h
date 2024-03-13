@@ -14,7 +14,7 @@
 #include "./LightManager.h"
 #include "MeshRenderer.h"
 #include <memory>
-#include "./PostProcessingFrameBuffer.h"
+#include "./GraphicsPipeLine.h"
 #include "../GameObject/PrimitiveObject/CubeMap.h"
 #include "./Shadow.h"
 
@@ -65,7 +65,7 @@ private:
 
 	shared_ptr<Model> backPack;
 
-	shared_ptr<PostProcessingFrameBuffer> postProcessingFrameBuffer;
+	shared_ptr<GraphicsPipeLine> graphicsPipe;
 
 	float accTime;
 

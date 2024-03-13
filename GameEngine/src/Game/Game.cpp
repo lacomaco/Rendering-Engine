@@ -39,21 +39,21 @@ void Game::GenerateOutput() {
 
 	// 나중에 낮에만 프로세싱 처리하도록 해야함.
 	if (true) {
-		postProcessingFrameBuffer->godRays->Draw(
+		graphicsPipe->godRays->Draw(
 			meshRenderer,
 			lightManager->directionLights[0]->box->position,
 			camera
 		);
 	}
 
-	postProcessingFrameBuffer->use();
+	graphicsPipe->use();
 	
 	// const char* shaderName = "simple-shading";
 	const char* shaderName = "default";
 	auto imguiController = ImguiController::getInstance();
 	imguiController->PutPBRUniform(shaderName);
 
-	postProcessingFrameBuffer->PutExposure(shaderName);
+	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	camera->putCameraUniform(shaderName);
 	lightManager->PutLightUniform(shaderName);
@@ -84,7 +84,7 @@ void Game::GenerateOutput() {
 		meshRenderer->Draw("normal");
 	}
 
-	postProcessingFrameBuffer->Draw("hdr");
+	graphicsPipe->Draw("hdr");
 
 	imguiController->Render();
 	SDL_GL_SwapWindow(mWindow);
@@ -147,7 +147,7 @@ bool Game::Initialize() {
 	CreateShaderProgram();
 	meshRenderer = make_shared<MeshRenderer>();
 
-	postProcessingFrameBuffer = make_shared<PostProcessingFrameBuffer>();
+	graphicsPipe = make_shared<GraphicsPipeLine>();
 	//cubeMap = make_shared<CubeMap>("./assets/skybox/");
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
 	//cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
@@ -333,7 +333,7 @@ void Game::UpdateGame() {
 
 	const auto exposure = imguiController->exposure;
 
-	postProcessingFrameBuffer->exposure = exposure;
+	graphicsPipe->exposure = exposure;
 
 
 	if (imguiController->useSun) {
@@ -355,7 +355,7 @@ void Game::UpdateGame() {
 		lightManager->DisablePointLight(1);
 	}
 
-	postProcessingFrameBuffer->bloomThreshold = imguiController->bloomThreshold;
+	graphicsPipe->bloomThreshold = imguiController->bloomThreshold;
 
 	//lightManager->UpdateLight(deltaTime);
 

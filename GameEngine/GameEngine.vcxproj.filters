@@ -831,7 +831,7 @@
     <ClInclude Include="src\Game\MeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\PostProcessingFrameBuffer.h">
+    <ClInclude Include="src\Game\GraphicsPipeLine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h">
@@ -950,7 +950,7 @@
     <ClCompile Include="src\Game\MeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\PostProcessingFrameBuffer.cpp">
+    <ClCompile Include="src\Game\GraphicsPipeLine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp">
