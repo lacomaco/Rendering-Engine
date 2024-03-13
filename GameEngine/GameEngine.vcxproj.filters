@@ -1418,6 +1418,8 @@
     <None Include="shader\pbr.glsl" />
     <None Include="shader\god-ray-fragment.glsl" />
     <None Include="shader\god-ray-vertex.glsl" />
+    <None Include="shader\god-ray-bloom-fragment.glsl" />
+    <None Include="shader\god-ray-post-processing-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

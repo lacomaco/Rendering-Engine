@@ -1,5 +1,6 @@
 #include "GodRays.h"
 #include "../Constants.h"
+#include "ImguiController.h"
 
 GodRays::GodRays() {
 	// 텍스처 생성
@@ -79,6 +80,22 @@ GodRays::GodRays() {
 	rayCircle = std::make_shared<Circle>();
 	rayCircle->scale = glm::vec3(2.0f);
 	rayCircle->SetupMesh();
+
+	// 임구이 바인딩
+	auto imguiController = ImguiController::getInstance();
+	imguiController->godLightTexture = godRayTexture;
+	imguiController->decay = decay;
+	imguiController->density = density;
+	imguiController->weight = weight;
+	imguiController->godRayExposure = exposure;
+}
+
+void GodRays::ImGuiUpdate() {
+	auto imguiController = ImguiController::getInstance();
+	decay = imguiController->decay;
+	density = imguiController->density;
+	weight = imguiController->weight;
+	exposure = imguiController->godRayExposure;
 }
 
 void GodRays::Draw(
@@ -87,6 +104,13 @@ void GodRays::Draw(
 	std::shared_ptr<Camera> camera) {
 	const char* godRayProgramName = "god-ray";
 	glBindFramebuffer(GL_FRAMEBUFFER, godRayFrameBuffer);
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D,
+		godRaySceneTexture,
+		0
+	);
 	// rbo도 넣어야할까? 고민해보자.
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(godRayProgramName);
@@ -108,6 +132,42 @@ void GodRays::Draw(
 	rayCircle->position = rayPosition;
 	rayCircle->Draw(godRayProgramName);
 
+	glm::vec2 screenPos = WorldToScreen(rayPosition, camera->view, camera->projection);
+
+	// worldToScreen은 왼쪽상단이 0,0 오른쪽 하단이 WINDOW_WIDTH, WINDOW_HEIGHT 좌표계
+	// 이를 opengl 텍스처 좌표계로 변환해야함.
+	screenPos.x = screenPos.x / WINDOW_WIDTH;
+	screenPos.y = 1.0 - (screenPos.y / WINDOW_HEIGHT);
+
+	// 포스트 프로세싱하기 위한 코드.
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D,
+		godRayTexture,
+		0
+	);
+
+	const char* rayEffect = "god-ray-effect";
+
+	program = shader->getShaderProgram(rayEffect);
+	glUseProgram(program);
+
+	ImGuiUpdate();
+	shader->setFloat(rayEffect, "decay", decay);
+	shader->setFloat(rayEffect, "density", density);
+	shader->setFloat(rayEffect, "weight", weight);
+	shader->setFloat(rayEffect, "exposure", exposure);
+
+	shader->setVec2(rayEffect, "lightPosition", screenPos);
+	glBindVertexArray(vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, godRaySceneTexture);
+	shader->setInt(rayEffect, "godRayTexture", 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+	glBindVertexArray(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

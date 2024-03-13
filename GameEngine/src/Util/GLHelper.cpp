@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../Constants.h"
 
+
 std::vector<float> quadVertices = {
 	// positions   // texCoords
 	-1.0f,  1.0f,  0.0f, 1.0f,
@@ -61,3 +62,19 @@ unsigned int CreateSimpleTexture() {
 
 	return texture;
 }
+
+glm::vec2 WorldToScreen(glm::vec3 worldPos, glm::mat4 view, glm::mat4 position) {
+	// clipSpace 전환
+	glm::vec4 clipSpace = position * view * glm::vec4(worldPos, 1.0f);
+
+	// NDC 전환 쉐이더에서는 GPU에서 자동으로 w 나누기 처리해줌 CPU에서 연산할땐 직접해야함.
+	glm::vec3 ndc = glm::vec3(clipSpace) / clipSpace.w;
+	// NDC -> 스크린 좌표로 변환
+	glm::vec2 screenPos = glm::vec2(
+		(ndc.x + 1.0f) * 0.5f * WINDOW_WIDTH,
+		(1.0f - ndc.y) * 0.5f * WINDOW_HEIGHT
+	);
+
+	return screenPos;
+}
+

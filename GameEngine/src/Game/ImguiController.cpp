@@ -130,6 +130,10 @@ void ImguiController::Update() {
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		ImGui::SliderFloat("decay", &decay, 0.0f, 1.0f);
+		ImGui::SliderFloat("density", &density, 0.0f, 1.0f);
+		ImGui::SliderFloat("weight", &weight, 0.0f, 1.0f);
+		ImGui::SliderFloat("exposure", &godRayExposure, 0.0f, 1.0f);
 		ImGui::TreePop();
 	}
 

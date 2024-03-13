@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include <glm/glm.hpp>
 
 extern std::vector<float> quadVertices;
 
@@ -24,3 +24,5 @@ SimpleQuad CreateSimpleQuad();
 
 // 화면에 꽉차는 텍스처 생성
 unsigned int CreateSimpleTexture();
+
+glm::vec2 WorldToScreen(glm::vec3 worldPos, glm::mat4 view, glm::mat4 position);

@@ -63,6 +63,10 @@ public:
 
 	// god light
 	unsigned int godLightTexture;
+	float decay = 0.0;
+	float density = 0.0;
+	float weight = 0.0;
+	float godRayExposure = 0.0;
 
 	void PutPBRUniform(const char* programName);
 };

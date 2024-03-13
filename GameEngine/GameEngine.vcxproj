@@ -630,6 +630,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\down-sample-fragment.glsl" />
+    <None Include="shader\god-ray-bloom-fragment.glsl" />
+    <None Include="shader\god-ray-post-processing-fragment.glsl" />
     <None Include="shader\god-ray-vertex.glsl" />
     <None Include="shader\god-ray-fragment.glsl" />
     <None Include="shader\hdr-fragment.glsl" />

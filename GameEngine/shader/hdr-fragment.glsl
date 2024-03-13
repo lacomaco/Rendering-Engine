@@ -5,6 +5,7 @@ in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
 uniform sampler2D bloomTexture;
+uniform sampler2D godRayTexture;
 uniform float exposure;
 uniform float bloomThreshold;
 
@@ -27,7 +28,6 @@ void main()
     color = mix(color,bloomColor, bloomThreshold);
     vec3 mapped = aces(color * log(exp2(exposure)));
     mapped = pow(mapped, vec3(1.0 / gamma));
-
-    //vec3 mapped = pow(color * exposure, vec3(1.0 / gamma));
+    mapped += texture(godRayTexture, TexCoords).rgb;
     FragColor = vec4(mapped, 1.0);
 }

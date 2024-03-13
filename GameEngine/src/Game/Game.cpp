@@ -260,7 +260,6 @@ bool Game::Initialize() {
 	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-	imguiController->godLightTexture = postProcessingFrameBuffer->godRays->godRaySceneTexture;
 
 
 	// Æ÷ÀÎÆ®.
@@ -487,5 +486,11 @@ void Game::CreateShaderProgram() {
 		"./shader/god-ray-vertex.glsl",
 		"./shader/god-ray-fragment.glsl",
 		"god-ray"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/god-ray-post-processing-fragment.glsl",
+		"god-ray-effect"
 	);
 }
