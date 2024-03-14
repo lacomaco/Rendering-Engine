@@ -138,6 +138,7 @@ void ImguiController::Update() {
 	}
 
 	if (ImGui::TreeNode("show GBuffer")) {
+		ImGui::Text("Position Metallic Texture");
 		ImGui::Image(
 			(void*)(intptr_t)positionMetallicTexture,
 			ImVec2(200, 200),
@@ -145,6 +146,7 @@ void ImguiController::Update() {
 			ImVec2(1, 0)
 		);
 
+		ImGui::Text("Albedo Roughness Texture");
 		ImGui::Image(
 			(void*)(intptr_t)albedoRoughnessTexture,
 			ImVec2(200, 200),
@@ -152,6 +154,7 @@ void ImguiController::Update() {
 			ImVec2(1, 0)
 		);
 
+		ImGui::Text("Normal Texture");
 		ImGui::Image(
 			(void*)(intptr_t)normalTexture,
 			ImVec2(200, 200),
@@ -159,6 +162,7 @@ void ImguiController::Update() {
 			ImVec2(1, 0)
 		);
 
+		ImGui::Text("God Ray Texture");
 		ImGui::Image(
 			(void*)(intptr_t)godRayTexture,
 			ImVec2(200, 200),

@@ -1,6 +1,8 @@
 #include "GBuffer.h"
 #include "../Constants.h"
 #include <iostream>
+#include "../Util/Shader.h"
+#include "ImguiController.h"
 
 GBuffer::GBuffer() {
 	glGenFramebuffers(1, &gBufferFBO);
@@ -29,6 +31,31 @@ GBuffer::GBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	delete[] attachments;
+}
+
+void GBuffer::use() {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram("gBuffer");
+	glUseProgram(program);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void GBuffer::unuse() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void GBuffer::UpdateImGui() {
+	auto imguiController = ImguiController::getInstance();
+
+	imguiController->albedoRoughnessTexture = albedoRoughnessTexture;
+	imguiController->positionMetallicTexture = positionMetallicTexture;
+	imguiController->normalTexture = normalTexture;
+	imguiController->godRayTexture = godRayTexture;
 }
 
 void GBuffer::createGBufferTexture(unsigned int& texture) {

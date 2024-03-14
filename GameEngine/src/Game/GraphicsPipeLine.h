@@ -5,6 +5,7 @@
 #include "Bloom.h"
 #include "GodRays.h"
 #include "GBuffer.h"
+#include "MeshRenderer.h"
 
 class GraphicsPipeLine
 {
@@ -12,10 +13,18 @@ private:
 	void CreateVAO();
 	void CreateMSAAFrameBuffer();
 	void CreateIntermediateFrameBuffer();
+	const char* programName = "gBuffer";
 
 public:
 	GraphicsPipeLine();
 	void PutExposure(const char* programName);
+	void DrawGBuffer(
+		shared_ptr<MeshRenderer> mesh,
+		std::shared_ptr<Camera> camera
+	);
+	void DrawGBuffer(shared_ptr<MeshRenderer> mesh,
+		glm::vec3 lightPos,
+		std::shared_ptr<Camera> camera);
 
 	unsigned int msaaFrameBuffer;
 	unsigned int msaaTexture; // 컬러버퍼 텍스처, MSAA

@@ -161,3 +161,29 @@ void GraphicsPipeLine::CreateVAO()
 	vbo = result.VBO;
 }
 
+void GraphicsPipeLine::DrawGBuffer(shared_ptr<MeshRenderer> mesh, std::shared_ptr<Camera>camera) {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram(gBuffer->programName);
+	glUseProgram(program);
+	gBuffer->use();
+	camera->putCameraUniform(gBuffer->programName);
+	shader->setBool(gBuffer->programName, "isGodRay", false);
+	mesh->Draw(gBuffer->programName);
+
+	gBuffer->UpdateImGui();
+}
+
+void GraphicsPipeLine::DrawGBuffer(
+	shared_ptr<MeshRenderer> mesh,
+	glm::vec3 lightPos,
+	std::shared_ptr<Camera> camera
+) {
+	auto shader = Shader::getInstance();
+
+	DrawGBuffer(mesh, camera);
+	shader->setBool(gBuffer->programName, "isGodRay", true);
+	godRays->rayCircle->position = lightPos;
+	godRays->rayCircle->Draw(gBuffer->programName);
+
+	gBuffer->UpdateImGui();
+}

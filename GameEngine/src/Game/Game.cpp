@@ -46,6 +46,12 @@ void Game::GenerateOutput() {
 		);
 	}
 
+	graphicsPipe->DrawGBuffer(
+		meshRenderer,
+		lightManager->directionLights[0]->box->position,
+		camera
+	);
+
 	graphicsPipe->use();
 	
 	// const char* shaderName = "simple-shading";
@@ -492,5 +498,11 @@ void Game::CreateShaderProgram() {
 		"./shader/hdr-vertex.glsl",
 		"./shader/god-ray-post-processing-fragment.glsl",
 		"god-ray-effect"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/gbuffer-vertex.glsl",
+		"./shader/gbuffer-fragment.glsl",
+		"gBuffer"
 	);
 }

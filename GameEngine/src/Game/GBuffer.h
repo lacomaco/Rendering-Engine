@@ -31,8 +31,11 @@ public:
 
 	unsigned int gBufferFBO;
 
+	const char* programName = "gBuffer";
+
 	// 아직 매개변수 못정함
-	void Draw();
+	void use();
+	void unuse();
 	void UpdateImGui();
 };
 
