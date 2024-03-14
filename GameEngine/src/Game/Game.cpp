@@ -36,20 +36,18 @@ void Game::GenerateOutput() {
 
 	lightManager->MakeShadow(meshRenderer);
 
-
-	// 나중에 낮에만 프로세싱 처리하도록 해야함.
-	if (true) {
-		graphicsPipe->godRays->Draw(
-			meshRenderer,
-			lightManager->directionLights[0]->box->position,
-			camera
-		);
-	}
-
 	graphicsPipe->DrawGBuffer(
 		meshRenderer,
 		lightManager->directionLights[0]->box->position,
 		camera
+	);
+
+	// 나중에 낮에만 처리하도록 변경
+	graphicsPipe->godRays->Draw(
+		meshRenderer,
+		lightManager->directionLights[0]->box->position,
+		camera,
+		graphicsPipe->gBuffer->godRayTexture
 	);
 
 	graphicsPipe->use();
@@ -486,12 +484,6 @@ void Game::CreateShaderProgram() {
 		"./shader/simple-shading-vertex.glsl",
 		"./shader/simple-pbr-shading-fragment.glsl",
 		"simple-pbr-shading"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/god-ray-vertex.glsl",
-		"./shader/god-ray-fragment.glsl",
-		"god-ray"
 	);
 
 	shader->loadShaderProgram(

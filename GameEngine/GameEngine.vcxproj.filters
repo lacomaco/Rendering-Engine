@@ -1422,8 +1422,6 @@
     <None Include="todo.md" />
     <None Include="shader\simple-pbr-shading-fragment.glsl" />
     <None Include="shader\pbr.glsl" />
-    <None Include="shader\god-ray-fragment.glsl" />
-    <None Include="shader\god-ray-vertex.glsl" />
     <None Include="shader\god-ray-bloom-fragment.glsl" />
     <None Include="shader\god-ray-post-processing-fragment.glsl" />
     <None Include="shader\gbuffer-vertex.glsl" />

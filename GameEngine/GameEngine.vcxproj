@@ -636,8 +636,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\gbuffer-vertex.glsl" />
     <None Include="shader\god-ray-bloom-fragment.glsl" />
     <None Include="shader\god-ray-post-processing-fragment.glsl" />
-    <None Include="shader\god-ray-vertex.glsl" />
-    <None Include="shader\god-ray-fragment.glsl" />
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\hdr-vertex.glsl" />
     <None Include="shader\light-fragment.glsl" />

@@ -46,9 +46,9 @@ public:
 	void Draw(
 		shared_ptr<MeshRenderer> mesh,
 		glm::vec3 rayPosition,
-		std::shared_ptr<Camera> camera
+		std::shared_ptr<Camera> camera,
+		unsigned int godRaySceneTexture
 	);
-	unsigned int godRaySceneTexture;
 	unsigned int godRayTexture; // 물체는 검정색 빛만 하얀색 추가
 	unsigned int godRayFrameBuffer;
 	unsigned int rbo;

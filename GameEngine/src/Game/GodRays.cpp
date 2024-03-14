@@ -23,25 +23,6 @@ GodRays::GodRays() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glGenTextures(1, &godRaySceneTexture);
-	glBindTexture(GL_TEXTURE_2D, godRaySceneTexture);
-	glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		GL_RGBA8,
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT,
-		0,
-		GL_RGBA,
-		GL_FLOAT,
-		NULL
-	);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 
 	// 프레임버퍼 생성
 	glGenFramebuffers(1, &godRayFrameBuffer);
@@ -51,7 +32,7 @@ GodRays::GodRays() {
 		GL_FRAMEBUFFER,
 		GL_COLOR_ATTACHMENT0,
 		GL_TEXTURE_2D,
-		godRaySceneTexture,
+		godRayTexture,
 		0
 	);
 
@@ -101,36 +82,13 @@ void GodRays::ImGuiUpdate() {
 void GodRays::Draw(
 	shared_ptr<MeshRenderer> mesh,
 	glm::vec3 rayPosition,
-	std::shared_ptr<Camera> camera) {
-	const char* godRayProgramName = "god-ray";
+	std::shared_ptr<Camera> camera,
+	unsigned int godRaySceneTexture) {
+	const char* rayEffect = "god-ray-effect";
 	glBindFramebuffer(GL_FRAMEBUFFER, godRayFrameBuffer);
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT0,
-		GL_TEXTURE_2D,
-		godRaySceneTexture,
-		0
-	);
-	// rbo도 넣어야할까? 고민해보자.
 	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram(godRayProgramName);
+	auto program = shader->getShaderProgram(rayEffect);
 	glUseProgram(program);
-	
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-
-	camera->putCameraUniform(godRayProgramName);
-	shader->setVec3(godRayProgramName, "rayPosition", rayPosition);
-	shader->setBool(godRayProgramName, "isGodRay", false);
-
-
-	mesh->Draw(godRayProgramName);
-
-	shader->setBool(godRayProgramName, "isGodRay", true);
-	rayCircle->position = rayPosition;
-	rayCircle->Draw(godRayProgramName);
 
 	glm::vec2 screenPos = WorldToScreen(rayPosition, camera->view, camera->projection);
 
@@ -139,19 +97,9 @@ void GodRays::Draw(
 	screenPos.x = screenPos.x / WINDOW_WIDTH;
 	screenPos.y = 1.0 - (screenPos.y / WINDOW_HEIGHT);
 
-	// 포스트 프로세싱하기 위한 코드.
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT0,
-		GL_TEXTURE_2D,
-		godRayTexture,
-		0
-	);
-
-	const char* rayEffect = "god-ray-effect";
-
-	program = shader->getShaderProgram(rayEffect);
-	glUseProgram(program);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ImGuiUpdate();
 	shader->setFloat(rayEffect, "decay", decay);
