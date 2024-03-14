@@ -56,10 +56,10 @@ public:
 	unsigned int vao;
 	unsigned int vbo;
 
-	float decay = 0.968;
-	float density = 0.979;
-	float weight = 0.707;
-	float exposure = 0.386;
+	float decay = 0.953;
+	float density = 0.999;
+	float weight = 0.843;
+	float exposure = 0.274;
 
 	std::shared_ptr<Circle> rayCircle;
 

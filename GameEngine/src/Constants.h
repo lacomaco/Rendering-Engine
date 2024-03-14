@@ -30,6 +30,14 @@
 #define TEXTURE_SKYBOX_OFFSET 4
 #endif
 
+
+// albdedo 9
+// normal 10
+// metallic 11
+// roughness 12 
+// ao 13
+// emissive 14
+// height 15
 #ifndef TEXTURE_START
 #define TEXTURE_START 9
 #endif

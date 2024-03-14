@@ -10,6 +10,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
 	gBuffer = std::make_shared<GBuffer>();
+	godRayBloom = std::make_shared<Bloom>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -29,6 +30,7 @@ void GraphicsPipeLine::Draw(const char* programName)
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 	bloom->Draw(screenTexture);
+	godRayBloom->Draw(godRays->godRayTexture);
 
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
@@ -51,7 +53,7 @@ void GraphicsPipeLine::Draw(const char* programName)
 	shader->setFloat(programName, "bloomThreshold", bloomThreshold);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, godRays->godRayTexture);
+	glBindTexture(GL_TEXTURE_2D, godRayBloom->fbo->textures[0]->texture);
 	shader->setInt(programName, "godRayTexture", 2);
 
 
