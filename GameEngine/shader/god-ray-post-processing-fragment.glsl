@@ -30,5 +30,5 @@ void main() {
         illuminationDecay *= decay;
     }
 
-    FragColor = color;
+    FragColor = vec4(vec3(color * exposure),1.0);
 }
