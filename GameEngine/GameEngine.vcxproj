@@ -161,6 +161,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\GBuffer.h" />
     <ClInclude Include="src\Game\GodRays.h" />
     <ClInclude Include="src\Game\Bloom.h" />
     <ClInclude Include="src\Game\BloomFBO.h" />
@@ -448,6 +449,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\GBuffer.cpp" />
     <ClCompile Include="src\Game\GodRays.cpp" />
     <ClCompile Include="src\Game\Bloom.cpp" />
     <ClCompile Include="src\Game\BloomFBO.cpp" />

@@ -137,6 +137,38 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
+	if (ImGui::TreeNode("show GBuffer")) {
+		ImGui::Image(
+			(void*)(intptr_t)positionMetallicTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::Image(
+			(void*)(intptr_t)albedoRoughnessTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::Image(
+			(void*)(intptr_t)normalTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::Image(
+			(void*)(intptr_t)godRayTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::TreePop();
+	}
+
 
 	ImGui::End();
 

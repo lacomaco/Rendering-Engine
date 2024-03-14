@@ -9,6 +9,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 {
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
+	gBuffer = std::make_shared<GBuffer>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();

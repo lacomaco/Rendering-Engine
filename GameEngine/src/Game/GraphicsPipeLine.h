@@ -4,6 +4,7 @@
 #include <memory>
 #include "Bloom.h"
 #include "GodRays.h"
+#include "GBuffer.h"
 
 class GraphicsPipeLine
 {
@@ -30,6 +31,7 @@ public:
 	void Draw(const char* programName);
 
 	std::shared_ptr<Bloom> bloom;
+	std::shared_ptr<GBuffer> gBuffer;
 	std::shared_ptr<GodRays> godRays;
 
 	float exposure = 1.0f;

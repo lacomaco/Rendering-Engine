@@ -68,6 +68,14 @@ public:
 	float weight = 0.0;
 	float godRayExposure = 0.0;
 
+	// GBUFFER 텍스처 시각화.
+	unsigned int positionMetallicTexture;
+	unsigned int albedoRoughnessTexture;
+	unsigned int normalTexture;
+	unsigned int godRayTexture;
+
+	// SSAO
+
 	void PutPBRUniform(const char* programName);
 };
 
