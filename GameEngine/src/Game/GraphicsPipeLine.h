@@ -42,7 +42,6 @@ public:
 	std::shared_ptr<Bloom> bloom;
 	std::shared_ptr<GBuffer> gBuffer;
 	std::shared_ptr<GodRays> godRays;
-	std::shared_ptr<Bloom> godRayBloom;
 
 	float exposure = 1.0f;
 

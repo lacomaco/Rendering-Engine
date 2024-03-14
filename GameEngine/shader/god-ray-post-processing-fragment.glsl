@@ -13,7 +13,7 @@ uniform float weight;
 uniform float exposure;
 
 void main() {
-    int NUM_SAMPLES = 100;
+    int NUM_SAMPLES = 300;
     
     // 현재 픽셀 위치.
     vec2 tc = TexCoords;
