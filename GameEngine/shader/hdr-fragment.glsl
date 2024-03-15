@@ -8,6 +8,8 @@ uniform sampler2D bloomTexture;
 uniform sampler2D godRayTexture;
 uniform sampler2D ssaoTexture;
 
+uniform bool useSSAO;
+
 uniform float exposure;
 uniform float bloomThreshold;
 
@@ -32,6 +34,9 @@ void main()
     mapped = pow(mapped, vec3(1.0 / gamma));
     mapped += texture(godRayTexture, TexCoords).rgb;
 
-    mapped *= texture(ssaoTexture, TexCoords).r;
+    if(useSSAO){
+        mapped *= texture(ssaoTexture, TexCoords).r;
+    }
+
     FragColor = vec4(mapped, 1.0);
 }

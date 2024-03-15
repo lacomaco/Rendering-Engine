@@ -4,9 +4,13 @@
 #include "../Util/Shader.h"
 #include "../Util/GLHelper.h"
 #include <memory>
+#include "ImguiController.h"
 
 GraphicsPipeLine::GraphicsPipeLine()
 {
+	auto imgui = ImguiController::getInstance();
+	imgui->useSSAO = useSSAO;
+
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
 	gBuffer = std::make_shared<GBuffer>();
@@ -18,7 +22,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 
 void GraphicsPipeLine::Draw(const char* programName)
 {
-
+	UpdateImGui();
 	auto shader = Shader::getInstance();
 	
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
@@ -59,6 +63,7 @@ void GraphicsPipeLine::Draw(const char* programName)
 	glBindTexture(GL_TEXTURE_2D, ssao->ssaoColorBufferBlur);
 	shader->setInt(programName, "ssaoTexture", 3);
 
+	shader->setBool(programName, "useSSAO", useSSAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
 }
@@ -198,4 +203,9 @@ void GraphicsPipeLine::DrawSSAO(
 	std::shared_ptr<Camera> camera
 ) {
 	ssao->DrawSSAO(gBuffer->positionMetallicTexture, gBuffer->normalTexture, camera);
+}
+
+void GraphicsPipeLine::UpdateImGui() {
+	auto imguiController = ImguiController::getInstance();
+	useSSAO = imguiController->useSSAO;
 }

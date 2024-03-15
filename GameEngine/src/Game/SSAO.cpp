@@ -5,6 +5,11 @@
 #include "../Game/ImguiController.h"
 
 SSAO::SSAO() {
+	auto imgui = ImguiController::getInstance();
+
+	imgui->radius = radius;
+	imgui->bias = bias;
+
 	GenerateSampleKernel();
 
 	glGenTextures(1, &noiseTexture);
@@ -113,6 +118,9 @@ void SSAO::DrawSSAO(unsigned int position, unsigned int normal,std::shared_ptr<C
 	shader->setFloat(programName, "width", (float)WINDOW_WIDTH);
 	shader->setFloat(programName, "height", (float)WINDOW_HEIGHT);
 
+	shader->setFloat(programName, "radius", radius);
+	shader->setFloat(programName, "bias", bias);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	// Blurring
@@ -189,4 +197,7 @@ void SSAO::UpdateImGui() {
 
 	imgui->ssaoTexture = ssaoColorBuffer;
 	imgui->ssaoBlurTexture = ssaoColorBufferBlur;
+
+	radius = imgui->radius;
+	bias = imgui->bias;
 }

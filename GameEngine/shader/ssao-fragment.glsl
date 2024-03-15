@@ -15,6 +15,9 @@ uniform mat4 view;
 uniform float width;
 uniform float height;
 
+uniform float radius;
+uniform float bias;
+
 const vec2 noiseScale = vec2(width/4.0, height/4.0);
 
 void main() {
@@ -39,8 +42,6 @@ void main() {
     mat3 TBN = mat3(tangent, bitangent, view_normal);
 
     float occlusion = 0.0;
-    float radius = 0.5;
-    float bias = 0.025;
     for(int i = 0; i < kernelSize; i++){
         vec3 samplePos = TBN * samples[i];
         samplePos = view_pos + samplePos * radius;

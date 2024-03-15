@@ -187,6 +187,9 @@ void ImguiController::Update() {
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		ImGui::SliderFloat("radius", &radius, 0.0f, 5.0f);
+		ImGui::SliderFloat("bias", &bias, -1.0f, 1.0f);
+		ImGui::Checkbox("useSSAO", &useSSAO);
 		ImGui::TreePop();
 	}
 

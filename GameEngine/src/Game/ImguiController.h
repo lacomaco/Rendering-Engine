@@ -78,6 +78,10 @@ public:
 	unsigned int ssaoTexture;
 	unsigned int ssaoBlurTexture;
 
+	float radius = 0.5f;
+	float bias = 0.025f;
+	bool useSSAO = true;
+
 	void PutPBRUniform(const char* programName);
 };
 

@@ -52,5 +52,9 @@ public:
 	float exposure = 1.0f;
 
 	float bloomThreshold = 0.04f;
+
+	bool useSSAO = true;
+
+	void UpdateImGui();
 };
 
