@@ -10,6 +10,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
 	gBuffer = std::make_shared<GBuffer>();
+	ssao = std::make_shared<SSAO>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -53,7 +54,10 @@ void GraphicsPipeLine::Draw(const char* programName)
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, godRays->godRayTexture);
 	shader->setInt(programName, "godRayTexture", 2);
-
+	
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, ssao->ssaoColorBufferBlur);
+	shader->setInt(programName, "ssaoTexture", 3);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glEnable(GL_DEPTH_TEST);
@@ -181,9 +185,17 @@ void GraphicsPipeLine::DrawGBuffer(
 	auto shader = Shader::getInstance();
 
 	DrawGBuffer(mesh, camera);
+	auto program = shader->getShaderProgram(gBuffer->programName);
+	glUseProgram(program);
 	shader->setBool(gBuffer->programName, "isGodRay", true);
 	godRays->rayCircle->position = lightPos;
 	godRays->rayCircle->Draw(gBuffer->programName);
 
 	gBuffer->UpdateImGui();
+}
+
+void GraphicsPipeLine::DrawSSAO(
+	std::shared_ptr<Camera> camera
+) {
+	ssao->DrawSSAO(gBuffer->positionMetallicTexture, gBuffer->normalTexture, camera);
 }

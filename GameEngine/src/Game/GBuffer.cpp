@@ -27,7 +27,6 @@ GBuffer::GBuffer() {
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	delete[] attachments;
@@ -35,7 +34,7 @@ GBuffer::GBuffer() {
 
 void GBuffer::use() {
 	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram("gBuffer");
+	auto program = shader->getShaderProgram(programName);
 	glUseProgram(program);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);

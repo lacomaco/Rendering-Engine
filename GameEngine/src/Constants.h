@@ -31,12 +31,20 @@
 #endif
 
 
+/*
+* 9: albedo
+* 10: metallic
+* 11: roughness
+* 12: normal
+* 13: ao
+* 14: emissive
+*/
 #ifndef TEXTURE_START
 #define TEXTURE_START 9
 #endif
 
 // 주의!!! OPENGL ES <- 텍스처 8개밖에 허용 안함, OpenGL 3.x 이상 버전에선 최소 16개의 유니폼 텍스처를 지원한다고함.
-// 내 컴퓨터에서 조회했을경우 32개까지 지원한다고 나옴.
+// Opengl 4 버전 이상을 쓰고 있음으로 크게 문제될건 없지만, 혹시 모르니 기억해두자!
 // 텍스처 늘리는건 조심하자!
 
 #ifndef BIAS

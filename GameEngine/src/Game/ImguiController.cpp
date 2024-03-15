@@ -100,7 +100,6 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
-	// TODO: 나중에 지우기.
 	if (ImGui::TreeNode("PBR Test")) {
 		ImGui::Text("Metallic");
 		ImGui::SliderFloat("metallic", &metallic, 0.0f, 1.0f);
@@ -173,6 +172,24 @@ void ImguiController::Update() {
 		ImGui::TreePop();
 	}
 
+	if (ImGui::TreeNode("show SSAO Texture")) {
+		ImGui::Text("SSAO Texture");
+		ImGui::Image(
+			(void*)(intptr_t)ssaoTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+		ImGui::Text("SSAO Blur Texture");
+		ImGui::Image(
+			(void*)(intptr_t)ssaoBlurTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+		ImGui::TreePop();
+	}
+
 
 	ImGui::End();
 
@@ -184,7 +201,6 @@ void ImguiController::Render() {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-// TODO: 나중에 지우기.
 void ImguiController::PutPBRUniform(const char* programName) {
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(programName);

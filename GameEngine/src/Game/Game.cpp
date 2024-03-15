@@ -32,6 +32,8 @@ void Game::GenerateOutput() {
 		meshRenderer->AddMesh(backPack);
 	}
 	//meshRenderer->AddMesh(circle[0]);
+	//meshRenderer->AddMesh(plane);
+
 	meshRenderer->MeshAlignment(camera.get());
 
 	lightManager->MakeShadow(meshRenderer);
@@ -41,6 +43,7 @@ void Game::GenerateOutput() {
 		lightManager->directionLights[0]->box->position,
 		camera
 	);
+	graphicsPipe->DrawSSAO(camera);
 
 	// 나중에 낮에만 처리하도록 변경
 	graphicsPipe->godRays->Draw(
@@ -61,6 +64,7 @@ void Game::GenerateOutput() {
 	cubeMap->PutCubeMapTexture(shaderName);
 	camera->putCameraUniform(shaderName);
 	lightManager->PutLightUniform(shaderName);
+
 	meshRenderer->Draw(shaderName);
 
 	/*
@@ -152,9 +156,7 @@ bool Game::Initialize() {
 	meshRenderer = make_shared<MeshRenderer>();
 
 	graphicsPipe = make_shared<GraphicsPipeLine>();
-	//cubeMap = make_shared<CubeMap>("./assets/skybox/");
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
-	//cubeMap = make_shared<CubeMap>("./assets/skybox-radiance/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -210,9 +212,6 @@ bool Game::Initialize() {
 	_circle->position = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
-	// TODO: 나중에 고치기.
-	// this->circle.push_back(_circle);
-
 	// 위로 : metallic
 	// 오른쪽 : roughness
 	int count = 0;
@@ -236,6 +235,7 @@ bool Game::Initialize() {
 
 	if (modelOn) {
 		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		//backPack = make_shared<Model>("./assets/backpack/backpack.obj");
 		//backPack = make_shared<Model>("./assets/futuristic_room/scene.gltf");
 		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
@@ -272,15 +272,6 @@ bool Game::Initialize() {
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
 		glm::vec3(0.972, 1.360, 1.616),
-		glm::vec3(-0.042, -0.390, 0.952),
-		12
-	);
-
-	lightManager->CreateLight
-	(
-		1,
-		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(-2.123, 1.358, -4.378),
 		glm::vec3(-0.042, -0.390, 0.952),
 		1
 	);
@@ -352,11 +343,11 @@ void Game::UpdateGame() {
 
 	if (imguiController->usePointLight) {
 		lightManager->EnablePointLight(0);
-		lightManager->EnablePointLight(1);
+		//lightManager->EnablePointLight(1);
 	}
 	else {
 		lightManager->DisablePointLight(0);
-		lightManager->DisablePointLight(1);
+		//lightManager->DisablePointLight(1);
 	}
 
 	graphicsPipe->bloomThreshold = imguiController->bloomThreshold;
@@ -496,5 +487,17 @@ void Game::CreateShaderProgram() {
 		"./shader/gbuffer-vertex.glsl",
 		"./shader/gbuffer-fragment.glsl",
 		"gBuffer"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/ssao-fragment.glsl",
+		"SSAO"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/ssao-blur-fragment.glsl",
+		"SSAOBlur"
 	);
 }

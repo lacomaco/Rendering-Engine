@@ -75,6 +75,8 @@ public:
 	unsigned int godRayTexture;
 
 	// SSAO
+	unsigned int ssaoTexture;
+	unsigned int ssaoBlurTexture;
 
 	void PutPBRUniform(const char* programName);
 };

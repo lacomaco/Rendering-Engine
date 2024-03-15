@@ -168,7 +168,7 @@ void main() {
 	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
 
 	if(countLight == 0.0){
-	    ambientLight *= vec3(0.3);
+	    ambientLight *= vec3(0.4);
 	} else if(!isDirectionalShadow) {
 		float distance = length(nearestLight.position - posWorld);
 		float attenuation = calcAttenuation(distance,nearestLight);

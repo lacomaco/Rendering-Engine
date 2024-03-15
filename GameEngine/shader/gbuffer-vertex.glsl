@@ -16,6 +16,7 @@ void main() {
     TexCoords = aTexCoord;
     FragPos = vec3(model * vec4(aPos, 1.0));
     vec3 normal = normalize(vec3(invTranspose * vec4(aNormal, 0.0)));
+    
     normalWorld = normal;
 
     vec3 T = aTangentModel;
@@ -23,8 +24,8 @@ void main() {
         T = -T;
     }
 
-    T = normalize(vec3(model * vec4(T, 0.0)));
-    vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
+    T = normalize(vec3(invTranspose * vec4(T, 0.0)));
+    vec3 B = normalize(vec3(invTranspose * vec4(aBitangent, 0.0)));
 
     TBN = mat3(T, B, normal);
 

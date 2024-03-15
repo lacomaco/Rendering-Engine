@@ -6,6 +6,7 @@
 #include "GodRays.h"
 #include "GBuffer.h"
 #include "MeshRenderer.h"
+#include "SSAO.h"
 
 class GraphicsPipeLine
 {
@@ -26,6 +27,10 @@ public:
 		glm::vec3 lightPos,
 		std::shared_ptr<Camera> camera);
 
+	void DrawSSAO(
+		std::shared_ptr<Camera> camera
+	);
+
 	unsigned int msaaFrameBuffer;
 	unsigned int msaaTexture; // 컬러버퍼 텍스처, MSAA
 
@@ -42,6 +47,7 @@ public:
 	std::shared_ptr<Bloom> bloom;
 	std::shared_ptr<GBuffer> gBuffer;
 	std::shared_ptr<GodRays> godRays;
+	std::shared_ptr<SSAO> ssao;
 
 	float exposure = 1.0f;
 

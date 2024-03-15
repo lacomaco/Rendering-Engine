@@ -446,6 +446,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="src\Util\stb_image.h" />
+    <ClInclude Include="src\Game\SSAO.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -488,6 +489,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Util\stb_image.cpp" />
+    <ClCompile Include="src\Game\SSAO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glew32.dll" />
@@ -661,6 +663,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-vertex.glsl" />
+    <None Include="shader\ssao-blur-fragment.glsl" />
+    <None Include="shader\ssao-fragment.glsl" />
     <None Include="todo.md" />
     <None Include="shader\up-sample-fragment.glsl" />
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
