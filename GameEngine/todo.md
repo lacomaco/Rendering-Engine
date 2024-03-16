@@ -1,6 +1,3 @@
-1. SSAO (2일)
-https://learnopengl.com/Advanced-Lighting/SSAO
-
 2. Lens Flare (1일)
 https://www.youtube.com/watch?v=OiMRdkhvwqg
 
@@ -9,4 +6,6 @@ https://www.youtube.com/watch?v=OiMRdkhvwqg
 
 4. HDRI with auto exposure (미정)
 https://bruop.github.io/exposure/
+
+5. PCSS
 

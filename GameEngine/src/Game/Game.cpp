@@ -157,6 +157,7 @@ bool Game::Initialize() {
 
 	graphicsPipe = make_shared<GraphicsPipeLine>();
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
+	// cubeMap = make_shared<CubeMap>("./assets/skybox/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -271,9 +272,10 @@ bool Game::Initialize() {
 	(
 		1,
 		//glm::vec3(0.0f, 3.0f, 5.0f),
-		glm::vec3(0.972, 1.360, 1.616),
+		// interogation_room x:-0.116 y:2.117 z:-1.116
+		glm::vec3(-0.116, 2.117, -1.116),
 		glm::vec3(-0.042, -0.390, 0.952),
-		1
+		5
 	);
 
 	std::cout << lightManager->getTotalLightCount() << std::endl;
