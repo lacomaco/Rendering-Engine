@@ -69,6 +69,9 @@ GodRays::GodRays() {
 	imguiController->density = density;
 	imguiController->weight = weight;
 	imguiController->godRayExposure = exposure;
+
+	imguiController->uGhosts = ghosts;
+	imguiController->uGhostDispersal = ghostDispersal;
 }
 
 void GodRays::ImGuiUpdate() {
@@ -77,6 +80,9 @@ void GodRays::ImGuiUpdate() {
 	density = imguiController->density;
 	weight = imguiController->weight;
 	exposure = imguiController->godRayExposure;
+
+	ghosts = imguiController->uGhosts;
+	ghostDispersal = imguiController->uGhostDispersal;
 }
 
 void GodRays::Draw(
@@ -106,6 +112,9 @@ void GodRays::Draw(
 	shader->setFloat(rayEffect, "density", density);
 	shader->setFloat(rayEffect, "weight", weight);
 	shader->setFloat(rayEffect, "exposure", exposure);
+
+	shader->setInt(rayEffect, "ghosts", ghosts);
+	shader->setFloat(rayEffect, "ghostDispersal", ghostDispersal);
 
 	shader->setVec2(rayEffect, "lightPosition", screenPos);
 	glBindVertexArray(vao);

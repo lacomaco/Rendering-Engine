@@ -66,21 +66,6 @@ void Game::GenerateOutput() {
 	lightManager->PutLightUniform(shaderName);
 
 	meshRenderer->Draw(shaderName);
-
-	/*
-	pbr 테스트용.
-	for (int i = 0; i < pbrTestCircle.size(); i++) {
-		auto circle = pbrTestCircle[i];
-		auto metallic = pbrTestMetallic[i];
-		auto roughness = pbrTestRoughness[i];
-
-		shader->setFloat(shaderName, "metallicTest", metallic);
-		shader->setFloat(shaderName, "roughnessTest", roughness);
-		shader->setVec3(shaderName, "color", glm::vec3(1.0,1.0,1.0));
-		circle->Draw(shaderName);
-	}
-	*/
-
 	lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
 
@@ -277,8 +262,6 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		5
 	);
-
-	std::cout << lightManager->getTotalLightCount() << std::endl;
 
 	input = Input::GetInstance();
 

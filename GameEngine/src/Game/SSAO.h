@@ -30,8 +30,8 @@ public:
 	unsigned int ssaoColorBuffer;
 	unsigned int ssaoColorBufferBlur;
 
-	float radius = 2.275f;
-	float bias = -0.048f;
+	float radius = 0.278;
+	float bias = -0.018f;
 
 
 	void DrawSSAO(

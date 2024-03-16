@@ -47,10 +47,11 @@ void Light::Draw(const char* shaderProgramName) {
 void Light::CalculateLightSpaceMatrix() {
 	glm::mat4 lightProjection, lightView;
 
-	lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near, far);
+	
+	lightProjection = glm::ortho(-14.0f, 14.0f, -14.0f, 14.0f, 1.0f, 22.0f);
 
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 lightRight = glm::normalize(glm::cross(up, direction));
+	glm::vec3 lightRight = glm::normalize(glm::cross(up,direction));
 	glm::vec3 lightUp = glm::cross(direction, lightRight);
 
 	lightView = glm::lookAt(
@@ -147,6 +148,7 @@ void Light::lookHere(glm::vec3 point) {
 }
 
 void Light::setPosition(glm::vec3 position) {
+
 	box->position = position;
 }
 

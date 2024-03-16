@@ -121,7 +121,9 @@ void SSAO::DrawSSAO(unsigned int position, unsigned int normal,std::shared_ptr<C
 	shader->setFloat(programName, "radius", radius);
 	shader->setFloat(programName, "bias", bias);
 
+	glDisable(GL_BLEND);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glEnable(GL_BLEND);
 
 	// Blurring
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
@@ -131,7 +133,10 @@ void SSAO::DrawSSAO(unsigned int position, unsigned int normal,std::shared_ptr<C
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 	shader->setInt(blurProgramName, "ssaoTexture", 0);
+
+	glDisable(GL_BLEND);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glEnable(GL_BLEND);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -188,7 +193,9 @@ void SSAO::GenerateSampleKernel() {
 			0.0f
 		);
 
-		ssaoNoise.push_back(noise);
+		ssaoNoise.push_back(
+			glm::normalize(noise)
+		);
 	}
 }
 

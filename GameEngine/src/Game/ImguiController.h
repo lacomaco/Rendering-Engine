@@ -68,6 +68,9 @@ public:
 	float weight = 0.0;
 	float godRayExposure = 0.0;
 
+	int uGhosts = 0;
+	float uGhostDispersal = 0.0f;
+
 	// GBUFFER 텍스처 시각화.
 	unsigned int positionMetallicTexture;
 	unsigned int albedoRoughnessTexture;
@@ -81,6 +84,9 @@ public:
 	float radius = 0.5f;
 	float bias = 0.025f;
 	bool useSSAO = true;
+
+	// Lens Flare
+	unsigned int lensFlareTexture;
 
 	void PutPBRUniform(const char* programName);
 };

@@ -202,10 +202,7 @@ struct ShadowStruct {
 ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,vec3 lightDir) {
     ShadowStruct result;
 
-    // weird... 내 프로젝트에선 1.0 - 보다 1.0 + 이 더 잘들어맞는다.
-    // 이거에 대해선 한번 수학적으로 증명해봐야한다.
-    // 증명해서 블로그에 올려보자.
-    float bias = max(0.01 * (1.0 +  dot(normal,lightDir)),0.006);
+    bias = 0.006;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;

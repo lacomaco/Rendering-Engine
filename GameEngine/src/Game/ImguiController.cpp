@@ -133,6 +133,8 @@ void ImguiController::Update() {
 		ImGui::SliderFloat("density", &density, 0.0f, 1.0f);
 		ImGui::SliderFloat("weight", &weight, 0.0f, 1.0f);
 		ImGui::SliderFloat("exposure", &godRayExposure, 0.0f, 1.0f);
+		ImGui::SliderInt("ghosts", &uGhosts, 0, 10);
+		ImGui::SliderFloat("ghostDispersal", &uGhostDispersal, 0.0f, 1.0f);
 		ImGui::TreePop();
 	}
 
@@ -190,6 +192,11 @@ void ImguiController::Update() {
 		ImGui::SliderFloat("radius", &radius, 0.0f, 5.0f);
 		ImGui::SliderFloat("bias", &bias, -1.0f, 1.0f);
 		ImGui::Checkbox("useSSAO", &useSSAO);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Lens Flare")) {
+
 		ImGui::TreePop();
 	}
 
