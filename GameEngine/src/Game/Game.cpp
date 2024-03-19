@@ -31,8 +31,13 @@ void Game::GenerateOutput() {
 	if (modelOn) {
 		meshRenderer->AddMesh(backPack);
 	}
-	//meshRenderer->AddMesh(circle[0]);
-	//meshRenderer->AddMesh(plane);
+
+	/*
+	for (auto& circle : pbrTestCircle) {
+		meshRenderer->AddMesh(circle);
+	}
+	*/
+	
 
 	meshRenderer->MeshAlignment(camera.get());
 
@@ -55,7 +60,7 @@ void Game::GenerateOutput() {
 
 	graphicsPipe->use();
 	
-	// const char* shaderName = "simple-shading";
+	//const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
 	auto imguiController = ImguiController::getInstance();
 	imguiController->PutPBRUniform(shaderName);
@@ -130,6 +135,7 @@ bool Game::Initialize() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	ImguiController::CreateInstance(mWindow, context);
 	imguiController = ImguiController::getInstance();
@@ -221,8 +227,6 @@ bool Game::Initialize() {
 
 	if (modelOn) {
 		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-		//backPack = make_shared<Model>("./assets/backpack/backpack.obj");
-		//backPack = make_shared<Model>("./assets/futuristic_room/scene.gltf");
 		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
@@ -466,6 +470,12 @@ void Game::CreateShaderProgram() {
 		"./shader/hdr-vertex.glsl",
 		"./shader/god-ray-post-processing-fragment.glsl",
 		"god-ray-effect"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/lens-flare-fragment.glsl",
+		"lensFlare"
 	);
 
 	shader->loadShaderProgram(
