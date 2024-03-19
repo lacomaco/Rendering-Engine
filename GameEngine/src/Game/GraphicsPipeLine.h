@@ -7,6 +7,7 @@
 #include "GBuffer.h"
 #include "MeshRenderer.h"
 #include "SSAO.h"
+#include "LensFlare.h"
 
 class GraphicsPipeLine
 {
@@ -48,6 +49,7 @@ public:
 	std::shared_ptr<GBuffer> gBuffer;
 	std::shared_ptr<GodRays> godRays;
 	std::shared_ptr<SSAO> ssao;
+	std::shared_ptr<LensFlare> lensFlare;
 
 	float exposure = 1.0f;
 

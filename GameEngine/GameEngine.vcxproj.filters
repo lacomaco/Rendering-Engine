@@ -876,6 +876,9 @@
     <ClInclude Include="src\Game\SSAO.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\LensFlare.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -996,6 +999,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\SSAO.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\LensFlare.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1434,6 +1440,7 @@
     <None Include="shader\gbuffer-fragment.glsl" />
     <None Include="shader\ssao-fragment.glsl" />
     <None Include="shader\ssao-blur-fragment.glsl" />
+    <None Include="shader\lens-flare-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

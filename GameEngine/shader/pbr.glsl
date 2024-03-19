@@ -202,7 +202,7 @@ struct ShadowStruct {
 ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,vec3 lightDir) {
     ShadowStruct result;
 
-    bias = 0.006;
+    float bias = 0.006;
 
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;

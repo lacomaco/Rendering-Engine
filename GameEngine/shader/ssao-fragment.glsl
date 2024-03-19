@@ -27,16 +27,6 @@ void main() {
     // 이 randomVec은 현재 TangentSpace에 있는 랜덤 벡터이다.
     vec3 randomVec = normalize(texture(noiseTexture, TexCoords * noiseScale).xyz);
 
-    /*
-    아래 수학적 계산에 대한 부가 설명.
-
-    dot(randomVec,normal) -> 투영
-    normal * dot(randomVec,normal) -> 정사영
-
-    randomVec에서 그 정사영에 대해서 빼기를 수행하면 수직인 벡터가 나온다.
-
-    normal에 수직인 벡터이므로 tangent로 사용 가능하다.
-    */
     vec3 tangent = normalize(randomVec - view_normal * dot(randomVec, view_normal));
     vec3 bitangent = cross(view_normal, tangent);
     mat3 TBN = mat3(tangent, bitangent, view_normal);

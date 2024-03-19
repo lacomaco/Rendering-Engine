@@ -16,7 +16,7 @@ uniform int ghosts;
 uniform float ghostDispersal;
 
 void main() {
-    int NUM_SAMPLES = 300;
+    int NUM_SAMPLES = 250;
     
     // 현재 픽셀 위치.
     vec2 tc = TexCoords;
@@ -33,17 +33,5 @@ void main() {
         illuminationDecay *= decay;
     }
 
-    vec2 reversedTexCoords = vec2(1.0) - TexCoords;
-    vec2 texelSize = 1.0 / vec2(textureSize(godRayTexture, 0));
-    vec2 ghostVec = (vec2(0.5) - reversedTexCoords) * ghostDispersal;
-
-    vec4 result = vec4(0.0);
-    for(int i = 0; i < ghosts; i++){
-        vec2 offset = fract(reversedTexCoords + ghostVec * float(i));
-        float weight = length(vec2(0.5) - offset) / length(vec2(0.5));
-        weight = pow(1.0 - weight, 10.0);
-        result += texture(godRayTexture, offset) * weight;
-    }
-
-    FragColor = vec4(vec3(color * exposure),1.0) + result;
+    FragColor = vec4(vec3(color * exposure),1.0);
 }

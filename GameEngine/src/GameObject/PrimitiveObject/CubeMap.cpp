@@ -70,6 +70,7 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
 
     std::cout << Format.Internal << std::endl;
 
+    
     glTexImage2D(GL_TEXTURE_2D,
         0,
         Format.Internal,
@@ -80,6 +81,18 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
         Format.Type,
         Texture.data()
     );
+    /*
+    glCompressedTexImage2D(
+    	GL_TEXTURE_2D,
+		0,
+        GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+		Texture.extent().x,
+		Texture.extent().y,
+		0,
+		Texture.size(),
+		Texture.data()
+    );
+    */
 }
 
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
@@ -110,6 +123,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
             GL_FLOAT,
             Texture.data()
         );
+
         GLenum error = glGetError();
         if (error != GL_NO_ERROR) {
             std::cout << "Error loading texture: " << error << std::endl;

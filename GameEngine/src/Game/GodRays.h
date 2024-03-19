@@ -7,6 +7,7 @@
 #include "Light.h"
 #include <memory>
 #include "../GameObject/PrimitiveObject/Circle.h"
+#include "LensFlare.h"
 
 /*
 * Screen Space God Rays
