@@ -25,7 +25,7 @@ public:
 	unsigned int vao, vbo;
 	unsigned int lensFlareFBO;
 
-	void Draw(unsigned int godRayTexture);
+	void Draw(unsigned int sceneTexture);
 
 };
 

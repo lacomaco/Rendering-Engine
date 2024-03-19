@@ -1,9 +1,10 @@
 #version 460 core
 
-uniform sampler2D godRayTexture;
+uniform sampler2D sceneTexture;
 
 out vec4 FragColor;
+in vec2 TexCoords;
 
 void main() {
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    FragColor = texture(sceneTexture, TexCoords);
 }

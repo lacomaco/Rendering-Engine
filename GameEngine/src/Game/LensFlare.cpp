@@ -59,7 +59,7 @@ LensFlare::LensFlare() {
 	imguiController->lensFlareTexture = downSampledTexture;
 }
 
-void LensFlare::Draw(unsigned int godRayTexture) {
+void LensFlare::Draw(unsigned int sceneTexture) {
 	const char* programName = "lensFlare";
 
 	auto shader = Shader::getInstance();
@@ -76,10 +76,11 @@ void LensFlare::Draw(unsigned int godRayTexture) {
 		0
 	);
 
+	glViewport(0, 0, WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, godRayTexture);
-	shader->setInt(programName, "godRayTexture", 0);
+	glBindTexture(GL_TEXTURE_2D, sceneTexture);
+	shader->setInt(programName, "sceneTexture", 0);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -90,6 +91,8 @@ void LensFlare::Draw(unsigned int godRayTexture) {
 		lensFlareTexture,
 		0
 	);
+
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
