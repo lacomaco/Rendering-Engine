@@ -3,7 +3,6 @@
 
 LensFlare::LensFlare() {
 	auto imguiController = ImguiController::getInstance();
-	imguiController->lensFlareTexture = downSampledTexture;
 
 	glGenFramebuffers(1, &lensFlareFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, lensFlareFBO);
@@ -56,6 +55,8 @@ LensFlare::LensFlare() {
 	);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	imguiController->lensFlareTexture = downSampledTexture;
 }
 
 void LensFlare::Draw(unsigned int godRayTexture) {

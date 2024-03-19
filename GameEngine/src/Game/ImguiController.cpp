@@ -196,7 +196,12 @@ void ImguiController::Update() {
 	}
 
 	if (ImGui::TreeNode("Lens Flare")) {
-
+		ImGui::Image(
+			(void*)(intptr_t)lensFlareTexture,
+			ImVec2(200, 200),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
 		ImGui::TreePop();
 	}
 

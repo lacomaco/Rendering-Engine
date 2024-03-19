@@ -15,6 +15,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 	godRays = std::make_shared<GodRays>();
 	gBuffer = std::make_shared<GBuffer>();
 	ssao = std::make_shared<SSAO>();
+	lensFlare = std::make_shared<LensFlare>();
 	CreateVAO();
 	CreateMSAAFrameBuffer();
 	CreateIntermediateFrameBuffer();
@@ -34,6 +35,8 @@ void GraphicsPipeLine::Draw(const char* programName)
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 	bloom->Draw(screenTexture);
+	lensFlare->Draw(screenTexture);
+
 
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
