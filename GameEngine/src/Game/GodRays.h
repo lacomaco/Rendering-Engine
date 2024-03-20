@@ -62,10 +62,6 @@ public:
 	float weight = 1;
 	float exposure = 0.384;
 
-	int ghosts = 2;
-	float ghostDispersal = 0.272;
-
-
 	std::shared_ptr<Circle> rayCircle;
 
 	void ImGuiUpdate();

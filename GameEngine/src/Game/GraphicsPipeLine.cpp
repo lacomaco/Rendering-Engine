@@ -34,8 +34,8 @@ void GraphicsPipeLine::Draw(const char* programName)
 		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
+	lensFlare->Draw(screenTexture, gBuffer->godRayTexture);
 	bloom->Draw(screenTexture);
-	lensFlare->Draw(screenTexture);
 
 
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
@@ -65,6 +65,10 @@ void GraphicsPipeLine::Draw(const char* programName)
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, ssao->ssaoColorBufferBlur);
 	shader->setInt(programName, "ssaoTexture", 3);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, lensFlare->lensFlareTexture);
+	shader->setInt(programName, "lensFlareTexture", 4);
 
 	shader->setBool(programName, "useSSAO", useSSAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

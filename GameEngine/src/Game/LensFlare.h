@@ -4,6 +4,7 @@
 #include "../Util/GLHelper.h"
 #include "ImguiController.h"
 #include "../Util/Shader.h"
+#include "Bloom.h"
 
 
 /*
@@ -16,16 +17,22 @@
 */
 class LensFlare
 {
+private:
+	unsigned int dirtLensTexture;
 public:
 	LensFlare();
-
-	unsigned int downSampledTexture;
 	unsigned int lensFlareTexture;
 
 	unsigned int vao, vbo;
 	unsigned int lensFlareFBO;
 
-	void Draw(unsigned int sceneTexture);
+	float uGhostDispersal = 0.273f;
+	int uNumGhosts = 7;
+
+	void Draw(unsigned int sceneTexture,unsigned int godRayTexture);
+	void UpdateImGui();
+
+	std::shared_ptr<Bloom> bloom;
 
 };
 

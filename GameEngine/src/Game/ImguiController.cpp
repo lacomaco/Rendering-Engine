@@ -133,8 +133,6 @@ void ImguiController::Update() {
 		ImGui::SliderFloat("density", &density, 0.0f, 1.0f);
 		ImGui::SliderFloat("weight", &weight, 0.0f, 1.0f);
 		ImGui::SliderFloat("exposure", &godRayExposure, 0.0f, 1.0f);
-		ImGui::SliderInt("ghosts", &uGhosts, 0, 10);
-		ImGui::SliderFloat("ghostDispersal", &uGhostDispersal, 0.0f, 1.0f);
 		ImGui::TreePop();
 	}
 
@@ -196,6 +194,8 @@ void ImguiController::Update() {
 	}
 
 	if (ImGui::TreeNode("Lens Flare")) {
+		ImGui::SliderInt("ghosts", &uGhosts, 0, 10);
+		ImGui::SliderFloat("ghostDispersal", &uGhostDispersal, 0.0f, 1.0f);
 		ImGui::Image(
 			(void*)(intptr_t)lensFlareTexture,
 			ImVec2(200, 200),

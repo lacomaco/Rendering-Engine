@@ -479,6 +479,12 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/lens-flare-dirt-fragment.glsl",
+		"lens-dirt"
+	);
+
+	shader->loadShaderProgram(
 		"./shader/gbuffer-vertex.glsl",
 		"./shader/gbuffer-fragment.glsl",
 		"gBuffer"

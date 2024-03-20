@@ -7,6 +7,7 @@ uniform sampler2D screenTexture;
 uniform sampler2D bloomTexture;
 uniform sampler2D godRayTexture;
 uniform sampler2D ssaoTexture;
+uniform sampler2D lensFlareTexture;
 
 uniform bool useSSAO;
 
@@ -30,6 +31,7 @@ void main()
     vec3 bloomColor = texture(bloomTexture, TexCoords).rgb;
 
     color = mix(color,bloomColor, bloomThreshold);
+    color += texture(lensFlareTexture, TexCoords).rgb;
     vec3 mapped = aces(color * log(exp2(exposure)));
     mapped = pow(mapped, vec3(1.0 / gamma));
     mapped += texture(godRayTexture, TexCoords).rgb;

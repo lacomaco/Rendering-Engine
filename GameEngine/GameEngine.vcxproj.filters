@@ -1441,6 +1441,7 @@
     <None Include="shader\ssao-fragment.glsl" />
     <None Include="shader\ssao-blur-fragment.glsl" />
     <None Include="shader\lens-flare-fragment.glsl" />
+    <None Include="shader\lens-flare-dirt-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
@@ -1477,6 +1478,9 @@
     <Image Include="assets\hdr-cubemap\specular_hdr.dds" />
     <Image Include="assets\hdr-cubemap\specular_mdr.dds" />
     <Image Include="assets\hdr-cubemap\env_hdr.dds" />
+    <Image Include="..\..\..\..\Desktop\lens-dirt.jpeg">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />

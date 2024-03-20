@@ -642,6 +642,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="shader\god-ray-post-processing-fragment.glsl" />
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\hdr-vertex.glsl" />
+    <None Include="shader\lens-flare-dirt-fragment.glsl" />
     <None Include="shader\lens-flare-fragment.glsl" />
     <None Include="shader\light-fragment.glsl" />
     <None Include="shader\light-vertex.glsl" />
@@ -673,6 +674,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="src\ECS\ECS 모듈에 대한 설명.md" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\lens-dirt.jpeg" />
     <Image Include="assets\hdr-cubemap\brdf.dds" />
     <Image Include="assets\hdr-cubemap\diffuse_hdr.dds" />
     <Image Include="assets\hdr-cubemap\diffuse_mdr.dds" />
