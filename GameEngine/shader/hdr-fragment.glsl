@@ -32,13 +32,15 @@ void main()
 
     color = mix(color,bloomColor, bloomThreshold);
     color += texture(lensFlareTexture, TexCoords).rgb;
+    
+    if(useSSAO){
+        color *= texture(ssaoTexture, TexCoords).r;
+    }
+
     vec3 mapped = aces(color * log(exp2(exposure)));
     mapped = pow(mapped, vec3(1.0 / gamma));
-    mapped += texture(godRayTexture, TexCoords).rgb;
 
-    if(useSSAO){
-        mapped *= texture(ssaoTexture, TexCoords).r;
-    }
+    mapped += texture(godRayTexture, TexCoords).rgb;
 
     FragColor = vec4(mapped, 1.0);
 }

@@ -178,6 +178,10 @@ void main() {
 	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 
+	if(use_emissive0){
+		colorWithAlpha += vec4(texture(emissive0, TexCoord).r) * 5.0;
+	}
+
 	FragColor = colorWithAlpha;
 }
 

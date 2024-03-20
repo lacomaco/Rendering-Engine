@@ -29,6 +29,9 @@ uniform sampler2D normal0;
 uniform bool use_height0;
 uniform sampler2D height0;
 
+uniform bool use_emissive0;
+uniform sampler2D emissive0;
+
 
 uniform samplerCube skyBox;
 uniform samplerCube radianceMap; //specular

@@ -71,7 +71,7 @@ void Game::GenerateOutput() {
 	lightManager->PutLightUniform(shaderName);
 
 	meshRenderer->Draw(shaderName);
-	lightManager->DrawLight(camera);
+	//lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
 
 	auto normalMode = ImguiController::getInstance()->showNormal;
@@ -115,8 +115,6 @@ bool Game::Initialize() {
 		return false;
 	}
 
-
-
 	context = SDL_GL_CreateContext(mWindow);
 
 	if (!context) {
@@ -148,7 +146,6 @@ bool Game::Initialize() {
 
 	graphicsPipe = make_shared<GraphicsPipeLine>();
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
-	// cubeMap = make_shared<CubeMap>("./assets/skybox/");
 
 	// 화면에 그릴 오브젝트들 생성
 	plane = make_shared<Plane>();
@@ -226,8 +223,8 @@ bool Game::Initialize() {
 	}
 
 	if (modelOn) {
-		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
+		// backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
 	camera = make_shared<Camera>(
