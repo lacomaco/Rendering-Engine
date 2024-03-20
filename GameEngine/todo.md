@@ -1,11 +1,17 @@
-2. Lens Flare (1일)
-http://john-chapman-graphics.blogspot.com/2013/02/pseudo-lens-flare.html
+1. 1차 목표 완료
 
-3. depth of field (될려나?)
- https://developer.nvidia.com/gpugems/gpugems/part-iv-image-processing/chapter-23-depth-field-survey-techniques
+나중에 구현할것들
 
-4. HDRI with auto exposure (미정)
-https://bruop.github.io/exposure/
+1. 그림자 개선 PCSS
 
-5. PCSS
+2. Global Illumination
+(
+Reflective Shadow Mapping
+Voxel Cone Tracing
+1. 
+
+https://research.nvidia.com/publication/2010-02_efficient-sparse-voxel-octrees
+https://www.reddit.com/r/GraphicsProgramming/comments/jhh84i/real_time_global_illumination_techniques/
+1. 
+1. )
 

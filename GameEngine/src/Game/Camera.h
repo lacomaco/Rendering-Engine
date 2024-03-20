@@ -39,5 +39,9 @@ public:
 	void putCameraUniformForSkybox(const char* shaderProgramName);
 	void ResetPitch();
 
+	float cameraMove = 2.5f;
+
+	void ImguiUpdate();
+
 };
 

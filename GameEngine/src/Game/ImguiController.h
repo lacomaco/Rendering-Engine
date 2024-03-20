@@ -36,6 +36,7 @@ public:
 	glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	bool showNormal = false;
+	float cameraSpeed = 2.5f;
 
 	// exposure
 	float exposure = 1.0f;

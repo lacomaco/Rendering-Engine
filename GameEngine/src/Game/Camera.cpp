@@ -32,6 +32,9 @@ Camera::Camera(float fov, int width, int height) {
 		cameraDirection,
 		cameraUp
 	);
+
+	auto imgui = ImguiController::getInstance();
+	imgui->cameraSpeed = cameraMove;
 }
 
 void Camera::CalculateCameraDirection() {
@@ -101,8 +104,9 @@ void Camera::CameraLookAround(float deltaTime) {
 }
 
 void Camera::Update(float deltaTime) {
+	ImguiUpdate();
 	const auto& Input = Input::GetInstance();
-	const float cameraSpeed = 2.5f * deltaTime;
+	const float cameraSpeed = cameraMove * deltaTime;
 
 
 	CameraLookAround(deltaTime);
@@ -118,6 +122,14 @@ void Camera::Update(float deltaTime) {
 	}
 	if (Input->IsKeyPressed(SDL_SCANCODE_D)) {
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	}
+
+	if(Input->IsKeyPressed(SDL_SCANCODE_SPACE)) {
+		cameraPos += cameraSpeed * cameraUp;
+	}
+
+	if (Input->IsKeyPressed(SDL_SCANCODE_LSHIFT)) {
+		cameraPos -= cameraSpeed * cameraUp;
 	}
 
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -158,3 +170,11 @@ void Camera::putCameraUniformForSkybox(const char* shaderProgramName) {
 	shader->setMat4(shaderProgramName, "view", skyboxView);
 	shader->setVec3(shaderProgramName, "cameraPos", cameraPos);
 }
+
+void Camera::ImguiUpdate() {
+	auto imguiController = ImguiController::getInstance();
+
+	cameraMove = imguiController->cameraSpeed;
+}
+
+

@@ -50,6 +50,8 @@ void ImguiController::Update() {
 		cameraFront.z
 	);
 
+	ImGui::SliderFloat("cameraSpeed", &cameraSpeed, 0.0f, 10.0f);
+
 	ImGui::Text("Exposure");
 	ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f);
 
