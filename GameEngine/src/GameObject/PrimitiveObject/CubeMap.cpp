@@ -67,9 +67,6 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
 
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
-
-    std::cout << Format.Internal << std::endl;
-
     
     glTexImage2D(GL_TEXTURE_2D,
         0,
@@ -103,7 +100,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
-        std::cout << "Error Bind Texture : " << error << std::endl;
+        std::cerr << "Error Bind Texture : " << error << std::endl;
     }
 
     for (unsigned int i = 0; i < maps.size(); i++)
@@ -126,7 +123,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 
         GLenum error = glGetError();
         if (error != GL_NO_ERROR) {
-            std::cout << "Error loading texture: " << error << std::endl;
+            std::cerr << "Error loading texture: " << error << std::endl;
         }
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -138,7 +135,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 
     error = glGetError();
     if (error != GL_NO_ERROR) {
-        std::cout << "mipmapFalse : " << error << std::endl;
+        std::cerr << "mipmapFalse : " << error << std::endl;
     }
 }
 

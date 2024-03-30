@@ -106,7 +106,7 @@ void GraphicsPipeLine::CreateIntermediateFrameBuffer() {
 	);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "ERROR::FRAMEBUFFER:: Intermediate Framebuffer is not complete!" << std::endl;
+		std::cerr << "ERROR::FRAMEBUFFER:: Intermediate Framebuffer is not complete!" << std::endl;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -163,7 +163,7 @@ void GraphicsPipeLine::CreateMSAAFrameBuffer() {
 
 	// opengl 에러 체크
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+		std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

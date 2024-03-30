@@ -5,8 +5,6 @@
 Shadow::Shadow() {
 	glGenFramebuffers(1, &depthMapFrameBuffer);
 
-	std::cout << "shadow »ý¼º " << std::endl;
-
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glTexImage2D(

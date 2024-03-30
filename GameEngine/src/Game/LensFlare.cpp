@@ -62,7 +62,7 @@ LensFlare::LensFlare() {
 
 	}
 	else {
-		std::cout << "Failed to load texture" << std::endl;
+		std::cerr << "Failed to load texture" << std::endl;
 	}
 
 	stbi_image_free(data);

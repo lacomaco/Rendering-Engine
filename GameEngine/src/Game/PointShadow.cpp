@@ -5,7 +5,6 @@
 
 PointShadow::PointShadow()
 {
-	std::cout << "point shadow »ý¼º " << std::endl;
 	glGenTextures(1,&depthCubeMap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubeMap);
 	for (int i = 0; i < 6; i++) {

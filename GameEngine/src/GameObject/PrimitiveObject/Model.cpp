@@ -33,7 +33,7 @@ void Model::loadModel(std::string path)
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
-		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+		std::cerr << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
 		return;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
@@ -50,7 +50,6 @@ void Model::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 tr)
 	// sketchfab에서 받은 모델에 rodrays 큐브가 있는데 블렌더로 어떻게 지우는지 모르겠음....
 	std::cout << node->mName.C_Str() << std::endl;
 	if (std::strcmp(node->mName.C_Str(),"GodRays_GodRays_0") == 0) {
-		std::cout <<"cut god ray" << std::endl;
 		return;
 	}
 
@@ -105,7 +104,7 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMa
 			vertex.normal = normal;
 		}
 		else {
-			std::cout << path << " has no normals" << std::endl;
+			std::cerr << path << " has no normals" << std::endl;
 		}
 
 		if (mesh->mTextureCoords[0]) {
@@ -130,7 +129,7 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMa
 		}
 		else {
 			vertex.texcoord = glm::vec2(0.0f, 0.0f);
-			std::cout << path << " has no texture coordinates" << std::endl;
+			std::cerr << path << " has no texture coordinates" << std::endl;
 		}
 
 		vertices.push_back(vertex);
@@ -201,10 +200,6 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		mat->GetTexture(type, i, &str);
 		bool skip = false;
 
-		if (type == aiTextureType::aiTextureType_SPECULAR) {
-			std::cout << "specular 이미지 존재함." << std::endl;
-		}
-
 		auto fileName = ExtractFileName(str.C_Str());
 
 		auto signature = fileName + textureType;
@@ -223,7 +218,6 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			Texture texture;
 			bool hasAlpha = false;
 			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha, textureType == "albedo");
-			std::cout << textureType << std::endl;
 			texture.type = textureType;
 			texture.path = fileName;
 			texture.signature = signature;
@@ -248,9 +242,6 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
-
-	std::cout << filename << std::endl;
-
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
@@ -280,7 +271,6 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			for (int i = 0; i < pixelCount; i++) {
 				if (data[i * nrComponents + 3] < 255) {
 					hasAlpha = 1;
-					std::cout << "알파값 있음" << std::endl;
 					break;
 				}
 			}
@@ -291,7 +281,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 		// 에러 체크
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR) {
-			std::cout << "Error Bind Texture : " << error << std::endl;
+			std::cerr << "Error Bind Texture : " << error << std::endl;
 		}
 		glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -304,7 +294,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 	}
 	else
 	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		std::cerr << "Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
 

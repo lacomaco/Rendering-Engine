@@ -223,8 +223,8 @@ bool Game::Initialize() {
 	}
 
 	if (modelOn) {
-		// backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-		backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
+		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
 	camera = make_shared<Camera>(
@@ -243,7 +243,6 @@ bool Game::Initialize() {
 	lightManager->CreateLight
 	(
 		0,
-		//y가 20까지 충분히 뒤로가야함. 안그럼 버그같은 현상이 발생함
 		glm::vec3(0, 20, -0.001),
 		glm::vec3(0, -1, 0.005),
 		12
@@ -257,11 +256,9 @@ bool Game::Initialize() {
 	lightManager->CreateLight
 	(
 		1,
-		//glm::vec3(0.0f, 3.0f, 5.0f),
-		// interogation_room x:-0.116 y:2.117 z:-1.116
 		glm::vec3(-0.116, 2.117, -1.116),
 		glm::vec3(-0.042, -0.390, 0.952),
-		5
+		1
 	);
 
 	input = Input::GetInstance();

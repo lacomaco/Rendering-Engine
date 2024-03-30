@@ -27,7 +27,7 @@ BloomFBO::BloomFBO(int width, int height, int bloomChains) {
 
 	int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE) {
-		std::cout << "ERROR::FRAMEBUFFER:: Intermediate Framebuffer is not complete!" << std::endl;
+		std::cerr << "ERROR::FRAMEBUFFER:: Intermediate Framebuffer is not complete!" << std::endl;
 	}
 
 	glGenVertexArrays(1, &vao);
