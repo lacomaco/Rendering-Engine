@@ -1,4 +1,4 @@
-#include "Game.h"
+ï»¿#include "Game.h"
 #include <SDL.h>
 #include <glew.h>
 #include "../Util/Shader.h"
@@ -25,7 +25,7 @@ void Game::GenerateOutput() {
 	float timeValue = SDL_GetTicks() / 1000.0f;
 	auto shader = Shader::getInstance();
 
-	// ¸®¼ÂÇØÁà¾ßÇÔ!
+	// ë¦¬ì…‹í•´ì¤˜ì•¼í•¨!
 	meshRenderer->ResetMesh();
 
 	if (modelOn) {
@@ -50,7 +50,7 @@ void Game::GenerateOutput() {
 	);
 	graphicsPipe->DrawSSAO(camera);
 
-	// ³ªÁß¿¡ ³·¿¡¸¸ Ã³¸®ÇÏµµ·Ï º¯°æ
+	// ë‚˜ì¤‘ì— ë‚®ì—ë§Œ ì²˜ë¦¬í•˜ë„ë¡ ë³€ê²½
 	graphicsPipe->godRays->Draw(
 		meshRenderer,
 		lightManager->directionLights[0]->box->position,
@@ -92,7 +92,7 @@ bool Game::Initialize() {
 	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
 
 	if (sdlResult != 0) {
-		SDL_Log("SDL ÃÊ±âÈ­ ½ÇÆĞ: %s", SDL_GetError());
+		SDL_Log("SDL ì´ˆê¸°í™” ì‹¤íŒ¨: %s", SDL_GetError());
 		return false;
 	}
 
@@ -111,18 +111,18 @@ bool Game::Initialize() {
 	);
 
 	if (!mWindow) {
-		SDL_Log("À©µµ¿ì »ı¼º ½ÇÆĞ %s", SDL_GetError());
+		SDL_Log("ìœˆë„ìš° ìƒì„± ì‹¤íŒ¨ %s", SDL_GetError());
 		return false;
 	}
 
 	context = SDL_GL_CreateContext(mWindow);
 
 	if (!context) {
-		SDL_Log("GL Context »ı¼º ½ÇÆĞ! %s", SDL_GetError());
+		SDL_Log("GL Context ìƒì„± ì‹¤íŒ¨! %s", SDL_GetError());
 	}
 
 	if (glewInit() != GLEW_OK) {
-		SDL_Log("GLEW ÃÊ±âÈ­ ½ÇÆĞ!");
+		SDL_Log("GLEW ì´ˆê¸°í™” ì‹¤íŒ¨!");
 		return false;
 	}
 
@@ -140,14 +140,14 @@ bool Game::Initialize() {
 
 	stbi_set_flip_vertically_on_load(true);
 
-	// ½¦ÀÌ´õ »ı¼º
+	// ì‰ì´ë” ìƒì„±
 	CreateShaderProgram();
 	meshRenderer = make_shared<MeshRenderer>();
 
 	graphicsPipe = make_shared<GraphicsPipeLine>();
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
 
-	// È­¸é¿¡ ±×¸± ¿ÀºêÁ§Æ®µé »ı¼º
+	// í™”ë©´ì— ê·¸ë¦´ ì˜¤ë¸Œì íŠ¸ë“¤ ìƒì„±
 	plane = make_shared<Plane>();
 	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
 	plane->position = glm::vec3(0.0f, 0.0f, -2.0f);
@@ -201,8 +201,8 @@ bool Game::Initialize() {
 	_circle->position = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
-	// À§·Î : metallic
-	// ¿À¸¥ÂÊ : roughness
+	// ìœ„ë¡œ : metallic
+	// ì˜¤ë¥¸ìª½ : roughness
 	int count = 0;
 	for (float i = 0; i < 5; i++) {
 		for (float j = 0; j < 5; j++) {
@@ -239,7 +239,7 @@ bool Game::Initialize() {
 
 	auto imguiController = ImguiController::getInstance();
 	
-	// ¶óÀÌÆ® 
+	// ë¼ì´íŠ¸ 
 	lightManager->CreateLight
 	(
 		0,
@@ -251,14 +251,13 @@ bool Game::Initialize() {
 	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
 	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
 
-
-	// Æ÷ÀÎÆ®.
+	// í¬ì¸íŠ¸.
 	lightManager->CreateLight
 	(
 		1,
 		glm::vec3(-0.116, 2.117, -1.116),
 		glm::vec3(-0.042, -0.390, 0.952),
-		1
+		3
 	);
 
 	input = Input::GetInstance();
@@ -276,26 +275,26 @@ void Game::Shutdown() {
 void Game::UpdateGame() {
 
 	/*
-	* fps¸¦ 60À¸·Î Á¦ÇÑÇÑ´Ù. (60FPS¸é ¾óÃß 16.6msÀÌ´Ù.)
+	* fpsë¥¼ 60ìœ¼ë¡œ ì œí•œí•œë‹¤. (60FPSë©´ ì–¼ì¶” 16.6msì´ë‹¤.)
 	* 
-	* PS: fps¸¦ 60À¸·Î Á¦ÇÑÇÏ´Â ÀÌÀ¯
+	* PS: fpsë¥¼ 60ìœ¼ë¡œ ì œí•œí•˜ëŠ” ì´ìœ 
 	* 
-	* ¹°¸® °è»êÀ» ¸Å¹ø UpdateÇÒ¶§ ÇÁ·¹ÀÓÀÌ ´Ş¶óÁö¸é ¹°¸® °Ô»ê °á°úµµ ´Ş¶óÁø´Ù.
-	* ¿©±â¼± °¡Àå ½¬¿î ¹æ¹ıÀ¸·Î ÃÖ´ë fps¸¦ 60À¸·Î Á¦ÇÑ °Å´Â ¹æ¹ıÀ¸·Î ÇØ°áÇÔ
+	* ë¬¼ë¦¬ ê³„ì‚°ì„ ë§¤ë²ˆ Updateí• ë•Œ í”„ë ˆì„ì´ ë‹¬ë¼ì§€ë©´ ë¬¼ë¦¬ ê²Œì‚° ê²°ê³¼ë„ ë‹¬ë¼ì§„ë‹¤.
+	* ì—¬ê¸°ì„  ê°€ì¥ ì‰¬ìš´ ë°©ë²•ìœ¼ë¡œ ìµœëŒ€ fpsë¥¼ 60ìœ¼ë¡œ ì œí•œ ê±°ëŠ” ë°©ë²•ìœ¼ë¡œ í•´ê²°í•¨
 	*/
 	while (!SDL_TICKS_PASSED(SDL_GetTicks(),mTicksCount + 16));
 
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
 
-	// µ¨Å¸ ½Ã°£ÀÌ ³Ê¹« Å©¸é °ÔÀÓÀÌ ¸ØÃß´Â °ÍÀ» ¹æÁö
+	// ë¸íƒ€ ì‹œê°„ì´ ë„ˆë¬´ í¬ë©´ ê²Œì„ì´ ë©ˆì¶”ëŠ” ê²ƒì„ ë°©ì§€
 	/*
-	* ÀÌ ·ÎÁ÷ÀÌ ÇÊ¿äÇÑ ÀÌÀ¯.
-	* ¸¸¾à sleepÀ» °É¾ú°Å³ª, µğ¹ö°Å·Î ½Ã½ºÅÛÀ» Àá±¸°í ´Ù½Ã ½ÇÇà½ÃÅ°¸é
-	* deltaTimeÀÌ Å©°Ô ºÒ¾î³ª´Â °æ¿ì°¡ ¹ß»ıÇÑ´Ù.
-	* ÀÌ¸¦ ¹æÁöÇÏ±â À§ÇØ¼­ deltaTimeÀÌ 0.05f¸¦ ³ÑÁö ¾Êµµ·Ï Á¦ÇÑÇÑ´Ù.
-	* 60fps·Î Á¦ÇÑÀ» °É¾îµÎ¾ú±â ¶§¹®¿¡ ÀÏ¹İÀûÀÎ »óÈ²¿¡¼± deltaTimeÀº
-	* 0.0166f Á¤µµ°¡µÈ´Ù.
+	* ì´ ë¡œì§ì´ í•„ìš”í•œ ì´ìœ .
+	* ë§Œì•½ sleepì„ ê±¸ì—ˆê±°ë‚˜, ë””ë²„ê±°ë¡œ ì‹œìŠ¤í…œì„ ì êµ¬ê³  ë‹¤ì‹œ ì‹¤í–‰ì‹œí‚¤ë©´
+	* deltaTimeì´ í¬ê²Œ ë¶ˆì–´ë‚˜ëŠ” ê²½ìš°ê°€ ë°œìƒí•œë‹¤.
+	* ì´ë¥¼ ë°©ì§€í•˜ê¸° ìœ„í•´ì„œ deltaTimeì´ 0.05fë¥¼ ë„˜ì§€ ì•Šë„ë¡ ì œí•œí•œë‹¤.
+	* 60fpsë¡œ ì œí•œì„ ê±¸ì–´ë‘ì—ˆê¸° ë•Œë¬¸ì— ì¼ë°˜ì ì¸ ìƒí™©ì—ì„  deltaTimeì€
+	* 0.0166f ì •ë„ê°€ëœë‹¤.
 	*/
 	if (deltaTime > 0.05f) {
 		deltaTime = 0.05f;
@@ -372,7 +371,7 @@ void Game::ProcessInput() {
 		}
 	}
 
-	// Å°º¸µå Å°°¡ ´­·È´ÂÁö °¨Áö
+	// í‚¤ë³´ë“œ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ê°ì§€
 	const Uint8* state = input->state;
 	if (state[SDL_SCANCODE_ESCAPE]) {
 		mIsRunning = false;

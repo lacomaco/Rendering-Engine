@@ -449,6 +449,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="src\Util\stb_image.h" />
     <ClInclude Include="src\Game\SSAO.h" />
+    <ClInclude Include="src\Util\tinyxml2.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +494,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Util\stb_image.cpp" />
     <ClCompile Include="src\Game\SSAO.cpp" />
+    <ClCompile Include="src\Util\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glew32.dll" />
