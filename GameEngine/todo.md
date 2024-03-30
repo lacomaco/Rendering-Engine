@@ -2,6 +2,7 @@
 
 [] GUI 개선
 [] Scene Tree GUI 추가
+[] Scene 정보 XML로 처리하도록 수정
 [] Materials 시스템 추가.
 [] 정보 저장 가능하도록 먼가 조치하기.
 
