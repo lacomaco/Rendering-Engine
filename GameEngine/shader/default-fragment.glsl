@@ -17,22 +17,6 @@ in mat3 TBN;
 in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
-Light getNearestLight(Light nearestLight, Light light,bool isShadow,bool isInit){
-    if(!isInit){
-	    return light;
-	}
-
-	if(isShadow){
-	    return nearestLight;
-	}
-
-	vec3 pixelToEye = normalize(cameraPos - posWorld);
-	float lightDistance = length(light.position - posWorld);
-	float nearestLightDistance = length(nearestLight.position - posWorld);
-
-	return lightDistance < nearestLightDistance ? light : nearestLight;
-}
-
 void main() {
 
 	vec3 toEye = normalize(cameraPos - posWorld);
@@ -73,12 +57,8 @@ void main() {
 
 	// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
 	float countLight = 0.0;
-	bool isInit = false;
-	Light nearestLight;
 
-	// 이 그림자가 태양 빛인지, 아닌지 구분해야함.
-	bool isDirectionalShadow = false;
-	bool isShadow = false;
+	float attenuation = 0.0;
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
@@ -93,19 +73,17 @@ void main() {
 
 			countLight = 1.0 - shadow.shadow;
 
-			// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
-			if(!shadow.isShadow){
-				nearestLight = getNearestLight(nearestLight, light,shadow.isShadow, isInit);
-				isInit = true;
-			} else {
-			    isDirectionalShadow = true;
-			}
-
 			color += directionalLight(
 				light,
 				shadow.shadow,
 				pbrMaterial
 			);
+
+			if(!shadow.isShadow){
+			    attenuation = 1.0;
+			} else {
+			    attenuation = 0.1;
+			}
 		}
 		else if(light.lightType == 2){
 
@@ -118,14 +96,6 @@ void main() {
 
 			countLight = 1.0 - shadow.shadow;
 
-			// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
-			if(!shadow.isShadow){
-				nearestLight = getNearestLight(nearestLight, light, shadow.isShadow, isInit);
-				isInit = true;
-			} else {
-			  isDirectionalShadow = false;
-			}
-
 			spotLightCount++;
 
 			color += spotLight(
@@ -133,6 +103,9 @@ void main() {
 				shadow.shadow,
 				pbrMaterial
 			);
+
+			float distance = length(light.position - posWorld);
+			attenuation = max(attenuation, calcAttenuation(distance,light));
 		}
 	}
 	
@@ -144,16 +117,6 @@ void main() {
 			light,
 			pointShadowDepthMap[i]
 		);
-
-		// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
-
-		if(!shadow.isShadow){
-			nearestLight = getNearestLight(nearestLight, light, shadow.isShadow,isInit);
-			isInit = true;
-		} else {
-			isDirectionalShadow = false;
-		}
-
 		
 		countLight = 1.0 - shadow.shadow;
 
@@ -162,18 +125,13 @@ void main() {
 			shadow.shadow,
 			pbrMaterial
 		);
+
+		float distance = length(light.position - posWorld);
+		attenuation = max(attenuation, calcAttenuation(distance,light));
 	}
 
 
-	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, countLight, pbrMaterial.ndotl);
-
-	if(countLight == 0.0){
-	    ambientLight *= vec3(0.4);
-	} else if(!isDirectionalShadow) {
-		float distance = length(nearestLight.position - posWorld);
-		float attenuation = calcAttenuation(distance,nearestLight);
-		ambientLight *= attenuation;
-	}
+	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, pbrMaterial.ndotl) * attenuation;
 
 	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);

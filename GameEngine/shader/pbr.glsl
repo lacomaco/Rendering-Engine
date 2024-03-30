@@ -49,11 +49,11 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
 
 
 // 나중에 GI 구현하게되면 diffuseIBL에 ndotl을 곱하는 코드는 제거해야함.
-vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness,float shadow, float ndotl){
+vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness, float ndotl){
     vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic);
     vec3 specularIBL = specularIBL(albedo,normalW,pixelToEye,metallic,roughness);
 
-    return (diffuseIBL + specularIBL) * ao * max(shadow,0.1);
+    return (diffuseIBL + specularIBL) * ao;
 }
 
 float NdfGGX(float ndotH, float roughness) {
@@ -130,7 +130,7 @@ vec3 pointLight(
     value.ndotl = ndotl;
     value.halfWayDir = halfWaydir;
 
-    return PBR(value,attenuation,shadow);
+    return PBR(value,vec3(lightStrength),shadow) * attenuation;
 }
 
 vec3 spotLight(    
