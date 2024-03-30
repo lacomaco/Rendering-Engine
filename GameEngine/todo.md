@@ -1,7 +1,6 @@
 1. 구현해야할것
 
 [] GUI 개선
-[] Asset Loader thread로 올리기.
 [] lua 스크립트 연동
 [] Scene Tree GUI 추가
 [] Materials 시스템 추가.
