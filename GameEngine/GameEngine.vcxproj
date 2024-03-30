@@ -125,6 +125,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\kyg\source\repos\GameEngine\GameEngine\SDL\SDL2\include;C:\Users\kyg\source\repos\GameEngine\GameEngine\glew-2.1.0\include\GL;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\glm;C:\Users\kyg\source\repos\GameEngine\GameEngine\libs\imgui;C:\Users\kyg\source\repos\GameEngine\GameEngine\gli;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,7 +162,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\AssetLoader\ShaderLoader.h" />
     <ClInclude Include="src\Game\LensFlare.h" />
     <ClInclude Include="src\Game\GBuffer.h" />
     <ClInclude Include="src\Game\GodRays.h" />
@@ -452,7 +452,6 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AssetLoader\ShaderLoader.cpp" />
     <ClCompile Include="src\Game\LensFlare.cpp" />
     <ClCompile Include="src\Game\GBuffer.cpp" />
     <ClCompile Include="src\Game\GodRays.cpp" />

@@ -2,20 +2,22 @@
 #include "../../Util/stb_image.h";
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <filesystem>
 #include <string>
 
 Model::Model(const char* path)
 {
 	this->path = path;
+
+	std::string directory = std::filesystem::path(path).parent_path().string();
+	PreLoadTextures(directory);
 	loadModel(path);
-	count = 0;
+	FreePreLoadTextures();
 }
 
 Model::~Model()
 {
-	for (auto& mesh : meshes) {
-
-	}
+	FreePreLoadTextures();
 }
 
 void Model::Draw(const char* shaderProgramName)
@@ -218,6 +220,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 			Texture texture;
 			bool hasAlpha = false;
 			texture.id = TextureFromFile(fileName.c_str(), directory, hasAlpha, textureType == "albedo");
+
 			texture.type = textureType;
 			texture.path = fileName;
 			texture.signature = signature;
@@ -237,16 +240,17 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 	return textures;
 }
 
-// 나중에 텍스처 생성 옵션은 따로 컨트롤 가능하도록 해야함.
-unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool& hasAlpha, bool gamma)
-{
-	std::string filename = std::string(path);
-	filename = directory + '/' + filename;
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
+
+void Model::LoadTexture(
+	const std::string& fileName,
+	const std::string& directory
+) {
+	std::string path = directory + '/' + fileName;
+
 
 	int width, height, nrComponents;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	bool hasAlpha = 0;
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum internalFormat;
@@ -276,8 +280,51 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 			}
 		}
 
+		RawTextureData textureData;
+
+		textureData.width = width;
+		textureData.height = height;
+		textureData.nrComponents = nrComponents;
+		textureData.data = data;
+		textureData.hasAlpha = hasAlpha;
+		textureData.internalFormat = internalFormat;
+		textureData.dataFormat = dataFormat;
+		textureData.fileName = fileName;
+
+		{
+			std::lock_guard<std::mutex> lock(mtx);
+			texturesData.push_back(textureData);
+		}
+	}
+}
+
+
+// 나중에 텍스처 생성 옵션은 따로 컨트롤 가능하도록 해야함.
+unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool& hasAlpha, bool gamma)
+{
+	std::string filename = std::string(path);
+
+	std::cout << filename << std::endl;
+
+	unsigned int textureID;
+	auto textureData = FindTextureData(ExtractFileName(filename));
+
+	glGenTextures(1, &textureID);
+
+	if (textureData.data)
+	{
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(
+			GL_TEXTURE_2D, 
+			0, 
+			textureData.internalFormat, 
+			textureData.width, 
+			textureData.height, 0, 
+			textureData.dataFormat, 
+			GL_UNSIGNED_BYTE, 
+			textureData.data
+		);
+
 		// 에러 체크
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR) {
@@ -290,12 +337,6 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cerr << "Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
 	}
 
 	return textureID;
@@ -318,4 +359,63 @@ void Model::SetScale(glm::vec3 _scale) {
 	for (auto& mesh : meshes) {
 		mesh->CalculateVertexAveragePosition(scale);
 	}
+}
+
+void Model::PreLoadTextures(std::string directory) {
+	std::vector<std::thread> threads;
+
+	try {
+		for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+			const auto& path = entry.path();
+			if (std::filesystem::is_regular_file(entry) && IsImageFIle(path.filename().string())) {
+				threads.push_back(
+					std::thread(
+						&Model::LoadTexture,
+						this,
+						path.filename().string(),
+						directory
+					)
+				);
+			}
+		}
+
+		for(auto& thread: threads) {
+			thread.join();
+		}
+	}
+	catch (const std::filesystem::filesystem_error& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
+}
+
+bool Model::IsImageFIle(const std::string& fileName) {
+	std::string extension = std::filesystem::path(fileName).extension().string();
+	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+	const std::vector<std::string> imageExtensions = {
+		".jpg",
+		".jpeg", 
+		".png", 
+		".bmp"
+	};
+
+	return std::find(imageExtensions.begin(), imageExtensions.end(), extension) != imageExtensions.end();
+}
+
+void Model::FreePreLoadTextures() {
+	for(auto& texture : texturesData) {
+		stbi_image_free(texture.data);
+	}
+
+	texturesData.clear();
+}
+
+RawTextureData Model::FindTextureData(const std::string& fileName) {
+	for(auto& texture: texturesData) {
+		if (texture.fileName == fileName) {
+			return texture;
+		}
+	}
+
+	return RawTextureData();
 }

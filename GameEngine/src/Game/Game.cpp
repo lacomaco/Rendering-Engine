@@ -11,12 +11,13 @@
 #include "../Constants.h"
 #include <glm/gtc/quaternion.hpp>
 #include <random>
+#include "../AssetLoader/ShaderLoader.h"
+
 
 
 Game::Game() {
 	mWindow = nullptr;
 	mIsRunning = true;
-
 }
 
 void Game::GenerateOutput() {
@@ -223,8 +224,8 @@ bool Game::Initialize() {
 	}
 
 	if (modelOn) {
-		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
+		//backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
 	camera = make_shared<Camera>(
