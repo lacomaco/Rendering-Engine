@@ -1,6 +1,7 @@
 1. 구현해야할것
 
 [] Materials xml에 정보 저장하여 사용하도록 수정
+[] Volumatric Light 추가 (Screen-Space God rays는 제거)
 [] Killer Feature PCSS 그림자
 
 PCSS 대안 
