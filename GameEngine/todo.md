@@ -46,9 +46,13 @@ https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-28-p
 
 해결해야할 이슈 들
 
-1. Normal맵 계산이 이상한가...?
-(simple-shading vs default 비교시 simple-shading 처럼 움직여야함)
-
 2. 그림자가 이상함 많이 고장났음
+
+Directional Light도 그냥 Perspective Projection으로 계산해도 될것같은데...
+
+
+3. PCSS 적용전 PCF 적용시 효과가 미미한점 이것이 정상인지 검증
+
+4. PCSS 적용
 
 
