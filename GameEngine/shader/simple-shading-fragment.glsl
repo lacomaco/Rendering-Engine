@@ -22,6 +22,12 @@ in vec3 FragPos;
 
 
 void main() {
+    mat3 TBN = mat3(
+	    normalize(tangent),
+		normalize(biTangent),
+		normalize(normal)
+	);
+
     vec3 n = texture(normal0, TexCoords).rgb;
 	n = n * 2.0 - 1.0;
 

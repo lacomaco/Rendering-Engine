@@ -11,13 +11,19 @@ uniform float exposure;
 
 in vec2 TexCoord;
 in vec3 normalWorld;
+in vec3 tangentWorld;
+in vec3 bitangentWorld;
 in vec3 posWorld;
-in mat3 TBN;
 
 in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
 
 void main() {
+    mat3 TBN = mat3(
+		normalize(tangentWorld),
+		normalize(bitangentWorld),
+	    normalize(normalWorld)
+	);
 
 	vec3 toEye = normalize(cameraPos - posWorld);
 
@@ -131,7 +137,7 @@ void main() {
 	}
 
 
-	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness, pbrMaterial.ndotl) * attenuation;
+	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness) * attenuation;
 
 	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);

@@ -7,9 +7,9 @@ layout (location = 3) in vec3 aTangentModel;
 layout (location = 4) in vec3 aBitangent;
 
 out vec3 tangent;
-out vec3 normal;
 out vec3 biTangent;
-out mat3 TBN;
+out vec3 normal;
+
 out vec2 TexCoords;
 out vec3 FragPos;
 
@@ -17,19 +17,15 @@ void main()
 {
 	tangent = aTangentModel;
 	normal = aNormal;
-	biTangent = aBitangent;
 
-	normal = normalize(invTranspose * aNormal);
-	tangent = normalize(invTranspose * aTangentModel);
+	normal = invTranspose * aNormal;
+	tangent = invTranspose * aTangentModel;
+	biTangent = invTranspose * aBitangent;
 
 	if (dot(cross(normal, tangent), biTangent) < 0.0){
 	    tangent = tangent * -1.0;
+		biTangent = cross(normal, tangent);
 	}
-
-	tangent = normalize(tangent - dot(tangent, normal) * normal);
-	biTangent = normalize(cross(normal, tangent));
-
-	 TBN = mat3(tangent,biTangent,normal);
 
     gl_Position = projection * view * model* vec4(aPos, 1.0);
 
