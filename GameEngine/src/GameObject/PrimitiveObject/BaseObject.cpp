@@ -28,9 +28,7 @@ void BaseObject::PutModelUniform(const char* shaderProgramName) {
 
 	shader->setMat4(shaderProgramName, "model", model);
 
-	glm::mat4 invTranspose = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	invTranspose = glm::inverse(invTranspose);
+	glm::mat3 invTranspose = glm::mat3(glm::inverse(model));
 	invTranspose = glm::transpose(invTranspose);
-	shader->setMat4(shaderProgramName, "invTranspose", invTranspose);
-
+	shader->setMat3(shaderProgramName, "invTranspose", invTranspose);
 }

@@ -42,5 +42,13 @@ https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-27-m
 Depth of Field GPU Gems 3
 https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-28-practical-post-process-depth-field
 
+---
+
+해결해야할 이슈 들
+
+1. Normal맵 계산이 이상한가...?
+(simple-shading vs default 비교시 simple-shading 처럼 움직여야함)
+
+2. 그림자가 이상함 많이 고장났음
 
 

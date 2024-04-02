@@ -19,8 +19,8 @@ void main()
 	normal = aNormal;
 	biTangent = aBitangent;
 
-	normal = normalize(vec3(invTranspose * vec4(aNormal, 0.0)));
-	tangent = normalize(vec3(invTranspose * vec4(aTangentModel, 0.0)));
+	normal = normalize(invTranspose * aNormal);
+	tangent = normalize(invTranspose * aTangentModel);
 
 	if (dot(cross(normal, tangent), biTangent) < 0.0){
 	    tangent = tangent * -1.0;

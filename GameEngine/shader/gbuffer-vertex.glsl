@@ -15,7 +15,7 @@ void main() {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     TexCoords = aTexCoord;
     FragPos = vec3(model * vec4(aPos, 1.0));
-    vec3 normal = normalize(vec3(invTranspose * vec4(aNormal, 0.0)));
+    vec3 normal = normalize(invTranspose * aNormal);
     
     normalWorld = normal;
 
@@ -24,8 +24,8 @@ void main() {
         T = -T;
     }
 
-    T = normalize(vec3(invTranspose * vec4(T, 0.0)));
-    vec3 B = normalize(vec3(invTranspose * vec4(aBitangent, 0.0)));
+    T = normalize(invTranspose * T);
+    vec3 B = normalize(invTranspose * aBitangent);
 
     TBN = mat3(T, B, normal);
 
