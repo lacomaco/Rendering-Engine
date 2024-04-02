@@ -45,7 +45,15 @@ void main() {
 	float roughness = use_roughness0 ? texture(roughness0, TexCoord).g : 0.0;
 	float metallic = use_metallic0 ? texture(metallic0, TexCoord).b : 0.0;
 
-	float ao = use_ao0 ? texture(ao0, TexCoord).r : 1.0;
+	float ao = 1.0;
+
+	if(use_ao0){
+	    ao = texture(ao0, TexCoord).r;
+	} else if (use_normal0) {
+		vec3 normalTextureValue = texture(normal0, TexCoord).rgb;
+		normalTextureValue = normalize(normalTextureValue * 2.0 - 1.0);
+		ao = normalTextureValue.y * 0.5 + 0.5;
+	}
 
 	// halfWayVector 계산은 라이트 처리에서 다룸.
 	float ndotO = max(dot(normal, pixelToEye), 0.0);
