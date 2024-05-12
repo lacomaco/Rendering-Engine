@@ -14,37 +14,6 @@ struct Vertex {
 	glm::vec3 bitangentModel;
 };
 
-/*
-* 텍스처이름들.
-* 
-* Phong
-* diffuseTexture;
-* specularTexture;
-* 
-* PBR
-* albedoTexture; <- diffuseTexture일 경우 albedo로 이동시킴.
-* emissiveTexture;
-* normalTexture; <- bumTexture일 경우 이곳으로 이동
-* heightTexture;
-* metallicTexture;
-* aoTexture;
-* roughnessTexture;
-* specularTexture
-* 
-* 
-* 텍스처가 중복되는 경우 +1로 숫자를 붙여서 처리한다.
-* 
-* example)
-* albedoTexture0
-* albedoTexture1 ...
-* 
-* 최종적으로 PBR만 지원하는 형태로 만들것이다.
-* 하지만 그전엔 우선 간단한 퐁모델을 띄어서 이것저것 기능을 추가해야하기 때문에
-* 퐁모델 먼저 지원한다.
-* 
-* 텍스처의 이름도 분리한다.
-*/
-
 struct Texture {
 	unsigned int id;
 	std::string type;
