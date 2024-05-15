@@ -1,8 +1,12 @@
 1. 구현해야할것
 
 [] Materials xml에 정보 저장하여 사용하도록 수정
+[] xml에 씬정보 저장하여 불러올 수 있도록 시스템 수정
 [] Volumatric Light 추가 (Screen-Space God rays는 제거)
 [] Killer Feature PCSS 그림자
+[] Volumetric Cloud 추가
+[] Light Baking
+
 
 PCSS 대안 
 https://developer.nvidia.com/gpugems/gpugems3/part-ii-light-and-shadows/chapter-8-summed-area-variance-shadow-maps
@@ -41,18 +45,3 @@ https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-27-m
 
 Depth of Field GPU Gems 3
 https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-28-practical-post-process-depth-field
-
----
-
-해결해야할 이슈 들
-
-2. 그림자가 이상함 많이 고장났음
-
-Directional Light도 그냥 Perspective Projection으로 계산해도 될것같은데...
-
-
-3. PCSS 적용전 PCF 적용시 효과가 미미한점 이것이 정상인지 검증
-
-4. PCSS 적용
-
-
