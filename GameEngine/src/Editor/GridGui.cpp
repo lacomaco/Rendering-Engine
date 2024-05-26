@@ -23,6 +23,8 @@ GridGui::GridGui(SDL_Window* window, SDL_GLContext context) {
 	ImGui_ImplSDL2_InitForOpenGL(window, context);
 	ImGui_ImplOpenGL3_Init("#version 460"); // 여기서 적절한 GLSL 버전을 설정하세요.
 
+	mainSceneTexture = new MainSceneTexture();
+
 }
 
 void GridGui::Update() {
@@ -244,7 +246,7 @@ void GridGui::SceneUpdate() {
 		if (ImGui::BeginTabItem("Main Scene")) {
 			ImGui::Text("Main scene rendering here.");
 			ImGui::Image(
-				(void*)(intptr_t)mainSceneTexture,
+				(void*)(intptr_t)mainSceneTexture->getMainSceneTexture(),
 				ImVec2(960, 720),
 				ImVec2(0, 1),
 				ImVec2(1, 0)
@@ -284,4 +286,6 @@ GridGui::~GridGui() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+
+	delete mainSceneTexture;
 }

@@ -5,6 +5,7 @@
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
 #include "../Util/Shader.h"
+#include "./MainSceneTexture.h"
 
 class GridGui
 {
@@ -13,7 +14,17 @@ private:
 	void ContentBrowserUpdate();
 	void InspectorUpdate();
 
+	MainSceneTexture* mainSceneTexture;
+
 public:
+	unsigned int getMainSceneFrameBuffer() {
+		if (!mainSceneTexture) {
+			return 0;
+		}
+
+		return mainSceneTexture->getMainSceneFrameBuffer();
+	}
+
 	static GridGui* instance;
 	GridGui(SDL_Window* window, SDL_GLContext context);
 	~GridGui();
@@ -81,9 +92,6 @@ public:
 	unsigned int albedoRoughnessTexture;
 	unsigned int normalTexture;
 	unsigned int godRayTexture;
-
-	// Main Scene ≈ÿΩ∫√≥
-	unsigned int mainSceneTexture;
 
 	// SSAO
 	unsigned int ssaoTexture;

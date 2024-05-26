@@ -162,7 +162,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GUIGrid.h" />
+    <ClInclude Include="src\Editor\MainSceneTexture.h" />
     <ClInclude Include="src\Game\LensFlare.h" />
     <ClInclude Include="src\Game\GBuffer.h" />
     <ClInclude Include="src\Game\GodRays.h" />
@@ -454,7 +454,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GUIGrid.cpp" />
+    <ClCompile Include="src\Editor\MainSceneTexture.cpp" />
     <ClCompile Include="src\Game\LensFlare.cpp" />
     <ClCompile Include="src\Game\GBuffer.cpp" />
     <ClCompile Include="src\Game\GodRays.cpp" />

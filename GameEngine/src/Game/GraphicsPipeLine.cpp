@@ -42,8 +42,7 @@ void GraphicsPipeLine::Draw(const char* programName)
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
 	if (gridGUI->editorMode) {
-		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
-		gridGUI->mainSceneTexture = screenTexture;
+		glBindFramebuffer(GL_FRAMEBUFFER, gridGUI->getMainSceneFrameBuffer());
 	}
 	else {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

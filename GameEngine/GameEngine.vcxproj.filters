@@ -882,7 +882,7 @@
     <ClInclude Include="src\Util\tinyxml2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GUIGrid.h">
+    <ClInclude Include="src\Editor\MainSceneTexture.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1013,7 +1013,7 @@
     <ClCompile Include="src\Util\tinyxml2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GUIGrid.cpp">
+    <ClCompile Include="src\Editor\MainSceneTexture.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
