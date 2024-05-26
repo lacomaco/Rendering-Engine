@@ -43,6 +43,7 @@ void GraphicsPipeLine::Draw(const char* programName)
 
 	if (gridGUI->editorMode) {
 		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
+		gridGUI->mainSceneTexture = screenTexture;
 	}
 	else {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -332,6 +332,8 @@ void Game::RunLoop() {
 
 void Game::ProcessInput() {
 	SDL_Event event;
+	auto gridGUI = GridGui::getInstance();
+
 	while (SDL_PollEvent(&event)) {
 		ImGui_ImplSDL2_ProcessEvent(&event);
 
@@ -349,7 +351,16 @@ void Game::ProcessInput() {
 		case SDL_MOUSEBUTTONUP:
 			input->rightMouseButtonDown = false;
 			break;
+
+
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_F12) {
+				gridGUI->editorMode = !gridGUI->editorMode;
+				std::cout << "is f12 press out? " << gridGUI->editorMode << std::endl;
+				break;
+			}
 		}
+			
 	}
 
 	// 키보드 키가 눌렸는지 감지

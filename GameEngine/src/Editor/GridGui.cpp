@@ -1,5 +1,6 @@
 #include "GridGui.h"
 #include <iostream>
+#include "../Game/Input.h"
 
 GridGui* GridGui::instance = nullptr;
 /*
@@ -31,9 +32,11 @@ void GridGui::Update() {
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	SceneUpdate();
-	ContentBrowserUpdate();
-	InspectorUpdate();
+	if (editorMode) {
+		SceneUpdate();
+		ContentBrowserUpdate();
+		InspectorUpdate();
+	}
 
 	// 임구이 세팅
 	ImGui::Begin("Game Engine Controller");
@@ -240,6 +243,13 @@ void GridGui::SceneUpdate() {
 	if (ImGui::BeginTabBar("Scene Viewer")) {
 		if (ImGui::BeginTabItem("Main Scene")) {
 			ImGui::Text("Main scene rendering here.");
+			ImGui::Image(
+				(void*)(intptr_t)mainSceneTexture,
+				ImVec2(960, 720),
+				ImVec2(0, 1),
+				ImVec2(1, 0)
+			);
+
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Mesh View")) {

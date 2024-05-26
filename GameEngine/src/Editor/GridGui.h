@@ -82,6 +82,9 @@ public:
 	unsigned int normalTexture;
 	unsigned int godRayTexture;
 
+	// Main Scene ≈ÿΩ∫√≥
+	unsigned int mainSceneTexture;
+
 	// SSAO
 	unsigned int ssaoTexture;
 	unsigned int ssaoBlurTexture;
