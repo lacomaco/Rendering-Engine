@@ -8,6 +8,10 @@
 
 class GridGui
 {
+private:
+	void SceneUpdate();
+	void ContentBrowserUpdate();
+	void InspectorUpdate();
 
 public:
 	static GridGui* instance;

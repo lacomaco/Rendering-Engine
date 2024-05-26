@@ -31,39 +31,9 @@ void GridGui::Update() {
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	// Left Top Corner for rendering output
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(960, 720));
-	ImGui::Begin("Render Output", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-	if (ImGui::BeginTabBar("MyTabBar")) {
-		if (ImGui::BeginTabItem("Main Scene")) {
-			// 메인 씬 렌더링 코드 삽입
-			ImGui::Text("Main scene rendering here.");
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Mesh View")) {
-			// 개별 메쉬 렌더링 코드 삽입
-			ImGui::Text("Mesh view rendering here.");
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
-
-	// 하단 패널
-	ImGui::SetNextWindowPos(ImVec2(0, 720));
-	ImGui::SetNextWindowSize(ImVec2(1280, 240));
-	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("This is Content Browser Panel");
-	ImGui::End();
-
-	// 오른쪽 패널
-	ImGui::SetNextWindowPos(ImVec2(960, 0));
-	ImGui::SetNextWindowSize(ImVec2(320, 720));
-	ImGui::Begin("Right Panel", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("This is the right panel.");
-	ImGui::End();
+	SceneUpdate();
+	ContentBrowserUpdate();
+	InspectorUpdate();
 
 	// 임구이 세팅
 	ImGui::Begin("Game Engine Controller");
@@ -260,6 +230,42 @@ void GridGui::PutPBRUniform(const char* programName) {
 	shader->setFloat(programName, "metallicTest", metallic);
 	shader->setFloat(programName, "roughnessTest", roughness);
 
+}
+
+void GridGui::SceneUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(960, 720));
+	ImGui::Begin("Render Output", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+	if (ImGui::BeginTabBar("Scene Viewer")) {
+		if (ImGui::BeginTabItem("Main Scene")) {
+			ImGui::Text("Main scene rendering here.");
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Mesh View")) {
+			// 개별 메쉬 렌더링 코드 삽입
+			ImGui::Text("Mesh view rendering here.");
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+}
+
+void GridGui::ContentBrowserUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(0, 720));
+	ImGui::SetNextWindowSize(ImVec2(1280, 240));
+	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("This is Content Browser Panel");
+	ImGui::End();
+}
+
+void GridGui::InspectorUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(960, 0));
+	ImGui::SetNextWindowSize(ImVec2(320, 720));
+	ImGui::Begin("Right Panel", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("This is the right panel.");
+	ImGui::End();
 }
 
 
