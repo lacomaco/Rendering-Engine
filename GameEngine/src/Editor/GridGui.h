@@ -16,6 +16,8 @@ public:
 	void Update();
 	void Render();
 
+	bool editorMode = true;
+
 	float f = 0.0f;
 	glm::vec3 clear_color = glm::vec3(0.45f, 0.55f, 0.60f);
 	int counter = 0;

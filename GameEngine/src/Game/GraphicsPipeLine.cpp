@@ -23,6 +23,7 @@ GraphicsPipeLine::GraphicsPipeLine()
 
 void GraphicsPipeLine::Draw(const char* programName)
 {
+	auto gridGUI = GridGui::getInstance();
 	UpdateImGui();
 	auto shader = Shader::getInstance();
 	
@@ -40,8 +41,12 @@ void GraphicsPipeLine::Draw(const char* programName)
 
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
-	// 기본 컬러버퍼 사용.
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	if (gridGUI->editorMode) {
+		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
+	}
+	else {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);

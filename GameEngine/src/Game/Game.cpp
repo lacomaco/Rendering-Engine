@@ -70,8 +70,7 @@ void Game::GenerateOutput() {
 	camera->putCameraUniform(shaderName);
 	lightManager->PutLightUniform(shaderName);
 
-	meshRenderer->Draw(shaderName);
-	//lightManager->DrawLight(camera);
+	meshRenderer->Draw(shaderName); 
 	cubeMap->Draw("cubemap", camera.get());
 
 	auto normalMode = GridGui::getInstance()->showNormal;

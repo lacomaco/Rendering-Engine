@@ -108,8 +108,6 @@ void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
 		shader->getShaderProgram(dirtProgramName)
 	);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, lensFlareFBO);
-
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
@@ -121,9 +119,6 @@ void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
 	shader->setInt(dirtProgramName, "dirtLensTexture", 1);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void LensFlare::UpdateImGui() {
