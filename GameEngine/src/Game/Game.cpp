@@ -6,7 +6,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
-#include "./ImguiController.h"
+#include "../Editor/GridGui.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../Constants.h"
 #include <glm/gtc/quaternion.hpp>
@@ -20,7 +20,7 @@ Game::Game() {
 }
 
 void Game::GenerateOutput() {
-	imguiController->Update();
+	gridGui->Update();
 
 	float timeValue = SDL_GetTicks() / 1000.0f;
 	auto shader = Shader::getInstance();
@@ -62,8 +62,8 @@ void Game::GenerateOutput() {
 	
 	//const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
-	auto imguiController = ImguiController::getInstance();
-	imguiController->PutPBRUniform(shaderName);
+	auto gridGui = GridGui::getInstance();
+	gridGui->PutPBRUniform(shaderName);
 
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
@@ -74,7 +74,7 @@ void Game::GenerateOutput() {
 	//lightManager->DrawLight(camera);
 	cubeMap->Draw("cubemap", camera.get());
 
-	auto normalMode = ImguiController::getInstance()->showNormal;
+	auto normalMode = GridGui::getInstance()->showNormal;
 
 	if (normalMode) {
 		lightManager->PutLightUniform("normal");
@@ -84,7 +84,7 @@ void Game::GenerateOutput() {
 
 	graphicsPipe->Draw("hdr");
 
-	imguiController->Render();
+	gridGui->Render();
 	SDL_GL_SwapWindow(mWindow);
 }
 
@@ -135,8 +135,8 @@ bool Game::Initialize() {
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	ImguiController::CreateInstance(mWindow, context);
-	imguiController = ImguiController::getInstance();
+	GridGui::CreateInstance(mWindow, context);
+	gridGui = GridGui::getInstance();
 
 	stbi_set_flip_vertically_on_load(true);
 
@@ -237,7 +237,7 @@ bool Game::Initialize() {
 
 	lightManager = LightManager::getInstance();
 
-	auto imguiController = ImguiController::getInstance();
+	auto gridGui = GridGui::getInstance();
 	
 	// 라이트 
 	lightManager->CreateLight
@@ -247,9 +247,9 @@ bool Game::Initialize() {
 		glm::vec3(0, -1, 0.005),
 		12
 	);
-	imguiController->directionalLightPosition = lightManager->directionLights[0]->box->position;
-	imguiController->directionalLightDirection = lightManager->directionLights[0]->direction;
-	imguiController->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	gridGui->directionalLightPosition = lightManager->directionLights[0]->box->position;
+	gridGui->directionalLightDirection = lightManager->directionLights[0]->direction;
+	gridGui->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
 
 	// 포인트.
 	lightManager->CreateLight
@@ -269,33 +269,15 @@ void Game::Shutdown() {
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
 	SDL_GL_DeleteContext(context);
-	delete imguiController;
+	delete gridGui;
 }
 
 void Game::UpdateGame() {
-
-	/*
-	* fps를 60으로 제한한다. (60FPS면 얼추 16.6ms이다.)
-	* 
-	* PS: fps를 60으로 제한하는 이유
-	* 
-	* 물리 계산을 매번 Update할때 프레임이 달라지면 물리 게산 결과도 달라진다.
-	* 여기선 가장 쉬운 방법으로 최대 fps를 60으로 제한 거는 방법으로 해결함
-	*/
 	while (!SDL_TICKS_PASSED(SDL_GetTicks(),mTicksCount + 16));
 
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
 
-	// 델타 시간이 너무 크면 게임이 멈추는 것을 방지
-	/*
-	* 이 로직이 필요한 이유.
-	* 만약 sleep을 걸었거나, 디버거로 시스템을 잠구고 다시 실행시키면
-	* deltaTime이 크게 불어나는 경우가 발생한다.
-	* 이를 방지하기 위해서 deltaTime이 0.05f를 넘지 않도록 제한한다.
-	* 60fps로 제한을 걸어두었기 때문에 일반적인 상황에선 deltaTime은
-	* 0.0166f 정도가된다.
-	*/
 	if (deltaTime > 0.05f) {
 		deltaTime = 0.05f;
 	}
@@ -306,16 +288,16 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	auto imguiController = ImguiController::getInstance();
+	auto gridGui = GridGui::getInstance();
 
-	const auto exposure = imguiController->exposure;
+	const auto exposure = gridGui->exposure;
 
 	graphicsPipe->exposure = exposure;
 
 
-	if (imguiController->useSun) {
-		lightManager->directionLights[0]->setPosition(imguiController->directionalLightPosition);
-		lightManager->directionLights[0]->direction = imguiController->directionalLightDirection;
+	if (gridGui->useSun) {
+		lightManager->directionLights[0]->setPosition(gridGui->directionalLightPosition);
+		lightManager->directionLights[0]->direction = gridGui->directionalLightDirection;
 
 		lightManager->EnableDirectionalLight(0);
 	}
@@ -323,7 +305,7 @@ void Game::UpdateGame() {
 		lightManager->DisableDirectionalLight(0);
 	}
 
-	if (imguiController->usePointLight) {
+	if (gridGui->usePointLight) {
 		lightManager->EnablePointLight(0);
 		//lightManager->EnablePointLight(1);
 	}
@@ -332,12 +314,12 @@ void Game::UpdateGame() {
 		//lightManager->DisablePointLight(1);
 	}
 
-	graphicsPipe->bloomThreshold = imguiController->bloomThreshold;
+	graphicsPipe->bloomThreshold = gridGui->bloomThreshold;
 
 	//lightManager->UpdateLight(deltaTime);
 
-	cubeMap->select = imguiController->select;
-	cubeMap->lodLevel = imguiController->lodLevel;
+	cubeMap->select = gridGui->select;
+	cubeMap->lodLevel = gridGui->lodLevel;
 
 }
 

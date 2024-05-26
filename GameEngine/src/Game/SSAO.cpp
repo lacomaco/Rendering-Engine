@@ -2,10 +2,10 @@
 #include "../Util/CommonMath.h"
 #include "../Constants.h"
 #include "../Util/Shader.h"
-#include "../Game/ImguiController.h"
+#include "../Editor/GridGui.h"
 
 SSAO::SSAO() {
-	auto imgui = ImguiController::getInstance();
+	auto imgui = GridGui::getInstance();
 
 	imgui->radius = radius;
 	imgui->bias = bias;
@@ -200,7 +200,7 @@ void SSAO::GenerateSampleKernel() {
 }
 
 void SSAO::UpdateImGui() {
-	auto imgui = ImguiController::getInstance();
+	auto imgui = GridGui::getInstance();
 
 	imgui->ssaoTexture = ssaoColorBuffer;
 	imgui->ssaoBlurTexture = ssaoColorBufferBlur;

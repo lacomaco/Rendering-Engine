@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <cstdlib>
-#include "./ImguiController.h"
+#include "../Editor/GridGui.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../GameObject/PrimitiveObject/Box.h"
 #include "../GameObject/PrimitiveObject/Circle.h"
@@ -38,7 +38,7 @@ private:
 	bool mIsRunning;
 	Uint32 mTicksCount;
 
-	ImguiController* imguiController;
+	GridGui* gridGui;
 
 	std::shared_ptr<Plane> plane;
 

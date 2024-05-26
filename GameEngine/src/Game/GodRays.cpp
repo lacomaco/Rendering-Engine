@@ -1,6 +1,6 @@
 #include "GodRays.h"
 #include "../Constants.h"
-#include "ImguiController.h"
+#include "../Editor/GridGui.h"
 
 GodRays::GodRays() {
 	// 텍스처 생성
@@ -63,20 +63,20 @@ GodRays::GodRays() {
 	rayCircle->SetupMesh();
 
 	// 임구이 바인딩
-	auto imguiController = ImguiController::getInstance();
-	imguiController->godLightTexture = godRayTexture;
-	imguiController->decay = decay;
-	imguiController->density = density;
-	imguiController->weight = weight;
-	imguiController->godRayExposure = exposure;
+	auto gridGui = GridGui::getInstance();
+	gridGui->godLightTexture = godRayTexture;
+	gridGui->decay = decay;
+	gridGui->density = density;
+	gridGui->weight = weight;
+	gridGui->godRayExposure = exposure;
 }
 
 void GodRays::ImGuiUpdate() {
-	auto imguiController = ImguiController::getInstance();
-	decay = imguiController->decay;
-	density = imguiController->density;
-	weight = imguiController->weight;
-	exposure = imguiController->godRayExposure;
+	auto gridGui = GridGui::getInstance();
+	decay = gridGui->decay;
+	density = gridGui->density;
+	weight = gridGui->weight;
+	exposure = gridGui->godRayExposure;
 }
 
 void GodRays::Draw(

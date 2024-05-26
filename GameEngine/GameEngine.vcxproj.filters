@@ -780,7 +780,7 @@
     <ClInclude Include="src\Game\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\ImguiController.h">
+    <ClInclude Include="src\Editor\GridGui.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h">
@@ -882,6 +882,9 @@
     <ClInclude Include="src\Util\tinyxml2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="GUIGrid.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -917,7 +920,7 @@
     <ClCompile Include="src\Game\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\ImguiController.cpp">
+    <ClCompile Include="src\Editor\GridGui.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui_tables.cpp">
@@ -1008,6 +1011,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\tinyxml2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIGrid.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

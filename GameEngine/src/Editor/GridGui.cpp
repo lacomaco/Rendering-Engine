@@ -1,13 +1,13 @@
-#include "ImguiController.h"
+#include "GridGui.h"
 #include <iostream>
 
-ImguiController* ImguiController::instance = nullptr;
+GridGui* GridGui::instance = nullptr;
 /*
 * Imgui SDL2 with OpenGL 참고 예제
 * 
 * https://github.com/ocornut/imgui/blob/master/examples/example_sdl2_opengl3/main.cpp
 */
-ImguiController::ImguiController(SDL_Window* window, SDL_GLContext context) {
+GridGui::GridGui(SDL_Window* window, SDL_GLContext context) {
 	// IMGUI
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -24,12 +24,46 @@ ImguiController::ImguiController(SDL_Window* window, SDL_GLContext context) {
 
 }
 
-void ImguiController::Update() {
+void GridGui::Update() {
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
+
+	// Left Top Corner for rendering output
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(960, 720));
+	ImGui::Begin("Render Output", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+	if (ImGui::BeginTabBar("MyTabBar")) {
+		if (ImGui::BeginTabItem("Main Scene")) {
+			// 메인 씬 렌더링 코드 삽입
+			ImGui::Text("Main scene rendering here.");
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Mesh View")) {
+			// 개별 메쉬 렌더링 코드 삽입
+			ImGui::Text("Mesh view rendering here.");
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+
+	// 하단 패널
+	ImGui::SetNextWindowPos(ImVec2(0, 720));
+	ImGui::SetNextWindowSize(ImVec2(1280, 240));
+	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("This is Content Browser Panel");
+	ImGui::End();
+
+	// 오른쪽 패널
+	ImGui::SetNextWindowPos(ImVec2(960, 0));
+	ImGui::SetNextWindowSize(ImVec2(320, 720));
+	ImGui::Begin("Right Panel", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("This is the right panel.");
+	ImGui::End();
 
 	// 임구이 세팅
 	ImGui::Begin("Game Engine Controller");
@@ -213,12 +247,12 @@ void ImguiController::Update() {
 }
 
 
-void ImguiController::Render() {
+void GridGui::Render() {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImguiController::PutPBRUniform(const char* programName) {
+void GridGui::PutPBRUniform(const char* programName) {
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(programName);
 	glUseProgram(program);
@@ -229,7 +263,7 @@ void ImguiController::PutPBRUniform(const char* programName) {
 
 
 
-ImguiController::~ImguiController() {
+GridGui::~GridGui() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();

@@ -5,7 +5,7 @@
 #include "../Util/CommonMath.h"
 #include <math.h>
 #include <glm/gtc/quaternion.hpp>
-#include "../Game/ImguiController.h"
+#include "../Editor/GridGui.h"
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(glm::radians(fov), float(width) / height, near, far);
@@ -33,8 +33,8 @@ Camera::Camera(float fov, int width, int height) {
 		cameraUp
 	);
 
-	auto imgui = ImguiController::getInstance();
-	imgui->cameraSpeed = cameraMove;
+	auto gui = GridGui::getInstance();
+	gui->cameraSpeed = cameraMove;
 }
 
 void Camera::CalculateCameraDirection() {
@@ -143,10 +143,10 @@ void Camera::Update(float deltaTime) {
 	);
 
 
-	auto imgui = ImguiController::getInstance();
+	auto gui = GridGui::getInstance();
 
-	imgui->cameraPosition = cameraPos;
-	imgui->cameraFront = cameraFront;
+	gui->cameraPosition = cameraPos;
+	gui->cameraFront = cameraFront;
 }
 
 void Camera::putCameraUniform(const char* shaderProgramName) {
@@ -172,9 +172,9 @@ void Camera::putCameraUniformForSkybox(const char* shaderProgramName) {
 }
 
 void Camera::ImguiUpdate() {
-	auto imguiController = ImguiController::getInstance();
+	auto gridGui = GridGui::getInstance();
 
-	cameraMove = imguiController->cameraSpeed;
+	cameraMove = gridGui->cameraSpeed;
 }
 
 

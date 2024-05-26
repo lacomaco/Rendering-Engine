@@ -5,7 +5,7 @@
 LensFlare::LensFlare() {
 	bloom = std::make_shared<Bloom>();
 
-	auto imguiController = ImguiController::getInstance();
+	auto gridGui = GridGui::getInstance();
 
 	glGenFramebuffers(1, &lensFlareFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, lensFlareFBO);
@@ -69,9 +69,9 @@ LensFlare::LensFlare() {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	imguiController->lensFlareTexture = lensFlareTexture;
-	imguiController->uGhosts = uNumGhosts;
-	imguiController->uGhostDispersal = uGhostDispersal;
+	gridGui->lensFlareTexture = lensFlareTexture;
+	gridGui->uGhosts = uNumGhosts;
+	gridGui->uGhostDispersal = uGhostDispersal;
 }
 
 void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
@@ -127,8 +127,8 @@ void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
 }
 
 void LensFlare::UpdateImGui() {
-	auto imguiController = ImguiController::getInstance();
+	auto gridGui = GridGui::getInstance();
 
-	uGhostDispersal = imguiController->uGhostDispersal;
-	uNumGhosts = imguiController->uGhosts;
+	uGhostDispersal = gridGui->uGhostDispersal;
+	uNumGhosts = gridGui->uGhosts;
 }

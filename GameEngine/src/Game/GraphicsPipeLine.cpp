@@ -4,12 +4,12 @@
 #include "../Util/Shader.h"
 #include "../Util/GLHelper.h"
 #include <memory>
-#include "ImguiController.h"
+#include "../Editor/GridGui.h"
 
 GraphicsPipeLine::GraphicsPipeLine()
 {
-	auto imgui = ImguiController::getInstance();
-	imgui->useSSAO = useSSAO;
+	auto gui = GridGui::getInstance();
+	gui->useSSAO = useSSAO;
 
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
@@ -213,6 +213,6 @@ void GraphicsPipeLine::DrawSSAO(
 }
 
 void GraphicsPipeLine::UpdateImGui() {
-	auto imguiController = ImguiController::getInstance();
-	useSSAO = imguiController->useSSAO;
+	auto gridGui = GridGui::getInstance();
+	useSSAO = gridGui->useSSAO;
 }

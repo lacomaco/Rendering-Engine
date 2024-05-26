@@ -5,13 +5,14 @@
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
 #include "../Util/Shader.h"
-class ImguiController
+
+class GridGui
 {
 
 public:
-	static ImguiController* instance;
-	ImguiController(SDL_Window* window, SDL_GLContext context);
-	~ImguiController();
+	static GridGui* instance;
+	GridGui(SDL_Window* window, SDL_GLContext context);
+	~GridGui();
 	void Update();
 	void Render();
 
@@ -19,14 +20,14 @@ public:
 	glm::vec3 clear_color = glm::vec3(0.45f, 0.55f, 0.60f);
 	int counter = 0;
 
-	ImguiController& operator=(const ImguiController&) = delete; // 할당 연산자 비활성화
-	ImguiController(const ImguiController&) = delete; // 복사 생성자 비활성화
+	GridGui& operator=(const GridGui&) = delete; // 할당 연산자 비활성화
+	GridGui(const GridGui&) = delete; // 복사 생성자 비활성화
 
 	static void CreateInstance(SDL_Window* window, SDL_GLContext context) {
-		instance = new ImguiController(window, context);
+		instance = new GridGui(window, context);
 	}
 
-	static ImguiController* getInstance() {
+	static GridGui* getInstance() {
 		return instance;
 	}
 

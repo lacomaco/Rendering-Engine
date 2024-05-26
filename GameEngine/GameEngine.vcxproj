@@ -162,6 +162,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GUIGrid.h" />
     <ClInclude Include="src\Game\LensFlare.h" />
     <ClInclude Include="src\Game\GBuffer.h" />
     <ClInclude Include="src\Game\GodRays.h" />
@@ -192,7 +193,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="src\GameObject\PrimitiveObject\Plane.h" />
     <ClInclude Include="src\GameObject\PrimitiveObject\Primitive.h" />
     <ClInclude Include="src\GameObject\MeshMaterialsLight.h" />
-    <ClInclude Include="src\Game\ImguiController.h" />
+    <ClInclude Include="src\Editor\GridGui.h" />
     <ClInclude Include="src\Game\Camera.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Util\Shader.h" />
@@ -453,6 +454,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GUIGrid.cpp" />
     <ClCompile Include="src\Game\LensFlare.cpp" />
     <ClCompile Include="src\Game\GBuffer.cpp" />
     <ClCompile Include="src\Game\GodRays.cpp" />
@@ -480,7 +482,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClCompile Include="src\GameObject\PrimitiveObject\Plane.cpp" />
     <ClCompile Include="src\GameObject\PrimitiveObject\Primitive.cpp" />
     <ClCompile Include="src\GameObject\MeshMaterialsLight.cpp" />
-    <ClCompile Include="src\Game\ImguiController.cpp" />
+    <ClCompile Include="src\Editor\GridGui.cpp" />
     <ClCompile Include="src\Game\Camera.cpp" />
     <ClCompile Include="src\Game\Shadow.cpp" />
     <ClCompile Include="src\Util\Shader.cpp" />
