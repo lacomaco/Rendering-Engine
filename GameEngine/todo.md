@@ -9,3 +9,10 @@
 [] Animation
 [] 자연 애니메이션
 [] GI
+
+2. 고려할것
+
+포스트 프로세싱 태우는 것들을 4각형 vertex로 처리하고 있는데 compute shader에서 처리해도 괜찮을듯 싶다. 시간 여유가 되면 바꿔보자.
+
+Deferred shading으로 변경해도 괜찮을듯 싶다. (G Buffer는 이미 구현되어져있다.)
+Deferred shading으로 변경시 alpha값은 포기하고 멀티샘플링은 직접 알고리즘으로 구현해야한다. 시간이 많이 들것이다.
