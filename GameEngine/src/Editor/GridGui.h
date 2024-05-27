@@ -4,9 +4,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
-#include "../Util/Shader.h"
 #include "./MainSceneTexture.h"
-#include "./IconTexture.h"
 #include "./ContentsBrowser.h"
 #include <memory>
 
@@ -14,17 +12,12 @@ class GridGui
 {
 private:
 	void SceneUpdate();
-	void ContentBrowserUpdate();
 	void InspectorUpdate();
 
 	std::shared_ptr<MainSceneTexture> mainSceneTexture;
-	std::shared_ptr<IconTexture> folderIcon;
-	std::shared_ptr<IconTexture> fbxIcon;
 	std::shared_ptr<ContentsBrowser> contentsBrowser;
 
 public:
-	std::shared_ptr<IconTexture> xmlIcon;
-
 	unsigned int getMainSceneFrameBuffer() {
 		if (!mainSceneTexture) {
 			return 0;
