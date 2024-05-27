@@ -28,8 +28,6 @@ GridGui::GridGui(SDL_Window* window, SDL_GLContext context) {
 }
 
 void GridGui::Update() {
-	ImGuiIO& io = ImGui::GetIO();
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
@@ -39,9 +37,79 @@ void GridGui::Update() {
 		ContentBrowserUpdate();
 		InspectorUpdate();
 	}
+}
 
+
+void GridGui::Render() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GridGui::PutPBRUniform(const char* programName) {
+	auto shader = Shader::getInstance();
+	auto program = shader->getShaderProgram(programName);
+	glUseProgram(program);
+	shader->setFloat(programName, "metallicTest", metallic);
+	shader->setFloat(programName, "roughnessTest", roughness);
+
+}
+
+void GridGui::SceneUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(960, 720));
+	ImGui::Begin("Render Output", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+	if (ImGui::BeginTabBar("Scene Viewer")) {
+		if (ImGui::BeginTabItem("Main Scene")) {
+			ImGui::Image(
+				(void*)(intptr_t)mainSceneTexture->getMainSceneTexture(),
+				ImVec2(960, 720),
+				ImVec2(0, 1),
+				ImVec2(1, 0)
+			);
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Mesh View")) {
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+}
+
+void GridGui::ContentBrowserUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(0, 720));
+	ImGui::SetNextWindowSize(ImVec2(1280, 240));
+	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Text("This is Content Browser Panel");
+	ImGui::End();
+}
+
+void GridGui::InspectorUpdate() {
+	ImGui::SetNextWindowPos(ImVec2(960, 0));
+	ImGui::SetNextWindowSize(ImVec2(320, 720));
+	ImGui::Begin("Game Panel", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	if(ImGui::BeginTabBar("Inspector Tab Bar")) {
+		if (ImGui::BeginTabItem("Inspector")) {
+			ImGui::Text("component Inspector");
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Engine Options")) {
+			EngineOptionUpdate();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+}
+
+void GridGui::EngineOptionUpdate() {
 	// 임구이 세팅
-	ImGui::Begin("Game Engine Controller");
+	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
@@ -136,7 +204,7 @@ void GridGui::Update() {
 	if (ImGui::TreeNode("for god ray debugging")) {
 		ImGui::Image(
 			(void*)(intptr_t)godLightTexture,
-			ImVec2(200,200),
+			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
@@ -215,69 +283,6 @@ void GridGui::Update() {
 		);
 		ImGui::TreePop();
 	}
-
-
-	ImGui::End();
-
-}
-
-
-void GridGui::Render() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void GridGui::PutPBRUniform(const char* programName) {
-	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram(programName);
-	glUseProgram(program);
-	shader->setFloat(programName, "metallicTest", metallic);
-	shader->setFloat(programName, "roughnessTest", roughness);
-
-}
-
-void GridGui::SceneUpdate() {
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(960, 720));
-	ImGui::Begin("Render Output", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-	if (ImGui::BeginTabBar("Scene Viewer")) {
-		if (ImGui::BeginTabItem("Main Scene")) {
-			ImGui::Text("Main scene rendering here.");
-			ImGui::Image(
-				(void*)(intptr_t)mainSceneTexture->getMainSceneTexture(),
-				ImVec2(960, 720),
-				ImVec2(0, 1),
-				ImVec2(1, 0)
-			);
-
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Mesh View")) {
-			// 개별 메쉬 렌더링 코드 삽입
-			ImGui::Text("Mesh view rendering here.");
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
-}
-
-void GridGui::ContentBrowserUpdate() {
-	ImGui::SetNextWindowPos(ImVec2(0, 720));
-	ImGui::SetNextWindowSize(ImVec2(1280, 240));
-	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("This is Content Browser Panel");
-	ImGui::End();
-}
-
-void GridGui::InspectorUpdate() {
-	ImGui::SetNextWindowPos(ImVec2(960, 0));
-	ImGui::SetNextWindowSize(ImVec2(320, 720));
-	ImGui::Begin("Right Panel", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("This is the right panel.");
-	ImGui::End();
 }
 
 

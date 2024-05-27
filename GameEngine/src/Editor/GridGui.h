@@ -13,6 +13,7 @@ private:
 	void SceneUpdate();
 	void ContentBrowserUpdate();
 	void InspectorUpdate();
+	void EngineOptionUpdate();
 
 	MainSceneTexture* mainSceneTexture;
 
