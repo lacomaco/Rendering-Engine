@@ -2,7 +2,7 @@
 #include "../Constants.h"
 #include <iostream>
 #include "../Util/Shader.h"
-#include "../Editor/GridGui.h"
+#include "../Editor/EditorSharedValue.h"
 
 GBuffer::GBuffer() {
 	glGenFramebuffers(1, &gBufferFBO);
@@ -49,12 +49,10 @@ void GBuffer::unuse() {
 }
 
 void GBuffer::UpdateImGui() {
-	auto gridGui = GridGui::getInstance();
-
-	gridGui->albedoRoughnessTexture = albedoRoughnessTexture;
-	gridGui->positionMetallicTexture = positionMetallicTexture;
-	gridGui->normalTexture = normalTexture;
-	gridGui->godRayTexture = godRayTexture;
+	EditorSharedValue::albedoRoughnessTexture = albedoRoughnessTexture;
+	EditorSharedValue::positionMetallicTexture = positionMetallicTexture;
+	EditorSharedValue::normalTexture = normalTexture;
+	EditorSharedValue::godRayTexture = godRayTexture;
 }
 
 void GBuffer::createGBufferTexture(unsigned int& texture) {

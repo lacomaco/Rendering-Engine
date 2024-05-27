@@ -4,12 +4,11 @@
 #include "../Util/Shader.h"
 #include "../Util/GLHelper.h"
 #include <memory>
-#include "../Editor/GridGui.h"
+#include "../Editor/EditorSharedValue.h"
 
 GraphicsPipeLine::GraphicsPipeLine()
 {
-	auto gui = GridGui::getInstance();
-	gui->useSSAO = useSSAO;
+	EditorSharedValue::useSSAO = useSSAO;
 
 	bloom = std::make_shared<Bloom>();
 	godRays = std::make_shared<GodRays>();
@@ -23,7 +22,6 @@ GraphicsPipeLine::GraphicsPipeLine()
 
 void GraphicsPipeLine::Draw(const char* programName)
 {
-	auto gridGUI = GridGui::getInstance();
 	UpdateImGui();
 	auto shader = Shader::getInstance();
 	
@@ -41,8 +39,8 @@ void GraphicsPipeLine::Draw(const char* programName)
 
 	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
 
-	if (gridGUI->editorMode) {
-		glBindFramebuffer(GL_FRAMEBUFFER, gridGUI->getMainSceneFrameBuffer());
+	if (EditorSharedValue::editorMode) {
+		glBindFramebuffer(GL_FRAMEBUFFER, EditorSharedValue::EditorMainSceneFrameBuffer);
 	}
 	else {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -218,6 +216,5 @@ void GraphicsPipeLine::DrawSSAO(
 }
 
 void GraphicsPipeLine::UpdateImGui() {
-	auto gridGui = GridGui::getInstance();
-	useSSAO = gridGui->useSSAO;
+	useSSAO = EditorSharedValue::useSSAO;
 }

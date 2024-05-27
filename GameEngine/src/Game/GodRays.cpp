@@ -1,6 +1,6 @@
 #include "GodRays.h"
 #include "../Constants.h"
-#include "../Editor/GridGui.h"
+#include "../Editor/EditorSharedValue.h"
 
 GodRays::GodRays() {
 	// 텍스처 생성
@@ -62,21 +62,18 @@ GodRays::GodRays() {
 	rayCircle->scale = glm::vec3(2.0f);
 	rayCircle->SetupMesh();
 
-	// 임구이 바인딩
-	auto gridGui = GridGui::getInstance();
-	gridGui->godLightTexture = godRayTexture;
-	gridGui->decay = decay;
-	gridGui->density = density;
-	gridGui->weight = weight;
-	gridGui->godRayExposure = exposure;
+	EditorSharedValue::godLightTexture = godRayTexture;
+	EditorSharedValue::decay = decay;
+	EditorSharedValue::density = density;
+	EditorSharedValue::weight = weight;
+	EditorSharedValue::godRayExposure = exposure;
 }
 
 void GodRays::ImGuiUpdate() {
-	auto gridGui = GridGui::getInstance();
-	decay = gridGui->decay;
-	density = gridGui->density;
-	weight = gridGui->weight;
-	exposure = gridGui->godRayExposure;
+	decay = EditorSharedValue::decay;
+	density = EditorSharedValue::density;
+	weight = EditorSharedValue::weight;
+	exposure = EditorSharedValue::godRayExposure;
 }
 
 void GodRays::Draw(

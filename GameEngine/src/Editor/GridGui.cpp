@@ -1,8 +1,8 @@
 #include "GridGui.h"
 #include <iostream>
 #include "../Game/Input.h"
+#include "../Editor/EditorSharedValue.h"
 
-GridGui* GridGui::instance = nullptr;
 /*
 * Imgui SDL2 with OpenGL 참고 예제
 * 
@@ -35,7 +35,7 @@ void GridGui::Update() {
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	if (editorMode) {
+	if (EditorSharedValue::editorMode) {
 		SceneUpdate();
 		ContentBrowserUpdate();
 		InspectorUpdate();
@@ -47,15 +47,6 @@ void GridGui::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void GridGui::PutPBRUniform(const char* programName) {
-	auto shader = Shader::getInstance();
-	auto program = shader->getShaderProgram(programName);
-	glUseProgram(program);
-	shader->setFloat(programName, "metallicTest", metallic);
-	shader->setFloat(programName, "roughnessTest", roughness);
-
 }
 
 void GridGui::SceneUpdate() {
@@ -119,7 +110,7 @@ void GridGui::InspectorUpdate() {
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Engine Options")) {
+		if (ImGui::BeginTabItem("Rendering Debug Panels")) {
 			EngineOptionUpdate();
 			ImGui::EndTabItem();
 		}
@@ -136,44 +127,43 @@ void GridGui::EngineOptionUpdate() {
 
 	ImGui::Text(
 		"Camera Position (x:%.3f y:%.3f z:%.3f)",
-		cameraPosition.x,
-		cameraPosition.y,
-		cameraPosition.z
+		EditorSharedValue::cameraPosition.x,
+		EditorSharedValue::cameraPosition.y,
+		EditorSharedValue::cameraPosition.z
 	);
 
 	ImGui::Text(
 		"Camera Front (x:%.3f y:%.3f z:%.3f)",
-		cameraFront.x,
-		cameraFront.y,
-		cameraFront.z
+		EditorSharedValue::cameraFront.x,
+		EditorSharedValue::cameraFront.y,
+		EditorSharedValue::cameraFront.z
 	);
 
-	ImGui::SliderFloat("cameraSpeed", &cameraSpeed, 0.0f, 10.0f);
+	ImGui::SliderFloat("cameraSpeed", &EditorSharedValue::cameraSpeed, 0.0f, 10.0f);
 
 	ImGui::Text("Exposure");
-	ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f);
+	ImGui::SliderFloat("exposure", &EditorSharedValue::exposure, 0.0f, 10.0f);
 
-	ImGui::Checkbox("useTexture", &useTexture);
-	ImGui::Checkbox("showNormal", &showNormal);
+	ImGui::Checkbox("showNormal", &EditorSharedValue::showNormal);
 
 	if (ImGui::TreeNode("DirectionalLight")) {
 		ImGui::Text("Position");
-		ImGui::SliderFloat("x", &directionalLightPosition.x, -20.0f, 20.0f);
+		ImGui::SliderFloat("x", &EditorSharedValue::directionalLightPosition.x, -20.0f, 20.0f);
 		ImGui::BeginDisabled();
-		ImGui::SliderFloat("y", &directionalLightPosition.y, -20.0f, 20.0f);
+		ImGui::SliderFloat("y", &EditorSharedValue::directionalLightPosition.y, -20.0f, 20.0f);
 		ImGui::EndDisabled();
-		ImGui::SliderFloat("z", &directionalLightPosition.z, -20.0f, 20.0f);
+		ImGui::SliderFloat("z", &EditorSharedValue::directionalLightPosition.z, -20.0f, 20.0f);
 
 		ImGui::Text("Direction");
-		ImGui::SliderFloat("x", &directionalLightDirection.x, -1.0f, 1.0f);
+		ImGui::SliderFloat("x", &EditorSharedValue::directionalLightDirection.x, -1.0f, 1.0f);
 		ImGui::BeginDisabled();
-		ImGui::SliderFloat("y", &directionalLightDirection.y, -1.0f, 1.0f);
+		ImGui::SliderFloat("y", &EditorSharedValue::directionalLightDirection.y, -1.0f, 1.0f);
 		ImGui::EndDisabled();
-		ImGui::SliderFloat("z", &directionalLightDirection.z, -1.0f, 1.0f);
+		ImGui::SliderFloat("z", &EditorSharedValue::directionalLightDirection.z, -1.0f, 1.0f);
 
 		ImGui::Text("shadow depthMap");
 		ImGui::Image(
-			(void*)(intptr_t)directionalLightDepthMap,
+			(void*)(intptr_t)EditorSharedValue::directionalLightDepthMap,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -183,63 +173,63 @@ void GridGui::EngineOptionUpdate() {
 	}
 
 	if (ImGui::TreeNode("CubeMap Test")) {
-		if (ImGui::RadioButton("skybox", select == 0)) {
-			select = 0;
+		if (ImGui::RadioButton("skybox", EditorSharedValue::select == 0)) {
+			EditorSharedValue::select = 0;
 		}
 
-		if (ImGui::RadioButton("radiance", select == 1)) {
-			select = 1;
+		if (ImGui::RadioButton("radiance", EditorSharedValue::select == 1)) {
+			EditorSharedValue::select = 1;
 		}
 
-		if (ImGui::RadioButton("irradiance", select == 2)) {
-			select = 2;
+		if (ImGui::RadioButton("irradiance", EditorSharedValue::select == 2)) {
+			EditorSharedValue::select = 2;
 		}
 
-		ImGui::SliderFloat("lodLevel", &lodLevel, 0.0f, 6.0f);
+		ImGui::SliderFloat("lodLevel", &EditorSharedValue::lodLevel, 0.0f, 6.0f);
 
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("PBR Test")) {
 		ImGui::Text("Metallic");
-		ImGui::SliderFloat("metallic", &metallic, 0.0f, 1.0f);
+		ImGui::SliderFloat("metallic", &EditorSharedValue::metallic, 0.0f, 1.0f);
 
 		ImGui::Text("Roughness");
-		ImGui::SliderFloat("roughness", &roughness, 0.0f, 1.0f);
+		ImGui::SliderFloat("roughness", &EditorSharedValue::roughness, 0.0f, 1.0f);
 
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Bloom")) {
 		ImGui::Text("bloomThreshold");
-		ImGui::SliderFloat("bloomCount", &bloomThreshold, 0, 1.0);
+		ImGui::SliderFloat("bloomCount", &EditorSharedValue::bloomThreshold, 0, 1.0);
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("light")) {
-		ImGui::Checkbox("useSun", &useSun);
-		ImGui::Checkbox("usePointLight", &usePointLight);
+		ImGui::Checkbox("useSun", &EditorSharedValue::useSun);
+		ImGui::Checkbox("usePointLight", &EditorSharedValue::usePointLight);
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("for god ray debugging")) {
 		ImGui::Image(
-			(void*)(intptr_t)godLightTexture,
+			(void*)(intptr_t)EditorSharedValue::godLightTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		ImGui::SliderFloat("decay", &decay, 0.0f, 1.0f);
-		ImGui::SliderFloat("density", &density, 0.0f, 1.0f);
-		ImGui::SliderFloat("weight", &weight, 0.0f, 1.0f);
-		ImGui::SliderFloat("exposure", &godRayExposure, 0.0f, 1.0f);
+		ImGui::SliderFloat("decay", &EditorSharedValue::decay, 0.0f, 1.0f);
+		ImGui::SliderFloat("density", &EditorSharedValue::density, 0.0f, 1.0f);
+		ImGui::SliderFloat("weight", &EditorSharedValue::weight, 0.0f, 1.0f);
+		ImGui::SliderFloat("exposure", &EditorSharedValue::godRayExposure, 0.0f, 1.0f);
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("show GBuffer")) {
 		ImGui::Text("Position Metallic Texture");
 		ImGui::Image(
-			(void*)(intptr_t)positionMetallicTexture,
+			(void*)(intptr_t)EditorSharedValue::positionMetallicTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -247,7 +237,7 @@ void GridGui::EngineOptionUpdate() {
 
 		ImGui::Text("Albedo Roughness Texture");
 		ImGui::Image(
-			(void*)(intptr_t)albedoRoughnessTexture,
+			(void*)(intptr_t)EditorSharedValue::albedoRoughnessTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -255,7 +245,7 @@ void GridGui::EngineOptionUpdate() {
 
 		ImGui::Text("Normal Texture");
 		ImGui::Image(
-			(void*)(intptr_t)normalTexture,
+			(void*)(intptr_t)EditorSharedValue::normalTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -263,7 +253,7 @@ void GridGui::EngineOptionUpdate() {
 
 		ImGui::Text("God Ray Texture");
 		ImGui::Image(
-			(void*)(intptr_t)godRayTexture,
+			(void*)(intptr_t)EditorSharedValue::godRayTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -275,29 +265,29 @@ void GridGui::EngineOptionUpdate() {
 	if (ImGui::TreeNode("show SSAO Texture")) {
 		ImGui::Text("SSAO Texture");
 		ImGui::Image(
-			(void*)(intptr_t)ssaoTexture,
+			(void*)(intptr_t)EditorSharedValue::ssaoTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
 		ImGui::Text("SSAO Blur Texture");
 		ImGui::Image(
-			(void*)(intptr_t)ssaoBlurTexture,
+			(void*)(intptr_t)EditorSharedValue::ssaoBlurTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		ImGui::SliderFloat("radius", &radius, 0.0f, 5.0f);
-		ImGui::SliderFloat("bias", &bias, -1.0f, 1.0f);
-		ImGui::Checkbox("useSSAO", &useSSAO);
+		ImGui::SliderFloat("radius", &EditorSharedValue::radius, 0.0f, 5.0f);
+		ImGui::SliderFloat("bias", &EditorSharedValue::bias, -1.0f, 1.0f);
+		ImGui::Checkbox("useSSAO", &EditorSharedValue::useSSAO);
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Lens Flare")) {
-		ImGui::SliderInt("ghosts", &uGhosts, 0, 10);
-		ImGui::SliderFloat("ghostDispersal", &uGhostDispersal, 0.0f, 1.0f);
+		ImGui::SliderInt("ghosts", &EditorSharedValue::uGhosts, 0, 10);
+		ImGui::SliderFloat("ghostDispersal", &EditorSharedValue::uGhostDispersal, 0.0f, 1.0f);
 		ImGui::Image(
-			(void*)(intptr_t)lensFlareTexture,
+			(void*)(intptr_t)EditorSharedValue::lensFlareTexture,
 			ImVec2(200, 200),
 			ImVec2(0, 1),
 			ImVec2(1, 0)

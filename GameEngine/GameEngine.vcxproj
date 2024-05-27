@@ -163,6 +163,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Editor\EditorSharedValue.h" />
+    <ClInclude Include="src\Editor\RenderingDebugPanel.h" />
     <ClInclude Include="src\Editor\IconTexture.h" />
     <ClInclude Include="src\Editor\MainSceneTexture.h" />
     <ClInclude Include="src\Game\LensFlare.h" />
@@ -456,6 +458,8 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Editor\EditorSharedValue.cpp" />
+    <ClCompile Include="src\Editor\RenderingDebugPanel.cpp" />
     <ClCompile Include="src\Editor\IconTexture.cpp" />
     <ClCompile Include="src\Editor\MainSceneTexture.cpp" />
     <ClCompile Include="src\Game\LensFlare.cpp" />

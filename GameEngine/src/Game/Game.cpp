@@ -6,11 +6,11 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
-#include "../Editor/GridGui.h"
 #include "../GameObject/PrimitiveObject/Plane.h"
 #include "../Constants.h"
 #include <glm/gtc/quaternion.hpp>
 #include <random>
+#include "../Editor/EditorSharedValue.h"
 
 
 
@@ -62,9 +62,6 @@ void Game::GenerateOutput() {
 	
 	//const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
-	auto gridGui = GridGui::getInstance();
-	gridGui->PutPBRUniform(shaderName);
-
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	camera->putCameraUniform(shaderName);
@@ -73,7 +70,7 @@ void Game::GenerateOutput() {
 	meshRenderer->Draw(shaderName); 
 	cubeMap->Draw("cubemap", camera.get());
 
-	auto normalMode = GridGui::getInstance()->showNormal;
+	auto normalMode = EditorSharedValue::showNormal;
 
 	if (normalMode) {
 		lightManager->PutLightUniform("normal");
@@ -134,8 +131,7 @@ bool Game::Initialize() {
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	GridGui::CreateInstance(mWindow, context);
-	gridGui = GridGui::getInstance();
+	gridGui = new GridGui(mWindow, context);
 
 	stbi_set_flip_vertically_on_load(true);
 
@@ -235,8 +231,6 @@ bool Game::Initialize() {
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
 	lightManager = LightManager::getInstance();
-
-	auto gridGui = GridGui::getInstance();
 	
 	// 라이트 
 	lightManager->CreateLight
@@ -246,9 +240,9 @@ bool Game::Initialize() {
 		glm::vec3(0, -1, 0.005),
 		12
 	);
-	gridGui->directionalLightPosition = lightManager->directionLights[0]->box->position;
-	gridGui->directionalLightDirection = lightManager->directionLights[0]->direction;
-	gridGui->directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	EditorSharedValue::directionalLightPosition = lightManager->directionLights[0]->box->position;
+	EditorSharedValue::directionalLightDirection = lightManager->directionLights[0]->direction;
+	EditorSharedValue::directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
 
 	// 포인트.
 	lightManager->CreateLight
@@ -287,16 +281,14 @@ void Game::UpdateGame() {
 
 	input->SetMouse();
 
-	auto gridGui = GridGui::getInstance();
-
-	const auto exposure = gridGui->exposure;
+	const auto exposure = EditorSharedValue::exposure;
 
 	graphicsPipe->exposure = exposure;
 
 
-	if (gridGui->useSun) {
-		lightManager->directionLights[0]->setPosition(gridGui->directionalLightPosition);
-		lightManager->directionLights[0]->direction = gridGui->directionalLightDirection;
+	if (EditorSharedValue::useSun) {
+		lightManager->directionLights[0]->setPosition(EditorSharedValue::directionalLightPosition);
+		lightManager->directionLights[0]->direction = EditorSharedValue::directionalLightDirection;
 
 		lightManager->EnableDirectionalLight(0);
 	}
@@ -304,7 +296,7 @@ void Game::UpdateGame() {
 		lightManager->DisableDirectionalLight(0);
 	}
 
-	if (gridGui->usePointLight) {
+	if (EditorSharedValue::usePointLight) {
 		lightManager->EnablePointLight(0);
 		//lightManager->EnablePointLight(1);
 	}
@@ -313,12 +305,12 @@ void Game::UpdateGame() {
 		//lightManager->DisablePointLight(1);
 	}
 
-	graphicsPipe->bloomThreshold = gridGui->bloomThreshold;
+	graphicsPipe->bloomThreshold = EditorSharedValue::bloomThreshold;
 
 	//lightManager->UpdateLight(deltaTime);
 
-	cubeMap->select = gridGui->select;
-	cubeMap->lodLevel = gridGui->lodLevel;
+	cubeMap->select = EditorSharedValue::select;
+	cubeMap->lodLevel = EditorSharedValue::lodLevel;
 
 }
 
@@ -332,7 +324,6 @@ void Game::RunLoop() {
 
 void Game::ProcessInput() {
 	SDL_Event event;
-	auto gridGUI = GridGui::getInstance();
 
 	while (SDL_PollEvent(&event)) {
 		ImGui_ImplSDL2_ProcessEvent(&event);
@@ -354,9 +345,9 @@ void Game::ProcessInput() {
 
 
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_F12) {
-				gridGUI->editorMode = !gridGUI->editorMode;
-				std::cout << "is f12 press out? " << gridGUI->editorMode << std::endl;
+			if (event.key.keysym.sym == SDLK_F11) {
+				EditorSharedValue::editorMode = !EditorSharedValue::editorMode;
+				std::cout << "is f12 press out? " << EditorSharedValue::editorMode << std::endl;
 				break;
 			}
 		}

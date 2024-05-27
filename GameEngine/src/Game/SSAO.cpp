@@ -2,13 +2,11 @@
 #include "../Util/CommonMath.h"
 #include "../Constants.h"
 #include "../Util/Shader.h"
-#include "../Editor/GridGui.h"
+#include "../Editor/EditorSharedValue.h"
 
 SSAO::SSAO() {
-	auto imgui = GridGui::getInstance();
-
-	imgui->radius = radius;
-	imgui->bias = bias;
+	EditorSharedValue::radius = radius;
+	EditorSharedValue::bias = bias;
 
 	GenerateSampleKernel();
 
@@ -200,11 +198,9 @@ void SSAO::GenerateSampleKernel() {
 }
 
 void SSAO::UpdateImGui() {
-	auto imgui = GridGui::getInstance();
+	EditorSharedValue::ssaoTexture = ssaoColorBuffer;
+	EditorSharedValue::ssaoBlurTexture = ssaoColorBufferBlur;
 
-	imgui->ssaoTexture = ssaoColorBuffer;
-	imgui->ssaoBlurTexture = ssaoColorBufferBlur;
-
-	radius = imgui->radius;
-	bias = imgui->bias;
+	radius = EditorSharedValue::radius;
+	bias = EditorSharedValue::bias;
 }

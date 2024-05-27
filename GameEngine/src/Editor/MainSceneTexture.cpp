@@ -1,6 +1,7 @@
 #include "MainSceneTexture.h"
 #include <glew.h>
 #include "../Util/GLHelper.h"
+#include "./EditorSharedValue.h"
 
 
 MainSceneTexture::MainSceneTexture() {
@@ -16,6 +17,8 @@ MainSceneTexture::MainSceneTexture() {
 		mainSceneTextureId,
 		0
 	);
+
+	EditorSharedValue::EditorMainSceneFrameBuffer = mainSceneTextureFrameBuffer;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

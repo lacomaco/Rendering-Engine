@@ -5,7 +5,7 @@
 #include "../Util/CommonMath.h"
 #include <math.h>
 #include <glm/gtc/quaternion.hpp>
-#include "../Editor/GridGui.h"
+#include "../Editor/EditorSharedValue.h"
 
 Camera::Camera(float fov, int width, int height) {
 	projection = glm::perspective(glm::radians(fov), float(width) / height, near, far);
@@ -33,8 +33,7 @@ Camera::Camera(float fov, int width, int height) {
 		cameraUp
 	);
 
-	auto gui = GridGui::getInstance();
-	gui->cameraSpeed = cameraMove;
+	EditorSharedValue::cameraSpeed = cameraMove;
 }
 
 void Camera::CalculateCameraDirection() {
@@ -142,11 +141,8 @@ void Camera::Update(float deltaTime) {
 		cameraUp
 	);
 
-
-	auto gui = GridGui::getInstance();
-
-	gui->cameraPosition = cameraPos;
-	gui->cameraFront = cameraFront;
+	EditorSharedValue::cameraPosition = cameraPos;
+	EditorSharedValue::cameraFront = cameraFront;
 }
 
 void Camera::putCameraUniform(const char* shaderProgramName) {
@@ -172,9 +168,7 @@ void Camera::putCameraUniformForSkybox(const char* shaderProgramName) {
 }
 
 void Camera::ImguiUpdate() {
-	auto gridGui = GridGui::getInstance();
-
-	cameraMove = gridGui->cameraSpeed;
+	cameraMove = EditorSharedValue::cameraSpeed;
 }
 
 

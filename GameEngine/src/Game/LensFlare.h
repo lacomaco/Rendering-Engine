@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 #include <glew.h>
 #include "../Util/GLHelper.h"
-#include "../Editor/GridGui.h"
 #include "../Util/Shader.h"
 #include "Bloom.h"
 

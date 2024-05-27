@@ -1,11 +1,10 @@
 #include "LensFlare.h"
 #include "../Constants.h"
 #include "../Util/stb_image.h"
+#include "../Editor/EditorSharedValue.h"
 
 LensFlare::LensFlare() {
 	bloom = std::make_shared<Bloom>();
-
-	auto gridGui = GridGui::getInstance();
 
 	glGenFramebuffers(1, &lensFlareFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, lensFlareFBO);
@@ -69,9 +68,10 @@ LensFlare::LensFlare() {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	gridGui->lensFlareTexture = lensFlareTexture;
-	gridGui->uGhosts = uNumGhosts;
-	gridGui->uGhostDispersal = uGhostDispersal;
+
+	EditorSharedValue::lensFlareTexture = lensFlareTexture;
+	EditorSharedValue::lensFlareTexture = uNumGhosts;
+	EditorSharedValue::lensFlareTexture = uGhostDispersal;
 }
 
 void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
@@ -122,8 +122,6 @@ void LensFlare::Draw(unsigned int sceneTexture,unsigned int godRayTexture) {
 }
 
 void LensFlare::UpdateImGui() {
-	auto gridGui = GridGui::getInstance();
-
-	uGhostDispersal = gridGui->uGhostDispersal;
-	uNumGhosts = gridGui->uGhosts;
+	uGhostDispersal = EditorSharedValue::uGhostDispersal;
+	uNumGhosts = EditorSharedValue::uGhosts;
 }
