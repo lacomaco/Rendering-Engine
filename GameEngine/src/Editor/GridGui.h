@@ -7,6 +7,7 @@
 #include "../Util/Shader.h"
 #include "./MainSceneTexture.h"
 #include "./IconTexture.h"
+#include "./ContentsBrowser.h"
 #include <memory>
 
 class GridGui
@@ -19,6 +20,7 @@ private:
 	std::shared_ptr<MainSceneTexture> mainSceneTexture;
 	std::shared_ptr<IconTexture> folderIcon;
 	std::shared_ptr<IconTexture> fbxIcon;
+	std::shared_ptr<ContentsBrowser> contentsBrowser;
 
 public:
 	std::shared_ptr<IconTexture> xmlIcon;

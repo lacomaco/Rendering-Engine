@@ -28,6 +28,7 @@ GridGui::GridGui(SDL_Window* window, SDL_GLContext context) {
 	folderIcon = std::make_shared<IconTexture>("./icons/folder.png");
 	xmlIcon = std::make_shared<IconTexture>("./icons/xml.png");
 	fbxIcon = std::make_shared<IconTexture>("./icons/fbx.png");
+	contentsBrowser = std::make_shared<ContentsBrowser>();
 
 }
 
