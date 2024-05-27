@@ -1,5 +1,5 @@
 #pragma once
-class RenderingDebugPanel
-{
-};
 
+namespace RenderingDebugPanel {
+	void UpdateRenderingDebugPanel();
+}

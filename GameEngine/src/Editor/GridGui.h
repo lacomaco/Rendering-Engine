@@ -15,7 +15,6 @@ private:
 	void SceneUpdate();
 	void ContentBrowserUpdate();
 	void InspectorUpdate();
-	void EngineOptionUpdate();
 
 	std::shared_ptr<MainSceneTexture> mainSceneTexture;
 	std::shared_ptr<IconTexture> folderIcon;
