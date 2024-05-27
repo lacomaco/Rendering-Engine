@@ -33,8 +33,8 @@ void ContentsBrowser::createDirectory(FileStructure* file) {
 
 				if (std::filesystem::is_regular_file(entry)) {
 					std::string extension = entry.path().extension().string();
-					if (extension == ".fbx" || extension == ".xml") {
-						child->type = extension == ".fbx" ? FileType::FBX : FileType::XML;
+					if (extension == ".fbx" || extension == ".xml" || extension == ".gltf" || extension == ".obj") {
+						child->type = extension == ".xml" ? FileType::XML : FileType::FBX;
 						file->child.push_back(child);
 					}
 				}
@@ -57,9 +57,14 @@ void ContentsBrowser::createDirectory(FileStructure* file) {
 void ContentsBrowser::UpdateContentsBrowserGUI() {
 	ImGui::SetNextWindowPos(ImVec2(0, 720));
 	ImGui::SetNextWindowSize(ImVec2(1280, 240));
-	ImGui::Begin(currentPath.c_str(),
+	ImGui::Begin(currentFolder->path.c_str(),
 		NULL, 
 		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+	if (currentFolder->parent && ImGui::Button("Back")) {
+		currentFolder = currentFolder->parent;
+	}
+
 	for (const auto& file : currentFolder->child) {
 
 		auto textureId = file->type == FileType::Folder ?
@@ -71,6 +76,13 @@ void ContentsBrowser::UpdateContentsBrowserGUI() {
 			(void*)(intptr_t)textureId,
 			ImVec2(32, 32)
 		);
+
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+			if (file->type == FileType::Folder) {
+				currentFolder = file;
+			}
+		}
+
 		ImGui::SameLine();
 		ImGui::Text(file->name.c_str());
 	}
@@ -90,6 +102,7 @@ void ContentsBrowser::UpdateContentsBrowserGUI() {
 
 	ImGui::End();
 }
+
 
 ContentsBrowser::~ContentsBrowser() {
 	if (RootFolder == NULL) {

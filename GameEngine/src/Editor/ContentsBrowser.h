@@ -35,7 +35,6 @@ private:
 	std::shared_ptr<IconTexture> fbxIcon;
 	std::shared_ptr<IconTexture> xmlIcon;
 
-
 public:
 	ContentsBrowser();
 	~ContentsBrowser();
