@@ -23,7 +23,10 @@ GridGui::GridGui(SDL_Window* window, SDL_GLContext context) {
 	ImGui_ImplSDL2_InitForOpenGL(window, context);
 	ImGui_ImplOpenGL3_Init("#version 460"); // 여기서 적절한 GLSL 버전을 설정하세요.
 
-	mainSceneTexture = new MainSceneTexture();
+	mainSceneTexture = std::make_shared<MainSceneTexture>();
+	folderIcon = std::make_shared<IconTexture>("./icons/folder.png");
+	xmlIcon = std::make_shared<IconTexture>("./icons/xml.png");
+	fbxIcon = std::make_shared<IconTexture>("./icons/fbx.png");
 
 }
 
@@ -83,7 +86,26 @@ void GridGui::ContentBrowserUpdate() {
 	ImGui::SetNextWindowPos(ImVec2(0, 720));
 	ImGui::SetNextWindowSize(ImVec2(1280, 240));
 	ImGui::Begin("Content Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-	ImGui::Text("This is Content Browser Panel");
+	ImGui::Image(
+		(void*)(intptr_t)folderIcon->getTexture(),
+		ImVec2(32, 32)
+	);
+	ImGui::SameLine();
+	ImGui::Text("are you stupid?");
+
+
+	// 컨텍스트 메뉴 시작
+	if (ImGui::BeginPopupContextItem("item context menu"))
+	{
+		if (ImGui::MenuItem("New Level"))
+		{
+			// "New Level" 항목이 선택되었을 때 실행할 코드
+			// 예: 새로운 레벨을 생성하는 함수 호출
+			std::cout << "New Level Created!" << std::endl;
+		}
+		ImGui::EndPopup();
+	}
+
 	ImGui::End();
 }
 
@@ -108,7 +130,6 @@ void GridGui::InspectorUpdate() {
 }
 
 void GridGui::EngineOptionUpdate() {
-	// 임구이 세팅
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
@@ -291,6 +312,4 @@ GridGui::~GridGui() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
-
-	delete mainSceneTexture;
 }

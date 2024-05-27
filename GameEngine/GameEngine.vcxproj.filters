@@ -885,6 +885,9 @@
     <ClInclude Include="src\Editor\MainSceneTexture.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\IconTexture.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -1014,6 +1017,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\MainSceneTexture.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\IconTexture.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1491,6 +1497,15 @@
     <Image Include="assets\hdr-cubemap\specular_mdr.dds" />
     <Image Include="assets\hdr-cubemap\env_hdr.dds" />
     <Image Include="..\..\..\..\Desktop\lens-dirt.jpeg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="icons\fbx.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="icons\folder.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="icons\xml.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

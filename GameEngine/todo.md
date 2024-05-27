@@ -16,3 +16,12 @@
 
 Deferred shading으로 변경해도 괜찮을듯 싶다. (G Buffer는 이미 구현되어져있다.)
 Deferred shading으로 변경시 alpha값은 포기하고 멀티샘플링은 직접 알고리즘으로 구현해야한다. 시간이 많이 들것이다.
+
+------ 현재 진행하는 리스트 ------
+
+Contents Browser 기능 추가중
+
+1. Folder, XML, FBX 아이콘 보이는지 한번 테스트용 아이콘
+2. assets 폴더 순회하면서 아이콘 나오도록 해야함.
+3. + new level 기능 추가
+4. xml 파일명 변경 가능하도록 수정

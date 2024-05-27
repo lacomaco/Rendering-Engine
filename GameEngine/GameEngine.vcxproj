@@ -135,7 +135,8 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     </Link>
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)assets" "$(OutDir)assets"
-xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
+xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"
+xcopy /E /I /Y "$(ProjectDir)icons" "$(OutDir)icons"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,6 +163,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Editor\IconTexture.h" />
     <ClInclude Include="src\Editor\MainSceneTexture.h" />
     <ClInclude Include="src\Game\LensFlare.h" />
     <ClInclude Include="src\Game\GBuffer.h" />
@@ -454,6 +456,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Editor\IconTexture.cpp" />
     <ClCompile Include="src\Editor\MainSceneTexture.cpp" />
     <ClCompile Include="src\Game\LensFlare.cpp" />
     <ClCompile Include="src\Game\GBuffer.cpp" />
@@ -700,6 +703,9 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
     <Image Include="assets\images\white.png" />
+    <Image Include="icons\fbx.png" />
+    <Image Include="icons\folder.png" />
+    <Image Include="icons\xml.png" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="glew32.lib" />
