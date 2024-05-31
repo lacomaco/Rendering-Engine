@@ -69,38 +69,60 @@ void main() {
 
 	float attenuation = 0.0;
 
+	int shadowMapPointer = 0;
+
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
 		if(light.lightType == 0){
-
+		/*
 			ShadowStruct shadow = shadowCalculation(
 				directionalLightShadowSpace,
 				directionalShadowDepthMap,
 				normal,
 				-light.direction
 			);
-
+		
 			color += directionalLight(
 				light,
 				shadow.shadow,
 				pbrMaterial
 			);
 
+			
 			if(!shadow.isShadow){
 			    attenuation = 1.0;
 			} else {
 			    attenuation = 0.1;
 			}
+			*/
+		} else if(light.lightType == 1){
+		/*
+			ShadowStruct shadow = pointShadowCalculation(
+				posWorld,
+				light,
+				pointShadowDepthMap[i]
+			);
+		
+			color += pointLight(
+				light,
+				shadow.shadow,
+				pbrMaterial
+			);
+
+			float distance = length(light.position - posWorld);
+			attenuation = max(attenuation, calcAttenuation(distance,light));
+			*/
 		}
 		else if(light.lightType == 2){
 
+		/*
 			ShadowStruct shadow = shadowCalculation(
 				spotLightShadowSpace[spotLightCount],
 				spotShadowDepthMap[spotLightCount],
 				normal,
 				normalize(light.position - posWorld)
 			);
-
+		
 			spotLightCount++;
 
 			color += spotLight(
@@ -111,28 +133,9 @@ void main() {
 
 			float distance = length(light.position - posWorld);
 			attenuation = max(attenuation, calcAttenuation(distance,light));
+			*/
 		}
 	}
-	
-	for(int i = 0; i < pointLightCount; i++) {
-		Light light = pointLights[i]; // 현재 조명
-
-	    ShadowStruct shadow = pointShadowCalculation(
-		    posWorld,
-			light,
-			pointShadowDepthMap[i]
-		);
-
-		color += pointLight(
-			light,
-			shadow.shadow,
-			pbrMaterial
-		);
-
-		float distance = length(light.position - posWorld);
-		attenuation = max(attenuation, calcAttenuation(distance,light));
-	}
-
 
 	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness) * attenuation;
 

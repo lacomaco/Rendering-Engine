@@ -32,7 +32,7 @@ void main() {
 		bitangentWorld = cross(normalWorld, tangentWorld);
 	}
 
-
+	/*
 	directionalLightShadowSpace = directionalShadowMap.lightSpaceMatrix * vec4(posWorld, 1.0);
 
 	for(int i = 0; i < 2; i++){
@@ -43,6 +43,7 @@ void main() {
 			spotLightShadowSpace[i] = vec4(0.0);
 		}
 	}
+	*/
 
 	TexCoord = aTexCoord;
 }

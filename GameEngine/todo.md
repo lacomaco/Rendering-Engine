@@ -25,8 +25,10 @@ Deferred shading으로 변경시 alpha값은 포기하고 멀티샘플링은 직접 알고리즘으로 구
 ------ 현재 진행하는 리스트 ------
 
 Cascade Shadow Map 진행중
-Cascade Shadow 진행 전 Camera UBO
-Light UBO
-Light - Shadow 전체적인 리팩토링
+Light - Shadow 대규모 리팩토링중
 
-TextureLayer를 사용하여 Shadowmap atlas 만들기.
+목표
+
+Light 정보 UBO로 전환
+Shadow Atlas를 통해서 쉐도우맵 전달
+Directional Light, Spot Light, Point Light 그림자 체크

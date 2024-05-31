@@ -822,12 +822,6 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\BaseObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Light.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\LightManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\MeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -837,16 +831,7 @@
     <ClInclude Include="src\GameObject\PrimitiveObject\CubeMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Shadow.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameObject\FresnelIRO.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\PointShadow.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\ShadowInterface.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\DummyTextureCube.h">
@@ -971,12 +956,6 @@
     <ClCompile Include="src\GameObject\PrimitiveObject\BaseObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Light.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\LightManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\MeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -986,13 +965,7 @@
     <ClCompile Include="src\GameObject\PrimitiveObject\CubeMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Shadow.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameObject\FresnelIRO.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\PointShadow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\DummyTextureCube.cpp">

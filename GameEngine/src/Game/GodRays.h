@@ -4,7 +4,6 @@
 #include "MeshRenderer.h"
 #include "../Util//GLHelper.h"
 #include "Camera.h"
-#include "Light.h"
 #include <memory>
 #include "../GameObject/PrimitiveObject/Circle.h"
 #include "LensFlare.h"

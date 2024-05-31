@@ -10,13 +10,10 @@
 #include "../Game/Camera.h"
 #include "../Game/Input.h"
 #include "../GameObject/PrimitiveObject/Model.h"
-#include "./Light.h"
-#include "./LightManager.h"
 #include "MeshRenderer.h"
 #include <memory>
 #include "./GraphicsPipeLine.h"
 #include "../GameObject/PrimitiveObject/CubeMap.h"
-#include "./Shadow.h"
 
 class Game
 {
@@ -56,8 +53,6 @@ private:
 	Input* input;
 
 	std::shared_ptr<Model> model;
-
-	LightManager* lightManager;
 
 	std::vector<std::shared_ptr<Plane>> grass;
 

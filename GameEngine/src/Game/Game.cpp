@@ -42,18 +42,20 @@ void Game::GenerateOutput() {
 
 	meshRenderer->MeshAlignment(camera.get());
 
-	lightManager->MakeShadow(meshRenderer);
+	// lightManager->MakeShadow(meshRenderer);
 
 	graphicsPipe->DrawGBuffer(
 		meshRenderer,
-		lightManager->directionLights[0]->box->position
+		// lightManager->directionLights[0]->box->position
+		glm::vec3(0, 0, 0)
 	);
 	graphicsPipe->DrawSSAO();
 
 	// 나중에 낮에만 처리하도록 변경
 	graphicsPipe->godRays->Draw(
 		meshRenderer,
-		lightManager->directionLights[0]->box->position,
+		// lightManager->directionLights[0]->box->position,
+		glm::vec3(0.0),
 		camera,
 		graphicsPipe->gBuffer->godRayTexture
 	);
@@ -64,7 +66,7 @@ void Game::GenerateOutput() {
 	const char* shaderName = "default";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
-	lightManager->PutLightUniform(shaderName);
+	// lightManager->PutLightUniform(shaderName);
 
 	meshRenderer->Draw(shaderName); 
 	cubeMap->Draw("cubemap");
@@ -72,7 +74,7 @@ void Game::GenerateOutput() {
 	auto normalMode = EditorSharedValue::showNormal;
 
 	if (normalMode) {
-		lightManager->PutLightUniform("normal");
+		// lightManager->PutLightUniform("normal");
 		meshRenderer->Draw("normal");
 	}
 
@@ -238,9 +240,10 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	lightManager = LightManager::getInstance();
+	// lightManager = LightManager::getInstance();
 	
 	// 라이트 
+	/*
 	lightManager->CreateLight
 	(
 		0,
@@ -251,8 +254,10 @@ bool Game::Initialize() {
 	EditorSharedValue::directionalLightPosition = lightManager->directionLights[0]->box->position;
 	EditorSharedValue::directionalLightDirection = lightManager->directionLights[0]->direction;
 	EditorSharedValue::directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
+	*/
 
 	// 포인트.
+	/*
 	lightManager->CreateLight
 	(
 		1,
@@ -260,6 +265,7 @@ bool Game::Initialize() {
 		glm::vec3(-0.042, -0.390, 0.952),
 		3
 	);
+	*/
 
 	input = Input::GetInstance();
 
@@ -295,21 +301,21 @@ void Game::UpdateGame() {
 
 
 	if (EditorSharedValue::useSun) {
-		lightManager->directionLights[0]->setPosition(EditorSharedValue::directionalLightPosition);
-		lightManager->directionLights[0]->direction = EditorSharedValue::directionalLightDirection;
+		// lightManager->directionLights[0]->setPosition(EditorSharedValue::directionalLightPosition);
+		// lightManager->directionLights[0]->direction = EditorSharedValue::directionalLightDirection;
 
-		lightManager->EnableDirectionalLight(0);
+		// lightManager->EnableDirectionalLight(0);
 	}
 	else {
-		lightManager->DisableDirectionalLight(0);
+		// lightManager->DisableDirectionalLight(0);
 	}
 
 	if (EditorSharedValue::usePointLight) {
-		lightManager->EnablePointLight(0);
+		// lightManager->EnablePointLight(0);
 		//lightManager->EnablePointLight(1);
 	}
 	else {
-		lightManager->DisablePointLight(0);
+		// lightManager->DisablePointLight(0);
 		//lightManager->DisablePointLight(1);
 	}
 
