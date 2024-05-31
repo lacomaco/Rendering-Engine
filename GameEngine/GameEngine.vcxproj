@@ -163,6 +163,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game\CameraShareValue.h" />
     <ClInclude Include="src\Editor\ContentsBrowser.h" />
     <ClInclude Include="src\Editor\EditorSharedValue.h" />
     <ClInclude Include="src\Editor\RenderingDebugPanel.h" />
@@ -459,6 +460,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\CameraShareValue.cpp" />
     <ClCompile Include="src\Editor\ContentsBrowser.cpp" />
     <ClCompile Include="src\Editor\EditorSharedValue.cpp" />
     <ClCompile Include="src\Editor\RenderingDebugPanel.cpp" />
@@ -671,6 +673,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
     <None Include="shader\pbr.glsl" />
+    <None Include="shader\shadow-geometry.glsl" />
     <None Include="shader\simple-pbr-shading-fragment.glsl" />
     <None Include="shader\simple-shading-fragment.glsl" />
     <None Include="shader\simple-shading-vertex.glsl" />

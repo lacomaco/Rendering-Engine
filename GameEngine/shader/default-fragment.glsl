@@ -66,11 +66,6 @@ void main() {
 	pbrMaterial.pixelToEye = pixelToEye;
 	pbrMaterial.ndotO = ndotO;
 	pbrMaterial.posWorld = posWorld;
-	// ndotH, ndotl, halfWay는 라이트처리에서 핸들링.
-	// 라이트 처리에서 lightStrength도 개별적으로 처리해주어야함.
-
-	// GI 기능이 아직 없어서 땜빵으로 구현한 코드 GI 기능 추가시 제거해야함.
-	float countLight = 0.0;
 
 	float attenuation = 0.0;
 
@@ -84,8 +79,6 @@ void main() {
 				normal,
 				-light.direction
 			);
-
-			countLight = 1.0 - shadow.shadow;
 
 			color += directionalLight(
 				light,
@@ -108,8 +101,6 @@ void main() {
 				normalize(light.position - posWorld)
 			);
 
-			countLight = 1.0 - shadow.shadow;
-
 			spotLightCount++;
 
 			color += spotLight(
@@ -131,8 +122,6 @@ void main() {
 			light,
 			pointShadowDepthMap[i]
 		);
-		
-		countLight = 1.0 - shadow.shadow;
 
 		color += pointLight(
 			light,

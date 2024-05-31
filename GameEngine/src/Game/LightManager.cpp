@@ -165,7 +165,6 @@ void LightManager::PutLightUniform(const char* programName) {
 void LightManager::DrawLight(shared_ptr<Camera> camera) {
 	auto program = Shader::getInstance()->getShaderProgram("light");
 	glUseProgram(program);
-	camera->putCameraUniform("light");
 	for (int i = 0; i < directionLights.size(); i++) {
 		auto& light = directionLights[i];
 

@@ -3,6 +3,7 @@
 #include "../Constants.h"
 #include "../Util/Shader.h"
 #include "../Editor/EditorSharedValue.h"
+#include "CameraShareValue.h"
 
 SSAO::SSAO() {
 	EditorSharedValue::radius = radius;
@@ -83,7 +84,7 @@ SSAO::SSAO() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void SSAO::DrawSSAO(unsigned int position, unsigned int normal,std::shared_ptr<Camera> camera) {
+void SSAO::DrawSSAO(unsigned int position, unsigned int normal) {
 	const char* programName = "SSAO";
 	const char* blurProgramName = "SSAOBlur";
 	auto shader = Shader::getInstance();
@@ -109,9 +110,6 @@ void SSAO::DrawSSAO(unsigned int position, unsigned int normal,std::shared_ptr<C
 		auto& sample = ssaoKernel[i];
 		shader->setVec3(programName, ("samples[" + std::to_string(i) + "]").c_str(), ssaoKernel[i]);
 	}
-
-	shader->setMat4(programName, "projection", camera->projection);
-	shader->setMat4(programName, "view", camera->view);
 
 	shader->setFloat(programName, "width", (float)WINDOW_WIDTH);
 	shader->setFloat(programName, "height", (float)WINDOW_HEIGHT);

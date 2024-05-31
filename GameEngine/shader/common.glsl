@@ -4,9 +4,16 @@
 #define Epsilon 0.00001
 #define PI 3.141592
 
-uniform mat4 projection;
-uniform mat4 view;
+layout (std140, binding = 0) uniform Camera {
+    mat4 projection; //64
+    mat4 view; // 64
+    mat4 skyBoxView; // 64
+    vec3 cameraPos; //16 total : 208
+    float padding; // 212
+};
+
 uniform mat4 model;
+
 uniform mat3 invTranspose;
 
 
@@ -88,8 +95,6 @@ struct Light {
 uniform Light lights[MAX_LIGHTS - 2];
 
 uniform Light pointLights[2];
-
-uniform vec3 cameraPos;
 
 // TODO: Áö¿ì±â.
 uniform float metallicTest;

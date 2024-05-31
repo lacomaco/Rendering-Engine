@@ -9,7 +9,6 @@
 #ifndef WINDOW_HEIGHT
 #define WINDOW_HEIGHT 960
 #endif
-
 /*
 * 0: 큐브매핑 스카이박스 예약
 * 1: 큐브매핑 라디언스 맵 예약
@@ -49,4 +48,10 @@
 
 #ifndef BIAS
 #define BIAS 0.005f
+#endif
+
+
+// UBO 목록
+#ifndef CAMERA_UBO
+#define CAMERA_UBO 0
 #endif

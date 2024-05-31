@@ -24,7 +24,7 @@ public:
 
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(50.0f));
 
-    void Draw(const char* shaderProgramName, Camera* camera);
+    void Draw(const char* shaderProgramName);
 
     void PutCubeMapTexture(const char* shaderProgramName);
 	

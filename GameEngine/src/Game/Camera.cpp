@@ -6,9 +6,25 @@
 #include <math.h>
 #include <glm/gtc/quaternion.hpp>
 #include "../Editor/EditorSharedValue.h"
+#include "CameraShareValue.h"
+#include "../Constants.h"
+#include <glm/gtc/type_ptr.hpp>
+
 
 Camera::Camera(float fov, int width, int height) {
-	projection = glm::perspective(glm::radians(fov), float(width) / height, near, far);
+	glGenBuffers(1, &cameraUniformBlock);
+	glBindBuffer(GL_UNIFORM_BUFFER, cameraUniformBlock);
+	glBufferData(GL_UNIFORM_BUFFER, 212, NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, cameraUniformBlock, 0, 212);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		std::cerr << "OpenGL error Occur when Camera UBO created " << error << std::endl;
+	}
+
+
+	projection = glm::perspective(glm::radians(fov), float(width) / height, CameraShareValue::near, CameraShareValue::far);
 	cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 	cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -27,13 +43,81 @@ Camera::Camera(float fov, int width, int height) {
 
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
-	view = glm::lookAt(
+	CameraShareValue::view = glm::lookAt(
 		cameraPos,
 		cameraDirection,
 		cameraUp
 	);
 
 	EditorSharedValue::cameraSpeed = cameraMove;
+}
+
+void Camera::bindUBO(const char* shaderProgramName) {
+	const auto shader = Shader::getInstance();
+	const auto program = shader->getShaderProgram(shaderProgramName);
+
+
+	GLuint blockIndex = glGetUniformBlockIndex(program, "Camera");
+	if (blockIndex == GL_INVALID_INDEX) {
+		std::cerr << "Error: Unable to find uniform block index for 'Camera'" << std::endl;
+	}
+	else {
+		glUniformBlockBinding(program, blockIndex, CAMERA_UBO);
+	}
+}
+
+void Camera::UpdateUBO() {
+	int stack = 0;
+	glBindBuffer(GL_UNIFORM_BUFFER, cameraUniformBlock);
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(glm::mat4),
+		glm::value_ptr(projection)
+	);
+	stack += sizeof(glm::mat4);
+
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(glm::mat4),
+		glm::value_ptr(CameraShareValue::view)
+	);
+	stack += sizeof(glm::mat4);
+
+	auto skyboxView = glm::lookAt(
+		glm::vec3(0.0f),
+		cameraFront,
+		cameraUp
+	);
+
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(glm::mat4),
+		glm::value_ptr(skyboxView)
+	);
+	stack += sizeof(glm::mat4);
+
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(glm::vec3),
+		glm::value_ptr(cameraPos)
+	);
+	stack += sizeof(glm::vec3);
+
+	float padding = 0.0f;
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(float),
+		&padding
+	);
+	stack += sizeof(float);
+
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Camera::CalculateCameraDirection() {
@@ -135,7 +219,7 @@ void Camera::Update(float deltaTime) {
 	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 	cameraUp = glm::cross(cameraDirection, cameraRight);
 
-	view = glm::lookAt(
+	CameraShareValue::view = glm::lookAt(
 		cameraPos,
 		cameraPos + cameraFront,
 		cameraUp
@@ -143,28 +227,8 @@ void Camera::Update(float deltaTime) {
 
 	EditorSharedValue::cameraPosition = cameraPos;
 	EditorSharedValue::cameraFront = cameraFront;
-}
 
-void Camera::putCameraUniform(const char* shaderProgramName) {
-	auto shader = Shader::getInstance();
-
-	shader->setMat4(shaderProgramName,"projection", projection);
-	shader->setMat4(shaderProgramName,"view", view);
-	shader->setVec3(shaderProgramName,"cameraPos", cameraPos);
-}
-
-void Camera::putCameraUniformForSkybox(const char* shaderProgramName) {
-	auto shader = Shader::getInstance();
-
-	auto skyboxView = glm::lookAt(
-		glm::vec3(0.0f),
-		cameraFront,
-		cameraUp
-	);
-
-	shader->setMat4(shaderProgramName, "projection", projection);
-	shader->setMat4(shaderProgramName, "view", skyboxView);
-	shader->setVec3(shaderProgramName, "cameraPos", cameraPos);
+	UpdateUBO();
 }
 
 void Camera::ImguiUpdate() {

@@ -165,11 +165,10 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
     shader->setInt(shaderProgramName, "select", select);
 }
 
-void CubeMap::Draw(const char* shaderProgramName,Camera* camera) {
+void CubeMap::Draw(const char* shaderProgramName) {
     auto shader = Shader::getInstance();
     glUseProgram(shader->getShaderProgram(shaderProgramName));
     PutCubeMapTexture(shaderProgramName);
-    camera->putCameraUniformForSkybox(shaderProgramName);
     shader->setMat4(shaderProgramName, "model", scaleMatrix);
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);

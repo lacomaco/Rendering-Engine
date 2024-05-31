@@ -36,8 +36,7 @@ public:
 
 	void DrawSSAO(
 		unsigned int position,
-		unsigned int normal,
-		std::shared_ptr<Camera> camera
+		unsigned int normal
 	);
 
 	void UpdateImGui();

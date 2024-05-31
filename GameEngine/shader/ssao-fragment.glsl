@@ -9,8 +9,14 @@ uniform sampler2D noiseTexture;
 
 const int kernelSize = 64;
 uniform vec3 samples[64];
-uniform mat4 projection;
-uniform mat4 view;
+
+layout (std140, binding = 0) uniform Camera {
+    mat4 projection; //64
+    mat4 view; // 64
+    mat4 skyBoxView; // 64
+    vec3 cameraPos; //16 total : 208
+    float padding; // 212
+};
 
 uniform float width;
 uniform float height;

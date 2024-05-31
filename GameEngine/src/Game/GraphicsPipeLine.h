@@ -20,17 +20,15 @@ private:
 public:
 	GraphicsPipeLine();
 	void PutExposure(const char* programName);
-	void DrawGBuffer(
-		shared_ptr<MeshRenderer> mesh,
-		std::shared_ptr<Camera> camera
-	);
-	void DrawGBuffer(shared_ptr<MeshRenderer> mesh,
-		glm::vec3 lightPos,
-		std::shared_ptr<Camera> camera);
 
-	void DrawSSAO(
-		std::shared_ptr<Camera> camera
+	void DrawGBuffer(
+		shared_ptr<MeshRenderer> mesh
 	);
+
+	void DrawGBuffer(shared_ptr<MeshRenderer> mesh,
+		glm::vec3 lightPos);
+
+	void DrawSSAO();
 
 	unsigned int msaaFrameBuffer;
 	unsigned int msaaTexture; // 컬러버퍼 텍스처, MSAA

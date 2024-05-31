@@ -16,11 +16,11 @@ private:
 	float ySensitive = 0.5;
 
 	void CalculateCameraDirection();
+	
+	unsigned int cameraUniformBlock;
 
 public:
 	Camera(float fov, int width, int height);
-	float near = 0.1f;
-	float far = 100.0f;
 	glm::mat4 projection;
 
 	// 여기는 아직 카메라 미구현이라. 상수처리.
@@ -30,18 +30,16 @@ public:
 	glm::vec3 cameraDirection;
 	glm::vec3 cameraUp;
 
-	glm::mat4 view;
-
 	void Update(float deltaTime);
 	void CameraLookAround(float deltaTime);
 
-	void putCameraUniform(const char* shaderProgramName);
-	void putCameraUniformForSkybox(const char* shaderProgramName);
 	void ResetPitch();
 
 	float cameraMove = 2.5f;
 
 	void ImguiUpdate();
+	void bindUBO(const char* shaderProgramName);
+	void UpdateUBO();
 
 };
 

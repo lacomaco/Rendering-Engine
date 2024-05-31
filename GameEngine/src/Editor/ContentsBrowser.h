@@ -35,7 +35,10 @@ private:
 	std::shared_ptr<IconTexture> fbxIcon;
 	std::shared_ptr<IconTexture> xmlIcon;
 
+	void CreateXML(std::string fileName);
 public:
+	static char xmlName[128];
+
 	ContentsBrowser();
 	~ContentsBrowser();
 	void UpdateContentsBrowserGUI();

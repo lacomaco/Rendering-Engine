@@ -4,6 +4,8 @@
 #include <stack>
 #include <imgui.h>
 
+char ContentsBrowser::xmlName[128] = "";
+
 ContentsBrowser::ContentsBrowser() {
 
 	folderIcon = std::make_shared<IconTexture>("./icons/folder.png");
@@ -20,6 +22,10 @@ ContentsBrowser::ContentsBrowser() {
 	visitPath.push_back("assets");
 
 	createDirectory(RootFolder);
+}
+
+void ContentsBrowser::CreateXML(std::string fileName) {
+
 }
 
 void ContentsBrowser::createDirectory(FileStructure* file) {
@@ -63,6 +69,28 @@ void ContentsBrowser::UpdateContentsBrowserGUI() {
 
 	if (currentFolder->parent && ImGui::Button("Back")) {
 		currentFolder = currentFolder->parent;
+	}
+
+	if (ImGui::Button("Create New Level xml")) {
+		ImGui::OpenPopup("Create XML");
+	}
+
+	if (ImGui::BeginPopupModal("Create XML", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Enter XML Name:");
+		ImGui::InputText("##xmlname", xmlName, IM_ARRAYSIZE(xmlName));
+
+		if (ImGui::Button("Create")) {
+			std::string newXmlName(xmlName);
+			std::cout << "New XML Name: " << newXmlName << std::endl;
+			xmlName[0] = '\0';
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel")) {
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
 	}
 
 	for (const auto& file : currentFolder->child) {

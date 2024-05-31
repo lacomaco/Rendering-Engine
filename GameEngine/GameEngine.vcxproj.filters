@@ -897,6 +897,9 @@
     <ClInclude Include="src\Editor\ContentsBrowser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\CameraShareValue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -1038,6 +1041,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\ContentsBrowser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CameraShareValue.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1478,6 +1484,7 @@
     <None Include="shader\ssao-blur-fragment.glsl" />
     <None Include="shader\lens-flare-fragment.glsl" />
     <None Include="shader\lens-flare-dirt-fragment.glsl" />
+    <None Include="shader\shadow-geometry.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

@@ -180,12 +180,11 @@ void GraphicsPipeLine::CreateVAO()
 	vbo = result.VBO;
 }
 
-void GraphicsPipeLine::DrawGBuffer(shared_ptr<MeshRenderer> mesh, std::shared_ptr<Camera>camera) {
+void GraphicsPipeLine::DrawGBuffer(shared_ptr<MeshRenderer> mesh) {
 	auto shader = Shader::getInstance();
 	auto program = shader->getShaderProgram(gBuffer->programName);
 	glUseProgram(program);
 	gBuffer->use();
-	camera->putCameraUniform(gBuffer->programName);
 	shader->setBool(gBuffer->programName, "isGodRay", false);
 	mesh->Draw(gBuffer->programName);
 
@@ -194,12 +193,11 @@ void GraphicsPipeLine::DrawGBuffer(shared_ptr<MeshRenderer> mesh, std::shared_pt
 
 void GraphicsPipeLine::DrawGBuffer(
 	shared_ptr<MeshRenderer> mesh,
-	glm::vec3 lightPos,
-	std::shared_ptr<Camera> camera
+	glm::vec3 lightPos
 ) {
 	auto shader = Shader::getInstance();
 
-	DrawGBuffer(mesh, camera);
+	DrawGBuffer(mesh);
 	auto program = shader->getShaderProgram(gBuffer->programName);
 	glUseProgram(program);
 	shader->setBool(gBuffer->programName, "isGodRay", true);
@@ -209,10 +207,8 @@ void GraphicsPipeLine::DrawGBuffer(
 	gBuffer->UpdateImGui();
 }
 
-void GraphicsPipeLine::DrawSSAO(
-	std::shared_ptr<Camera> camera
-) {
-	ssao->DrawSSAO(gBuffer->positionMetallicTexture, gBuffer->normalTexture, camera);
+void GraphicsPipeLine::DrawSSAO() {
+	ssao->DrawSSAO(gBuffer->positionMetallicTexture, gBuffer->normalTexture);
 }
 
 void GraphicsPipeLine::UpdateImGui() {

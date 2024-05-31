@@ -11,6 +11,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <random>
 #include "../Editor/EditorSharedValue.h"
+#include "CameraShareValue.h"
 
 
 
@@ -45,10 +46,9 @@ void Game::GenerateOutput() {
 
 	graphicsPipe->DrawGBuffer(
 		meshRenderer,
-		lightManager->directionLights[0]->box->position,
-		camera
+		lightManager->directionLights[0]->box->position
 	);
-	graphicsPipe->DrawSSAO(camera);
+	graphicsPipe->DrawSSAO();
 
 	// 나중에 낮에만 처리하도록 변경
 	graphicsPipe->godRays->Draw(
@@ -64,17 +64,15 @@ void Game::GenerateOutput() {
 	const char* shaderName = "default";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
-	camera->putCameraUniform(shaderName);
 	lightManager->PutLightUniform(shaderName);
 
 	meshRenderer->Draw(shaderName); 
-	cubeMap->Draw("cubemap", camera.get());
+	cubeMap->Draw("cubemap");
 
 	auto normalMode = EditorSharedValue::showNormal;
 
 	if (normalMode) {
 		lightManager->PutLightUniform("normal");
-		camera->putCameraUniform("normal");
 		meshRenderer->Draw("normal");
 	}
 
@@ -223,10 +221,20 @@ bool Game::Initialize() {
 	}
 
 	camera = make_shared<Camera>(
-		90.0f,
+		CameraShareValue::fov,
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT
 	);
+
+	// ubo 세팅
+	{
+		camera->bindUBO("normal");
+		camera->bindUBO("cubemap");
+		camera->bindUBO("default");
+		camera->bindUBO("gBuffer");
+		camera->bindUBO("light");
+		camera->bindUBO("SSAO");
+	}
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
@@ -414,7 +422,8 @@ void Game::CreateShaderProgram() {
 	shader->loadShaderProgram(
 		"./shader/shadow-vertex.glsl",
 		"./shader/shadow-fragment.glsl",
-		"shadow"
+		"shadow",
+		"./shader/shadow-geometry.glsl"
 	);
 
 	shader->loadShaderProgram(

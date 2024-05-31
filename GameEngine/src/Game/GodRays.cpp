@@ -1,6 +1,7 @@
 #include "GodRays.h"
 #include "../Constants.h"
 #include "../Editor/EditorSharedValue.h"
+#include "./CameraShareValue.h"
 
 GodRays::GodRays() {
 	// 텍스처 생성
@@ -87,7 +88,7 @@ void GodRays::Draw(
 	auto program = shader->getShaderProgram(rayEffect);
 	glUseProgram(program);
 
-	glm::vec2 screenPos = WorldToScreen(rayPosition, camera->view, camera->projection);
+	glm::vec2 screenPos = WorldToScreen(rayPosition, CameraShareValue::view, camera->projection);
 
 	// worldToScreen은 왼쪽상단이 0,0 오른쪽 하단이 WINDOW_WIDTH, WINDOW_HEIGHT 좌표계
 	// 이를 opengl 텍스처 좌표계로 변환해야함.
