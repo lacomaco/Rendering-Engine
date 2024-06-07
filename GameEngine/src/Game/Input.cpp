@@ -16,12 +16,9 @@ glm::vec2 Input::ScreenNormalize(int x, int y) {
 	return point;
 }
 
-
-
 void Input::SetMouse() {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 	mousePos = ScreenNormalize(x, y);
 }
-
 

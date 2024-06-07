@@ -87,8 +87,6 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMa
 		Vertex vertex;
 		auto tt = tr * mesh->mVertices[i];
 
-
-		// process vertex positions, normals and texture coordinates
 		glm::vec3 vector;
 		vector.x = tt.x;
 		vector.y = tt.y;
@@ -146,11 +144,6 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene,aiMa
 	// process material
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-	/*
-	* diffuse == albedo == baseColor
-	*
-	* 이름이 혼재되어있지만 같은 역할임.
-	*/
 	std::vector<Texture> albedoMaps = loadMaterialTextures(material,
 		aiTextureType_DIFFUSE, "albedo");
 	textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());

@@ -21,11 +21,6 @@ const vec3 warmYellow = vec3(0.8, 0.6, 0.2);
 const vec3 lightRed = vec3(0.8, 0.2, 0.2);
 const vec3 darkRed = vec3(0.4, 0.0, 0.0);
 
-/*
-가장 안쪽 lightBlue
-2번째 안쪽 darkBlue
-3번째 안쪽 yellowThreshold
-*/
 vec3 circularGradient(vec2 uv){
     vec2 center = vec2(0.5);
     float dist = length(uv-center) * 2.0;
