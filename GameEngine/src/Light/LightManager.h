@@ -18,6 +18,8 @@ private:
 	bool isUseSun = true;
 	bool isUseSpotLight = false;
 	bool isUsePointLight = false;
+
+	unsigned int lightUniformBlock;
 public:
 	LightManager();
 	void ToggleDirectionalLight();
@@ -31,6 +33,9 @@ public:
 		float cutOff = glm::cos(glm::radians(12.5f)),
 		float outerCutOff = glm::cos(glm::radians(17.5f))
 	);
+
+	void BindUBO(const char* shaderProgramName);
+	void UpdateUBO();
 
 	std::shared_ptr<DirectionalLight> GetSun();
 };

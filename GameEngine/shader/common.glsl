@@ -32,7 +32,7 @@ struct Light {
         float quadratic;
         float cutOff;
         float cutOuter;
-        // total 16 byte
+        // total 64 byte
 };
 
 struct Shadow {
@@ -45,13 +45,13 @@ struct Shadow {
 };
 
 layout (std140, binding = 1) uniform Lights {
-    Light lights[MAX_LIGHTS]; // 1600 byte
+    Light lights[MAX_LIGHTS]; // 6400 byte
 
     int lightCount; // active Light Count
     int directionalCascadeLevel;
     vec2 padding3;
 
-    // all 1604 byte
+    // all 6416 byte
 };
 
 layout (std140, binding = 2) uniform Shadows {

@@ -55,3 +55,7 @@
 #ifndef CAMERA_UBO
 #define CAMERA_UBO 0
 #endif
+
+#ifndef LIGHT_UBO
+#define LIGHT_UBO 1
+#endif

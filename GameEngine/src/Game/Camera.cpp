@@ -16,7 +16,7 @@ Camera::Camera(float fov, int width, int height) {
 	glBindBuffer(GL_UNIFORM_BUFFER, cameraUniformBlock);
 	glBufferData(GL_UNIFORM_BUFFER, 212, NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, cameraUniformBlock, 0, 212);
+	glBindBufferRange(GL_UNIFORM_BUFFER, CAMERA_UBO, cameraUniformBlock, 0, 212);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
