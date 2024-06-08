@@ -38,5 +38,9 @@ public:
 	void UpdateUBO();
 
 	std::shared_ptr<DirectionalLight> GetSun();
+
+	bool GetIsUseSun() const {
+		return isUseSun;
+	}
 };
 

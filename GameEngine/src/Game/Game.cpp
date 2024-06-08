@@ -44,21 +44,25 @@ void Game::GenerateOutput() {
 
 	// lightManager->MakeShadow(meshRenderer);
 
-	graphicsPipe->DrawGBuffer(
-		meshRenderer,
-		// lightManager->directionLights[0]->box->position
-		glm::vec3(0, 0, 0)
-	);
+	if (lightManager->GetIsUseSun()) {
+		graphicsPipe->DrawGBuffer(
+			meshRenderer,
+			lightManager->GetSun()->getLightInfo().position
+		);
+	}
+	else {
+		graphicsPipe->DrawGBuffer(meshRenderer);
+	}
 	graphicsPipe->DrawSSAO();
 
-	// 나중에 낮에만 처리하도록 변경
-	graphicsPipe->godRays->Draw(
-		meshRenderer,
-		// lightManager->directionLights[0]->box->position,
-		glm::vec3(0.0),
-		camera,
-		graphicsPipe->gBuffer->godRayTexture
-	);
+	if (lightManager->GetIsUseSun()) {
+		graphicsPipe->godRays->Draw(
+			meshRenderer,
+			lightManager->GetSun()->getLightInfo().position,
+			camera,
+			graphicsPipe->gBuffer->godRayTexture
+		);
+	}
 
 	graphicsPipe->use();
 	
