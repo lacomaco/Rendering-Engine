@@ -1,12 +1,23 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
+#include <memory>
+#include "./LightType.h"
+#include "DirectionalLight.h"
 
 using namespace glm;
 
 class LightManager
 {
 private:
+	std::shared_ptr<DirectionalLight> Sun;
+	std::vector<Light> spotLights;
+	std::vector<Light> pointLights;
+	std::vector<Light> virtualLights;
 
+	bool isUseSun = true;
+	bool isUseSpotLight = false;
+	bool isUsePointLight = false;
 public:
 	LightManager();
 	void ToggleDirectionalLight();
@@ -21,6 +32,6 @@ public:
 		float outerCutOff = glm::cos(glm::radians(17.5f))
 	);
 
-	void GetSun();
+	std::shared_ptr<DirectionalLight> GetSun();
 };
 

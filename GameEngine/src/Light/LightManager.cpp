@@ -1,7 +1,11 @@
 #include "LightManager.h"
 
 LightManager::LightManager() {
-
+	Sun = std::make_shared<DirectionalLight>(
+		glm::vec3(0,20,-0.001),
+		glm::vec3(0,-1,0.005),
+		12
+	);
 }
 
 void LightManager::ToggleDirectionalLight() {
@@ -27,6 +31,6 @@ void LightManager::CreateLight(
 
 }
 
-void LightManager::GetSun() {
-
+std::shared_ptr<DirectionalLight> LightManager::GetSun() {
+	return Sun;
 }

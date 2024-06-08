@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
 using namespace glm;
 
 struct Light {
@@ -25,3 +26,11 @@ struct Shadow {
 	int matrixCount;
 	float padding2[2];
 };
+
+struct LightPower {
+	float constant;
+	float linear;
+	float quadratic;
+};
+
+extern std::vector<LightPower> lightPowers;
