@@ -14,6 +14,7 @@
 #include <memory>
 #include "./GraphicsPipeLine.h"
 #include "../GameObject/PrimitiveObject/CubeMap.h"
+#include "../Light/LightManager.h"
 
 class Game
 {
@@ -49,6 +50,7 @@ private:
 	std::vector<float> pbrTestRoughness;
 
 	std::shared_ptr<Camera> camera;
+	std::shared_ptr<LightManager> lightManager;
 
 	Input* input;
 

@@ -55,7 +55,58 @@ void LightManager::BindUBO(const char* shaderProgramName) {
 
 void LightManager::UpdateUBO() {
 	// Lights 사이즈 생성
+	int stack = 0;
+	const int maxLights = 100;
+	std::vector<Light> lights;
+	lights.reserve(maxLights);
 
+
+	glBindBuffer(GL_UNIFORM_BUFFER, lightUniformBlock);
+
+	// light 배열 업로드.
+
+	// Sun 추가
+	if (Sun) {
+		lights.push_back(Sun->getLightInfo());
+	}
+
+	for (const auto& light : spotLights) {
+		if (lights.size() < maxLights) {
+			lights.push_back(light);
+		}
+	}
+
+	for (const auto& light : pointLights) {
+		if (lights.size() < maxLights) {
+			lights.push_back(light);
+		}
+	}
+
+	for (const auto& light : virtualLights) {
+		if (lights.size() < maxLights) {
+			lights.push_back(light);
+		}
+	}
+
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Light) * lights.size(), lights.data());
+
+	stack += sizeof(Light) * maxLights;
+
+	int lightCount = Sun ? 1 : 0;
+
+	lightCount += spotLights.size();
+	lightCount += pointLights.size();
+	lightCount += virtualLights.size();
+
+	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &lightCount);
+	stack += sizeof(int);
+	
+	int directionalCascadeLevel = 5;
+	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &directionalCascadeLevel);
+	stack += sizeof(int);
+
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 std::shared_ptr<DirectionalLight> LightManager::GetSun() {

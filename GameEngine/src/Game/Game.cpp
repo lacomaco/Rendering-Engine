@@ -240,7 +240,14 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	// lightManager = LightManager::getInstance();
+	// lightUBO 설정
+	lightManager = make_shared<LightManager>();
+	{
+		lightManager->BindUBO("default");
+		lightManager->BindUBO("gBuffer");
+	}
+
+	//
 	
 	// 라이트 
 	/*
@@ -290,6 +297,7 @@ void Game::UpdateGame() {
 	}
 
 	camera->Update(deltaTime);
+	lightManager->UpdateUBO();
 
 	accTime += deltaTime;
 

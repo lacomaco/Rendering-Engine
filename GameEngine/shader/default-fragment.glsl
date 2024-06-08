@@ -74,6 +74,7 @@ void main() {
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
 		if(light.lightType == 0){
+
 		/*
 			ShadowStruct shadow = shadowCalculation(
 				directionalLightShadowSpace,
@@ -81,7 +82,11 @@ void main() {
 				normal,
 				-light.direction
 			);
-		
+		*/
+		ShadowStruct shadow;
+		shadow.isShadow = false;
+		shadow.shadow = 0.0;
+
 			color += directionalLight(
 				light,
 				shadow.shadow,
@@ -94,7 +99,6 @@ void main() {
 			} else {
 			    attenuation = 0.1;
 			}
-			*/
 		} else if(light.lightType == 1){
 		/*
 			ShadowStruct shadow = pointShadowCalculation(
