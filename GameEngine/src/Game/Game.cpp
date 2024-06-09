@@ -251,22 +251,6 @@ bool Game::Initialize() {
 		lightManager->BindUBO("gBuffer");
 	}
 
-	//
-	
-	// 라이트 
-	/*
-	lightManager->CreateLight
-	(
-		0,
-		glm::vec3(0, 20, -0.001),
-		glm::vec3(0, -1, 0.005),
-		12
-	);
-	EditorSharedValue::directionalLightPosition = lightManager->directionLights[0]->box->position;
-	EditorSharedValue::directionalLightDirection = lightManager->directionLights[0]->direction;
-	EditorSharedValue::directionalLightDepthMap = lightManager->directionLights[0]->shadow->depthMap;
-	*/
-
 	// 포인트.
 	/*
 	lightManager->CreateLight
