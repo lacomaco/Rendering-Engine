@@ -40,6 +40,5 @@ public:
 	void ImguiUpdate();
 	void bindUBO(const char* shaderProgramName);
 	void UpdateUBO();
-
 };
 

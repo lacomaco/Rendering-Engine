@@ -47,7 +47,7 @@ void Game::GenerateOutput() {
 	if (lightManager->GetIsUseSun()) {
 		graphicsPipe->DrawGBuffer(
 			meshRenderer,
-			lightManager->GetSun()->getLightInfo().position
+			lightManager->GetSun()->GetLightInfo().position
 		);
 	}
 	else {
@@ -58,7 +58,7 @@ void Game::GenerateOutput() {
 	if (lightManager->GetIsUseSun()) {
 		graphicsPipe->godRays->Draw(
 			meshRenderer,
-			lightManager->GetSun()->getLightInfo().position,
+			lightManager->GetSun()->GetLightInfo().position,
 			camera,
 			graphicsPipe->gBuffer->godRayTexture
 		);

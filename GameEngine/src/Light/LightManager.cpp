@@ -67,7 +67,7 @@ void LightManager::UpdateUBO() {
 
 	// Sun Ãß°¡
 	if (Sun) {
-		lights.push_back(Sun->getLightInfo());
+		lights.push_back(Sun->GetLightInfo());
 	}
 
 	for (const auto& light : spotLights) {
@@ -101,7 +101,7 @@ void LightManager::UpdateUBO() {
 	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &lightCount);
 	stack += sizeof(int);
 	
-	int directionalCascadeLevel = 5;
+	int directionalCascadeLevel = Sun->GetCascadeLevel();
 	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &directionalCascadeLevel);
 	stack += sizeof(int);
 

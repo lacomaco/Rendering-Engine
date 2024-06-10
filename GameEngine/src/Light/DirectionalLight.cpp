@@ -21,6 +21,8 @@ DirectionalLight::DirectionalLight(
 
 	lightInfo.cutOff = cutOff;
 	lightInfo.cutOuter = outerCutOff;
+	
+	Shadow = make_shared<CascadeShadow>(cascadeLevel);
 }
 
 void DirectionalLight::MovePosition(vec3 position) {

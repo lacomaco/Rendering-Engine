@@ -2,15 +2,16 @@
 #include "glm/glm.hpp"
 #include "LightType.h"
 #include "CascadeShadow.h"
+#include <memory>
 
 using namespace glm;
-
 
 class DirectionalLight
 {
 private:
 	Light lightInfo;
-	CascadeShadow CascadeShadow;
+	shared_ptr<CascadeShadow> Shadow;
+	int cascadeLevel = 5.0f;
 
 public:
 	DirectionalLight(
@@ -25,8 +26,12 @@ public:
 	void MoveDirection(vec3 direction);
 	void CreateShadow();
 
-	Light getLightInfo() {
+	Light GetLightInfo() {
 		return lightInfo;
+	}
+
+	int GetCascadeLevel() {
+		return cascadeLevel;
 	}
 };
 
