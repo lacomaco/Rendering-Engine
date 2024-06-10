@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "LightType.h"
+#include "CascadeShadow.h"
 
 using namespace glm;
 
@@ -9,6 +10,7 @@ class DirectionalLight
 {
 private:
 	Light lightInfo;
+	CascadeShadow CascadeShadow;
 
 public:
 	DirectionalLight(

@@ -232,7 +232,6 @@ bool Game::Initialize() {
 		WINDOW_HEIGHT
 	);
 
-	// ubo 세팅
 	{
 		camera->bindUBO("normal");
 		camera->bindUBO("cubemap");
@@ -244,7 +243,6 @@ bool Game::Initialize() {
 
 	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
 
-	// lightUBO 설정
 	lightManager = make_shared<LightManager>();
 	{
 		lightManager->BindUBO("default");
