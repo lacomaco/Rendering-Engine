@@ -108,4 +108,6 @@ std::vector<glm::mat4> CascadeShadow::GetLightSpaceMatrices(glm::vec3 lightDirec
 			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i],cascadeLevels[i+1], lightDirection));
 		}
 	}
+
+	return matrices;
 }

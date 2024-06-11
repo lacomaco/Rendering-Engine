@@ -59,3 +59,7 @@
 #ifndef LIGHT_UBO
 #define LIGHT_UBO 1
 #endif
+
+#ifndef SHADOW_RESOLUTION
+#define SHADOW_RESOLUTION 1024
+#endif

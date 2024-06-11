@@ -20,6 +20,9 @@ private:
 	bool isUsePointLight = false;
 
 	unsigned int lightUniformBlock;
+
+	unsigned int shadowFBO;
+	unsigned int shadowMaps;
 public:
 	LightManager();
 	void ToggleDirectionalLight();

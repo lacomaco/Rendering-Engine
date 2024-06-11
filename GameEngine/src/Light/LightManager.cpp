@@ -15,6 +15,29 @@ LightManager::LightManager() {
 	glBufferData(GL_UNIFORM_BUFFER, 6416, NULL, GL_DYNAMIC_DRAW);
 	glBindBufferRange(GL_UNIFORM_BUFFER, LIGHT_UBO, lightUniformBlock, 0, 6416);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glGenFramebuffers(1, &shadowFBO);
+	glGenTextures(1, &shadowMaps);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMaps);
+	glTexImage3D(
+		GL_TEXTURE_2D_ARRAY,
+		0,
+		GL_DEPTH_COMPONENT32F,
+		SHADOW_RESOLUTION,
+		SHADOW_RESOLUTION,
+		61,
+		0,
+		GL_DEPTH_COMPONENT,
+		GL_FLOAT,
+		nullptr
+	);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	constexpr float bordercolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, bordercolor);
+	glBindBuffer(GL_FRAMEBUFFER, 0);
 }
 
 void LightManager::ToggleDirectionalLight() {

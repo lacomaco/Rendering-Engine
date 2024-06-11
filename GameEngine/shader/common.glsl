@@ -55,7 +55,7 @@ layout (std140, binding = 1) uniform Lights {
 };
 
 layout (std140, binding = 2) uniform Shadows {
-    Shadow shadows[10];
+    Shadow shadows[10]; // 그림자는 최대 60개.
     int shadowCount;
     vec3 padding4;
 
