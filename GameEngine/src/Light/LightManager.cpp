@@ -63,7 +63,7 @@ void LightManager::CreateLight(
 
 }
 
-void LightManager::BindUBO(const char* shaderProgramName) {
+void LightManager::BindLightUBO(const char* shaderProgramName) {
 	const auto shader = Shader::getInstance();
 	const auto program = shader->getShaderProgram(shaderProgramName);
 
@@ -76,7 +76,7 @@ void LightManager::BindUBO(const char* shaderProgramName) {
 	}
 }
 
-void LightManager::UpdateUBO() {
+void LightManager::UpdateLightUBO() {
 	// Lights 사이즈 생성
 	int stack = 0;
 	const int maxLights = 100;

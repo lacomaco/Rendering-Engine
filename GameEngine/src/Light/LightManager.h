@@ -37,8 +37,8 @@ public:
 		float outerCutOff = glm::cos(glm::radians(17.5f))
 	);
 
-	void BindUBO(const char* shaderProgramName);
-	void UpdateUBO();
+	void BindLightUBO(const char* shaderProgramName);
+	void UpdateLightUBO();
 
 	std::shared_ptr<DirectionalLight> GetSun();
 

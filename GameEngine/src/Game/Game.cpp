@@ -245,8 +245,8 @@ bool Game::Initialize() {
 
 	lightManager = make_shared<LightManager>();
 	{
-		lightManager->BindUBO("default");
-		lightManager->BindUBO("gBuffer");
+		lightManager->BindLightUBO("default");
+		lightManager->BindLightUBO("gBuffer");
 	}
 
 	// 포인트.
@@ -283,7 +283,7 @@ void Game::UpdateGame() {
 	}
 
 	camera->Update(deltaTime);
-	lightManager->UpdateUBO();
+	lightManager->UpdateLightUBO();
 
 	accTime += deltaTime;
 
