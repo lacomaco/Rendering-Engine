@@ -21,6 +21,7 @@ private:
 	bool isUsePointLight = false;
 
 	unsigned int lightUniformBlock;
+	unsigned int shadowUniformBlock;
 
 	unsigned int shadowFBO;
 	unsigned int shadowMaps;

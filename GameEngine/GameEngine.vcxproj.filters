@@ -1487,6 +1487,7 @@
     <None Include="shader\lens-flare-dirt-fragment.glsl" />
     <None Include="shader\cascade-shaodw-map-vertex.glsl" />
     <None Include="shader\cascade-shadow-map-fragment.glsl" />
+    <None Include="shader\cascade-shadow-map-geometry.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

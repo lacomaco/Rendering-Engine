@@ -16,7 +16,14 @@ LightManager::LightManager() {
 	glBindBufferRange(GL_UNIFORM_BUFFER, LIGHT_UBO, lightUniformBlock, 0, 6416);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	glGenBuffers(1, &shadowUniformBlock);
+	glBindBuffer(GL_UNIFORM_BUFFER, shadowUniformBlock);
+	glBufferData(GL_UNIFORM_BUFFER, 3904, NULL, GL_DYNAMIC_DRAW);
+	glBindBufferRange(GL_UNIFORM_BUFFER, SHADOW_UBO, shadowUniformBlock, 0, 6416);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 	glGenTextures(1, &shadowMaps);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMaps);
 	glTexImage3D(
@@ -37,7 +44,10 @@ LightManager::LightManager() {
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	constexpr float bordercolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, bordercolor);
-	glBindBuffer(GL_FRAMEBUFFER, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMaps, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void LightManager::ToggleDirectionalLight() {
@@ -133,11 +143,33 @@ void LightManager::UpdateLightUBO() {
 }
 
 void LightManager::BindShadowUBO(const char* shaderProgramName) {
+	const auto shader = Shader::getInstance();
+	const auto program = shader->getShaderProgram(shaderProgramName);
 
+	GLuint blockIndex = glGetUniformBlockIndex(program, "LightSpaceMatrices");
+	if (blockIndex == GL_INVALID_INDEX) {
+		std::cerr << "Error: Unable to find uniform block index for 'Lights'" << std::endl;
+	}
+	else {
+		glUniformBlockBinding(program, blockIndex, SHADOW_UBO);
+	}
 }
 
 void LightManager::UpdateShadowUBO() {
+	std::vector<mat4> lightMatrices;
 
+	glBindBuffer(GL_UNIFORM_BUFFER, shadowUniformBlock);
+
+	const auto sunLightMatrices = Sun->GetLightSpaceMatrices();
+
+	lightMatrices.insert(lightMatrices.end(), sunLightMatrices.begin(), sunLightMatrices.end());
+
+	// Spot Light 贸府
+
+	// Point Light 贸府
+
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, lightMatrices.size() * sizeof(glm::mat4), lightMatrices.data());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void LightManager::CreateShadow(
@@ -152,6 +184,31 @@ void LightManager::CreateShadow(
 	);
 
 	// Point Spot 累诀
+
+	int totalLightMatricesCount = 0;
+
+	if (isUseSun) {
+		totalLightMatricesCount += Sun->GetCascadeLevel();
+	}
+
+	if (isUsePointLight) {
+		totalLightMatricesCount += pointLights.size() * 6;
+	}
+
+	if (isUseSpotLight) {
+		totalLightMatricesCount += spotLights.size();
+	}
+
+	auto shader = Shader::getInstance();
+	const char* shaderProgramName = "cascade-shadow";
+	glUseProgram(shader->getShaderProgram(shaderProgramName));
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+	glCullFace(GL_FRONT);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+
+	glCullFace(GL_BACK);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 std::shared_ptr<DirectionalLight> LightManager::GetSun() {

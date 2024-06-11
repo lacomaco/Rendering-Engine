@@ -60,6 +60,15 @@
 #define LIGHT_UBO 1
 #endif
 
+#ifndef SHADOW_UBO
+#define SHADOW_UBO 2
+#endif
+
 #ifndef SHADOW_RESOLUTION
 #define SHADOW_RESOLUTION 1024
+#endif
+
+// 9 * 9 그림자맵이 들어감.
+#ifndef SHADOW_ATLAS
+#define SHADOW_ATLAS 9216
 #endif

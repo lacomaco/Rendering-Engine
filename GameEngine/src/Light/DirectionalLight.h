@@ -39,5 +39,9 @@ public:
 	int GetCascadeLevel() {
 		return cascadeLevel;
 	}
+
+	std::vector<glm::mat4> GetLightSpaceMatrices() {
+		return Shadow->GetLightSpaceMatrices(lightInfo.direction);
+	}
 };
 

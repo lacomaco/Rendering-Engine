@@ -251,6 +251,11 @@ bool Game::Initialize() {
 		lightManager->BindLightUBO("gBuffer");
 	}
 
+	{
+		lightManager->BindShadowUBO("cascade-shadow");
+		lightManager->BindShadowUBO("default");
+	}
+
 	// 포인트.
 	/*
 	lightManager->CreateLight
@@ -288,6 +293,7 @@ void Game::UpdateGame() {
 
 	camera->Update(deltaTime);
 	lightManager->UpdateLightUBO();
+	lightManager->UpdateShadowUBO();
 
 	accTime += deltaTime;
 
@@ -426,7 +432,8 @@ void Game::CreateShaderProgram() {
 	shader->loadShaderProgram(
 		"./shader/cascade-shaodw-map-vertex.glsl",
 		"./shader/cascade-shadow-map-fragment.glsl",
-		"cascade-shadow"
+		"cascade-shadow",
+		"./shader/cascade-shadow-map-geometry.glsl"
 	);
 
 	shader->loadShaderProgram(

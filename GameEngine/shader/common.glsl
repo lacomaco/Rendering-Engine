@@ -5,18 +5,6 @@
 #define Epsilon 0.00001
 #define PI 3.141592
 
-layout (std140, binding = 0) uniform Camera {
-    mat4 projection; //64
-    mat4 view; // 64
-    mat4 skyBoxView; // 64
-    vec3 cameraPos; //16 total : 208
-    float padding; // 212
-};
-
-uniform mat4 model;
-
-uniform mat3 invTranspose;
-
 // 빛은 그림자가 있는 directional, point spot이 먼저 들어온다.
 struct Light {
         vec3 direction;
@@ -35,13 +23,12 @@ struct Light {
         // total 64 byte
 };
 
-struct Shadow {
-    mat4 lightMatrices[6]; // 94
-    int lightIndex;
-    int matrixCount; // directional: 3, Point: 6, Spot: 2
-    float padding2[2];
-
-    // 98 byte
+layout (std140, binding = 0) uniform Camera {
+    mat4 projection; //64
+    mat4 view; // 64
+    mat4 skyBoxView; // 64
+    vec3 cameraPos; //16 total : 208
+    float padding; // 212
 };
 
 layout (std140, binding = 1) uniform Lights {
@@ -54,13 +41,15 @@ layout (std140, binding = 1) uniform Lights {
     // all 6416 byte
 };
 
-layout (std140, binding = 2) uniform Shadows {
-    Shadow shadows[10]; // 그림자는 최대 60개.
-    int shadowCount;
-    vec3 padding4;
+layout (std140, binding = 2) uniform LightSpaceMatrices {
+    mat4 lightSpaceMatrices[61];
 
-    // 84 byte
+    // total: 3904 byte
 };
+
+uniform mat4 model;
+
+uniform mat3 invTranspose;
 
 // 그림자는
 // directional point spot 순으로 들어온다.

@@ -647,6 +647,7 @@ xcopy /E /I /Y "$(ProjectDir)shader" "$(OutDir)shader"</Command>
     <None Include="libs\glm\LICENSE" />
     <None Include="libs\imgui\LICENSE" />
     <None Include="shader\cascade-shadow-map-fragment.glsl" />
+    <None Include="shader\cascade-shadow-map-geometry.glsl" />
     <None Include="shader\cascade-shaodw-map-vertex.glsl" />
     <None Include="shader\common.glsl">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
