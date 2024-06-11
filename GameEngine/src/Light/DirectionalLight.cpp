@@ -33,6 +33,16 @@ void DirectionalLight::MoveDirection(vec3 direction) {
 	direction = direction;
 }
 
-void DirectionalLight::CreateShadow() {
-
+int DirectionalLight::CreateShadow(
+	shared_ptr<MeshRenderer> meshRenderer,
+	unsigned int fbo,
+	unsigned int textureArray,
+	unsigned int index) {
+	return Shadow->CreateShadow(
+		meshRenderer,
+		lightInfo.direction,
+		fbo,
+		textureArray,
+		index
+	);
 }

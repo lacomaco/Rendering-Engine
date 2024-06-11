@@ -64,6 +64,8 @@ void Game::GenerateOutput() {
 		);
 	}
 
+	lightManager->CreateShadow(meshRenderer);
+
 	graphicsPipe->use();
 	
 	//const char* shaderName = "simple-pbr-shading";
@@ -278,9 +280,11 @@ void Game::UpdateGame() {
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
 
+	/*
 	if (deltaTime > 0.05f) {
 		deltaTime = 0.05f;
 	}
+	*/
 
 	camera->Update(deltaTime);
 	lightManager->UpdateLightUBO();

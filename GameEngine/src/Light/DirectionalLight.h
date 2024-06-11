@@ -3,6 +3,7 @@
 #include "LightType.h"
 #include "CascadeShadow.h"
 #include <memory>
+#include "../Game/MeshRenderer.h"
 
 using namespace glm;
 
@@ -24,7 +25,12 @@ public:
 
 	void MovePosition(vec3 position);
 	void MoveDirection(vec3 direction);
-	void CreateShadow();
+	int CreateShadow(
+		shared_ptr<MeshRenderer> meshRenderer,
+		unsigned int fbo,
+		unsigned int textureArray,
+		unsigned int index
+	);
 
 	Light GetLightInfo() {
 		return lightInfo;

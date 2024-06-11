@@ -4,6 +4,7 @@
 #include <memory>
 #include "./LightType.h"
 #include "DirectionalLight.h"
+#include "../Game/MeshRenderer.h"
 
 using namespace glm;
 
@@ -39,6 +40,13 @@ public:
 
 	void BindLightUBO(const char* shaderProgramName);
 	void UpdateLightUBO();
+
+	// 아직 미완성
+	void BindShadowUBO(const char* shaderProgramName);
+	// 아직 미완성
+	void UpdateShadowUBO();
+
+	void CreateShadow(shared_ptr<MeshRenderer> meshRenderer);
 
 	std::shared_ptr<DirectionalLight> GetSun();
 

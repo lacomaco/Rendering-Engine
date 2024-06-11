@@ -132,6 +132,28 @@ void LightManager::UpdateLightUBO() {
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
+void LightManager::BindShadowUBO(const char* shaderProgramName) {
+
+}
+
+void LightManager::UpdateShadowUBO() {
+
+}
+
+void LightManager::CreateShadow(
+	shared_ptr<MeshRenderer> meshRenderer
+) {
+	int index = 0;
+	index += Sun->CreateShadow(
+		meshRenderer,
+		shadowFBO,
+		shadowMaps,
+		index
+	);
+
+	// Point Spot ÀÛ¾÷
+}
+
 std::shared_ptr<DirectionalLight> LightManager::GetSun() {
 	return Sun;
 }

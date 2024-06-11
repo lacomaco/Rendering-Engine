@@ -126,12 +126,15 @@ int CascadeShadow::CreateShadow(
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
 
+	glCullFace(GL_FRONT);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	for (int i = 0; i < lightMatrices.size(); i++) {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureArray, 0, index + i);
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureArray, i, index + i);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		shader->setMat4(shaderProgramName, "lightSpaceMatrix", lightMatrices[i]);
 		meshRenderer->Draw(shaderProgramName);
 	}
+	glCullFace(GL_BACK);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	return lightMatrices.size();
