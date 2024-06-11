@@ -94,3 +94,18 @@ glm::mat4 CascadeShadow::GetDirectionalLightMatrix(const float near, const float
 
 	return lightProjection * lightView;
 }
+
+std::vector<glm::mat4> CascadeShadow::GetLightSpaceMatrices(glm::vec3 lightDirection) {
+	std::vector<glm::mat4> matrices;
+	for (int i = 0; i < cascadeLevels.size(); i++) {
+		if (i == 0) {
+			matrices.push_back(GetDirectionalLightMatrix(CameraShareValue::near, cascadeLevels[0], lightDirection));
+		}
+		else if (i == cascadeLevels.size() - 1) {
+			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i], CameraShareValue::far, lightDirection));
+		}
+		else {
+			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i],cascadeLevels[i+1], lightDirection));
+		}
+	}
+}
