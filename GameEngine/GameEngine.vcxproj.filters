@@ -1463,8 +1463,6 @@
     <None Include="shader\linearize-depth.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\cubemap-fragment.glsl" />
-    <None Include="shader\shadow-vertex.glsl" />
-    <None Include="shader\shadow-fragment.glsl" />
     <None Include="shader\shadow-debug-vertex.glsl" />
     <None Include="shader\shadow-debug-fragment.glsl" />
     <None Include="shader\point-shadow-vertex.glsl" />
@@ -1487,7 +1485,8 @@
     <None Include="shader\ssao-blur-fragment.glsl" />
     <None Include="shader\lens-flare-fragment.glsl" />
     <None Include="shader\lens-flare-dirt-fragment.glsl" />
-    <None Include="shader\shadow-geometry.glsl" />
+    <None Include="shader\cascade-shaodw-map-vertex.glsl" />
+    <None Include="shader\cascade-shadow-map-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

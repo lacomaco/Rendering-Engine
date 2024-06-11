@@ -420,10 +420,9 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadShaderProgram(
-		"./shader/shadow-vertex.glsl",
-		"./shader/shadow-fragment.glsl",
-		"shadow",
-		"./shader/shadow-geometry.glsl"
+		"./shader/cascade-shaodw-map-vertex.glsl",
+		"./shader/cascade-shadow-map-fragment.glsl",
+		"cascade-shadow"
 	);
 
 	shader->loadShaderProgram(

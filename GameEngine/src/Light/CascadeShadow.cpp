@@ -111,3 +111,28 @@ std::vector<glm::mat4> CascadeShadow::GetLightSpaceMatrices(glm::vec3 lightDirec
 
 	return matrices;
 }
+
+int CascadeShadow::CreateShadow(
+	shared_ptr<MeshRenderer> meshRenderer,
+	glm::vec3 lightDirection,
+	unsigned int fbo,
+	unsigned int textureArray,
+	unsigned int index
+) {
+	auto shader = Shader::getInstance();
+	const auto lightMatrices = GetLightSpaceMatrices(lightDirection);
+	const char* shaderProgramName = "cascade-shadow";
+	glUseProgram(shader->getShaderProgram(shaderProgramName));
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	for (int i = 0; i < lightMatrices.size(); i++) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureArray, 0, index + i);
+		shader->setMat4(shaderProgramName, "lightSpaceMatrix", lightMatrices[i]);
+		meshRenderer->Draw(shaderProgramName);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return lightMatrices.size();
+}
