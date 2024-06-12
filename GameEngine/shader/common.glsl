@@ -39,7 +39,7 @@ layout (std140, binding = 1) uniform Lights {
     int directionalCascadeLevel;
     vec2 padding3;
     
-    float cascadePlaneDistances[16]; // 16 * 16 -> 256 byte
+    float cascadePlaneDistances[MAX_CASCADE_LEVEL]; // 16 * 16 -> 256 byte
 
     // all 6672 byte
 };
