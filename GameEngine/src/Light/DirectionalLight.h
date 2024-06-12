@@ -25,12 +25,6 @@ public:
 
 	void MovePosition(vec3 position);
 	void MoveDirection(vec3 direction);
-	int CreateShadow(
-		shared_ptr<MeshRenderer> meshRenderer,
-		unsigned int fbo,
-		unsigned int textureArray,
-		unsigned int index
-	);
 
 	Light GetLightInfo() {
 		return lightInfo;
