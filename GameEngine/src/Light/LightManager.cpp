@@ -51,7 +51,7 @@ LightManager::LightManager() {
 }
 
 void LightManager::ToggleDirectionalLight() {
-
+	isUseSun = !isUseSun;
 }
 
 void LightManager::TogglePointLight() {
