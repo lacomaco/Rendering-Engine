@@ -176,12 +176,6 @@ void LightManager::CreateShadow(
 	shared_ptr<MeshRenderer> meshRenderer
 ) {
 	int index = 0;
-	index += Sun->CreateShadow(
-		meshRenderer,
-		shadowFBO,
-		shadowMaps,
-		index
-	);
 
 	// Point Spot 작업
 
@@ -202,11 +196,14 @@ void LightManager::CreateShadow(
 	auto shader = Shader::getInstance();
 	const char* shaderProgramName = "cascade-shadow";
 	glUseProgram(shader->getShaderProgram(shaderProgramName));
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_TEXTURE_2D_ARRAY, shadowMaps, 0);
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glCullFace(GL_FRONT);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-
+	// Mesh Renderer Instancing 모드
+	meshRenderer->Draw(shaderProgramName,totalLightMatricesCount);
 	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

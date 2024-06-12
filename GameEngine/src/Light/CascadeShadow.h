@@ -15,12 +15,4 @@ private:
 public:
 	CascadeShadow(float cascadeLevel);
 	std::vector<glm::mat4> GetLightSpaceMatrices(glm::vec3 lightDirection);
-
-	int CreateShadow(
-		shared_ptr<MeshRenderer> meshRenderer,
-		glm::vec3 lightDirection,
-		unsigned int fbo,
-		unsigned int textureArray,
-		unsigned int index
-	);
 };

@@ -66,18 +66,18 @@ void MeshRenderer::AddMesh(std::shared_ptr<Primitive> primitive) {
 	}
 }
 
-void MeshRenderer::Draw(const char* programName) {
+void MeshRenderer::Draw(const char* programName, int instanceCount) {
 	auto normalProgram = Shader::getInstance()->getShaderProgram(programName);
 	glUseProgram(normalProgram);
 
 	for (auto& meshStruct : nonAlphaMesh) {
 		if (meshStruct.isPrimitive) {
 			meshStruct.primitive->PutModelUniform(programName);
-			meshStruct.mesh->Draw(programName);
+			meshStruct.mesh->Draw(programName, instanceCount);
 		}
 		else {
 			meshStruct.model->PutModelUniform(programName);
-			meshStruct.mesh->Draw(programName);
+			meshStruct.mesh->Draw(programName, instanceCount);
 		}
 	}
 
@@ -87,11 +87,11 @@ void MeshRenderer::Draw(const char* programName) {
 	for (auto& meshStruct : transparentMesh) {
 		if (meshStruct.isPrimitive) {
 			meshStruct.primitive->PutModelUniform(programName);
-			meshStruct.mesh->Draw(programName);
+			meshStruct.mesh->Draw(programName, instanceCount);
 		}
 		else {
 			meshStruct.model->PutModelUniform(programName);
-			meshStruct.mesh->Draw(programName);
+			meshStruct.mesh->Draw(programName, instanceCount);
 		}
 	}
 	glDisable(GL_BLEND);

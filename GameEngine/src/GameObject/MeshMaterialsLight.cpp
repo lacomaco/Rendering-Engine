@@ -43,7 +43,7 @@ Mesh::~Mesh() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::Draw(const char* shaderProgramName) {
+void Mesh::Draw(const char* shaderProgramName,int instanceCount) {
 	auto shader = Shader::getInstance();
 	mat.PutMaterialUniforms(shaderProgramName);
 	auto program = shader->getShaderProgram(shaderProgramName);
@@ -120,7 +120,12 @@ void Mesh::Draw(const char* shaderProgramName) {
 
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	if (instanceCount == 0) {
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	else {
+		glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
+	}
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i + TEXTURE_START);
