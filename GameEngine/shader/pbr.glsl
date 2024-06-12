@@ -222,6 +222,12 @@ ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 
     return result;
 }
 
+/*
+ShadwoStruct cascadeShadowCalculation(){
+
+}
+*/
+
 ShadowStruct pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
 	ShadowStruct result;
     vec3 posToLight = posWorld - light.position;

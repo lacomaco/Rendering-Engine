@@ -12,14 +12,14 @@ LightManager::LightManager() {
 
 	glGenBuffers(1, &lightUniformBlock);
 	glBindBuffer(GL_UNIFORM_BUFFER, lightUniformBlock);
-	glBufferData(GL_UNIFORM_BUFFER, 6416, NULL, GL_DYNAMIC_DRAW);
-	glBindBufferRange(GL_UNIFORM_BUFFER, LIGHT_UBO, lightUniformBlock, 0, 6416);
+	glBufferData(GL_UNIFORM_BUFFER, 6672, NULL, GL_DYNAMIC_DRAW);
+	glBindBufferRange(GL_UNIFORM_BUFFER, LIGHT_UBO, lightUniformBlock, 0, 6672);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glGenBuffers(1, &shadowUniformBlock);
 	glBindBuffer(GL_UNIFORM_BUFFER, shadowUniformBlock);
 	glBufferData(GL_UNIFORM_BUFFER, 3904, NULL, GL_DYNAMIC_DRAW);
-	glBindBufferRange(GL_UNIFORM_BUFFER, SHADOW_UBO, shadowUniformBlock, 0, 6416);
+	glBindBufferRange(GL_UNIFORM_BUFFER, SHADOW_UBO, shadowUniformBlock, 0, 3904);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glGenFramebuffers(1, &shadowFBO);
@@ -134,9 +134,25 @@ void LightManager::UpdateLightUBO() {
 	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &lightCount);
 	stack += sizeof(int);
 	
-	int directionalCascadeLevel = Sun->GetCascadeLevel();
+	int directionalCascadeLevel = Sun->GetCascadeMaxLevel();
 	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(int), &directionalCascadeLevel);
 	stack += sizeof(int);
+
+	// padding to 16 byte
+	stack += sizeof(vec2);
+
+	// std140 스펙에 의하면
+	// float 배열은 4byte가 아니라 하나의 원소가 16바이트씩 잡아먹는다.
+	// 따라서 이를 조정해줘야한다.
+	std::vector<float> paddedCascadeLevels(Sun->GetCascadeMaxLevel() * 4, 0.0f);
+	std::vector<float> cascadeLevels = Sun->GetCasacdeLevel();
+
+	for (int i = 0; i < cascadeLevels.size(); i++) {
+		paddedCascadeLevels[i * 4] = cascadeLevels[i];
+	}
+
+	glBufferSubData(GL_UNIFORM_BUFFER, stack, sizeof(float) * paddedCascadeLevels.size(), paddedCascadeLevels.data());	
+	stack += sizeof(float) * 16 * 4;
 
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -182,7 +198,7 @@ void LightManager::CreateShadow(
 	int totalLightMatricesCount = 0;
 
 	if (isUseSun) {
-		totalLightMatricesCount += Sun->GetCascadeLevel();
+		totalLightMatricesCount += Sun->GetCascadeMaxLevel();
 	}
 
 	if (isUsePointLight) {

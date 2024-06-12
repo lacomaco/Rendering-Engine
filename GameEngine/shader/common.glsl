@@ -4,6 +4,7 @@
 #define MAX_POINT_LIGHT 5 // 나중에 지울거임
 #define Epsilon 0.00001
 #define PI 3.141592
+#define MAX_CASCADE_LEVEL 16;
 
 // 빛은 그림자가 있는 directional, point spot이 먼저 들어온다.
 struct Light {
@@ -37,8 +38,10 @@ layout (std140, binding = 1) uniform Lights {
     int lightCount; // active Light Count
     int directionalCascadeLevel;
     vec2 padding3;
+    
+    float cascadePlaneDistances[16]; // 16 * 16 -> 256 byte
 
-    // all 6416 byte
+    // all 6672 byte
 };
 
 layout (std140, binding = 2) uniform LightSpaceMatrices {

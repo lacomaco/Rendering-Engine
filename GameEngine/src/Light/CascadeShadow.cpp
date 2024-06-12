@@ -35,7 +35,7 @@ vector<glm::vec4> CascadeShadow::GetFrustumCornerWorldSpace(const glm::mat4& pro
 glm::mat4 CascadeShadow::GetDirectionalLightMatrix(const float near, const float far,const glm::vec3 lightDirection) {
 	const glm::mat4 projection = glm::perspective(
 		glm::radians(CameraShareValue::fov),
-		(float)SHADOW_RESOLUTION / (float)SHADOW_RESOLUTION,
+		(float)WINDOW_WIDTH / (float)WINDOW_HEIGHT,
 		near,
 		far
 	);

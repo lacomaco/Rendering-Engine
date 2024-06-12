@@ -15,4 +15,8 @@ private:
 public:
 	CascadeShadow(float cascadeLevel);
 	std::vector<glm::mat4> GetLightSpaceMatrices(glm::vec3 lightDirection);
+
+	std::vector<float> GetCascadeLevels() const {
+		return cascadeLevels;
+	}
 };
