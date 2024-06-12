@@ -41,8 +41,8 @@ void Game::GenerateOutput() {
 	
 
 	meshRenderer->MeshAlignment(camera.get());
+	lightManager->CreateShadow(meshRenderer);
 
-	// lightManager->MakeShadow(meshRenderer);
 
 	if (lightManager->GetIsUseSun()) {
 		graphicsPipe->DrawGBuffer(
@@ -63,16 +63,13 @@ void Game::GenerateOutput() {
 			graphicsPipe->gBuffer->godRayTexture
 		);
 	}
-
-	lightManager->CreateShadow(meshRenderer);
-
 	graphicsPipe->use();
 	
 	//const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
-	// lightManager->PutLightUniform(shaderName);
+	lightManager->PutShadowUniform(shaderName);
 
 	meshRenderer->Draw(shaderName); 
 	cubeMap->Draw("cubemap");
@@ -80,7 +77,6 @@ void Game::GenerateOutput() {
 	auto normalMode = EditorSharedValue::showNormal;
 
 	if (normalMode) {
-		// lightManager->PutLightUniform("normal");
 		meshRenderer->Draw("normal");
 	}
 
@@ -434,12 +430,6 @@ void Game::CreateShaderProgram() {
 		"./shader/cascade-shadow-map-fragment.glsl",
 		"cascade-shadow",
 		"./shader/cascade-shadow-map-geometry.glsl"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/shadow-debug-vertex.glsl",
-		"./shader/shadow-debug-fragment.glsl",
-		"shadow-debug"
 	);
 
 	shader->loadShaderProgram(

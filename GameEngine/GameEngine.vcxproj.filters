@@ -879,9 +879,6 @@
     <ClInclude Include="src\Game\CameraShareValue.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Light\ShadowManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Light\CascadeShadow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -1026,9 +1023,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\CameraShareValue.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Light\ShadowManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Light\CascadeShadow.cpp">
@@ -1463,8 +1457,6 @@
     <None Include="shader\linearize-depth.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
     <None Include="shader\cubemap-fragment.glsl" />
-    <None Include="shader\shadow-debug-vertex.glsl" />
-    <None Include="shader\shadow-debug-fragment.glsl" />
     <None Include="shader\point-shadow-vertex.glsl" />
     <None Include="shader\point-shadow-geometry.glsl" />
     <None Include="shader\point-shadow-fragment.glsl" />
@@ -1488,6 +1480,9 @@
     <None Include="shader\cascade-shaodw-map-vertex.glsl" />
     <None Include="shader\cascade-shadow-map-fragment.glsl" />
     <None Include="shader\cascade-shadow-map-geometry.glsl" />
+    <None Include="copy_assets.bat">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

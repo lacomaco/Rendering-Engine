@@ -227,3 +227,11 @@ void LightManager::CreateShadow(
 std::shared_ptr<DirectionalLight> LightManager::GetSun() {
 	return Sun;
 }
+
+void LightManager::PutShadowUniform(const char* shaderProgramName) {
+	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram(shaderProgramName));
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMaps);
+	shader->setInt(shaderProgramName, "shadowMaps", 4);
+}

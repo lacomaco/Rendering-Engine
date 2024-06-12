@@ -13,7 +13,6 @@ out vec3 tangentWorld;
 out vec3 bitangentWorld;
 out vec3 normalWorld;
 
-out vec4 directionalLightShadowSpace;
 out vec4 spotLightShadowSpace[2];
 
 void main() {
@@ -33,8 +32,6 @@ void main() {
 	}
 
 	/*
-	directionalLightShadowSpace = directionalShadowMap.lightSpaceMatrix * vec4(posWorld, 1.0);
-
 	for(int i = 0; i < 2; i++){
 		if(spotShadowMap[i].use){
 			spotLightShadowSpace[i] = spotShadowMap[i].lightSpaceMatrix * vec4(posWorld, 1.0);

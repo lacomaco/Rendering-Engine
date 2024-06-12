@@ -1,9 +1,8 @@
 #version 460 core
 precision highp float;
 #include common.glsl
-#include pbr.glsl
 
-
+uniform sampler2DArray shadowMaps;
 
 out vec4 FragColor;
 
@@ -15,8 +14,9 @@ in vec3 tangentWorld;
 in vec3 bitangentWorld;
 in vec3 posWorld;
 
-in vec4 directionalLightShadowSpace;
 in vec4 spotLightShadowSpace[2];
+
+#include pbr.glsl
 
 void main() {
     mat3 TBN = mat3(
@@ -70,22 +70,16 @@ void main() {
 	float attenuation = 0.0;
 
 	int shadowMapPointer = 0;
+	int shadowIndex = 0;
 
 	for(int i = 0; i < lightCount; i++){
 	    Light light = lights[i];
 		if(light.lightType == 0){
-
-		/*
-			ShadowStruct shadow = shadowCalculation(
-				directionalLightShadowSpace,
-				directionalShadowDepthMap,
-				normal,
-				-light.direction
+			ShadowStruct shadow = cascadeShadowCalculation(
+				posWorld,
+				shadowIndex,
+				light
 			);
-		*/
-		ShadowStruct shadow;
-		shadow.isShadow = false;
-		shadow.shadow = 0.0;
 
 			color += directionalLight(
 				light,
@@ -99,6 +93,8 @@ void main() {
 			} else {
 			    attenuation = 0.1;
 			}
+
+			shadowIndex += directionalCascadeLevel;
 		} else if(light.lightType == 1){
 		/*
 			ShadowStruct shadow = pointShadowCalculation(

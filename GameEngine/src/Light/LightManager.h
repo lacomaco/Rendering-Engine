@@ -54,5 +54,7 @@ public:
 	bool GetIsUseSun() const {
 		return isUseSun;
 	}
+
+	void PutShadowUniform(const char* shaderProgramName);
 };
 

@@ -189,44 +189,73 @@ const vec2 diskSamples64[64] = vec2[](
     vec2(0.41623562331748715, 0.9006236205438447)
 );
 
-float PCF(float bias, float closestDepth,float currentDepth,sampler2D shadowMap,vec3 projCoords){
+float PCF(float bias,float currentDepth,int index,vec3 projCoords){
     float shadow = 0.0;
 
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    vec2 texelSize = 1.0 / vec2(textureSize(shadowMaps, 0));
 
     for(int x = 0; x < 64; ++x) {
-		float pcfDepth = texture(shadowMap, projCoords.xy + diskSamples64[x] * texelSize).r;
+		float pcfDepth = texture(shadowMaps, vec3(projCoords.xy + diskSamples64[x] * texelSize,index)).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 
     return shadow / 64.0f;
 }
 
-ShadowStruct shadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap,vec3 normal,vec3 lightDir) {
+
+ShadowStruct cascadeShadowCalculation(
+    vec3 fragPosWorldSpace,
+    int shadowIndex,
+    Light light
+){
     ShadowStruct result;
+    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
+    float depthValue = abs(fragPosViewSpace.z);
 
-    float bias = 0.005;
+    int layer = -1;
+    for(int i = 0; i < directionalCascadeLevel; i++){
+        if(depthValue < cascadePlaneDistances[i]){
+            layer = i;
+            break;
+        }
+    }
 
-    vec3 projCoords = fragPosLightSpace.xyz;
+    if(layer == -1){
+        layer = directionalCascadeLevel - 1;
+    }
+
+    vec4 fragPosLightSpace = lightSpaceMatrices[shadowIndex + layer] * vec4(fragPosWorldSpace, 1.0);
+
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
-
-
-    float closestDepth = texture(shadowMap, projCoords.xy).r;
 
     float currentDepth = projCoords.z;
 
-    result.isShadow = currentDepth - bias > closestDepth;
+    if(currentDepth > 1.0) {
+        result.isShadow = false;
+        result.shadow = 0.0;
+        return result;
+    }
 
-    result.shadow = PCF(bias,closestDepth,currentDepth,shadowMap,projCoords);
+    vec3 normal = normalize(normalWorld);
+    vec3 direction = light.direction;
+
+    float bias = max(0.05 * (1.0 - dot(normal, direction)),0.005);
+    const float biasModifier = 0.5f;
+
+    if(layer + 1 == directionalCascadeLevel) {
+        bias *= 1 / (far * biasModifier);
+    } else {
+        bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
+    }
+
+    float closestDepth = texture(shadowMaps, vec3(projCoords.x, projCoords.y, layer + shadowIndex)).r;
+
+    result.isShadow = currentDepth - bias > closestDepth;
+    result.shadow = PCF(bias,currentDepth,layer + shadowIndex,projCoords);
 
     return result;
 }
-
-/*
-ShadwoStruct cascadeShadowCalculation(){
-
-}
-*/
 
 ShadowStruct pointShadowCalculation(vec3 posWorld,Light light,samplerCube map){
 	ShadowStruct result;
