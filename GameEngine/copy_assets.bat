@@ -9,5 +9,6 @@ set TARGET_DIR=%1
 
 REM assets 폴더를 빌드된 위치로 복사
 xcopy "assets" "%TARGET_DIR%\assets" /E /I /Y
+xcopy "shader" "%TARGET_DIR%\shader" /E /I /Y
 
 echo Assets copied successfully.

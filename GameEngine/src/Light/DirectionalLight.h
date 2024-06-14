@@ -4,6 +4,7 @@
 #include "CascadeShadow.h"
 #include <memory>
 #include "../Game/MeshRenderer.h"
+#include "./LightType.h"
 
 using namespace glm;
 
@@ -35,7 +36,7 @@ public:
 	}
 
 	std::vector<glm::mat4> GetLightSpaceMatrices() {
-		return Shadow->GetLightSpaceMatrices(lightInfo.direction);
+		return Shadow->GetLightSpaceMatrices(lightInfo);
 	}
 
 	std::vector<float> GetCasacdeLevel() {
