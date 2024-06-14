@@ -486,4 +486,10 @@ void Game::CreateShaderProgram() {
 		"./shader/ssao-blur-fragment.glsl",
 		"SSAOBlur"
 	);
+
+	shader->loadShaderProgram(
+		"./shader/cascade-debug.vs",
+		"./shader/cascade-debug.fs",
+		"cascade-debug"
+	);
 }

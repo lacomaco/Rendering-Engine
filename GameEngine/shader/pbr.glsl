@@ -247,9 +247,9 @@ ShadowStruct cascadeShadowCalculation(
     const float biasModifier = 0.5f;
 
     if(layer + 1 == directionalCascadeLevel) {
-        //bias *= 1 / (far * biasModifier);
+        // bias *= 1 / (far * biasModifier);
     } else {
-        //bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
+        // bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
     }
 
     float closestDepth = texture(shadowMaps, vec3(projCoords.x, projCoords.y, layer + shadowIndex)).r;
