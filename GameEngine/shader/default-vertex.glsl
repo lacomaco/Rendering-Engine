@@ -19,7 +19,7 @@ void main() {
 
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 
-	posWorld = (model * vec4(aPos, 1.0f)).xyz;
+	posWorld = vec3(model * vec4(aPos, 1.0f));
 
 	normalWorld = invTranspose * aNormal;
 
@@ -30,17 +30,6 @@ void main() {
 		tangentWorld = tangentWorld * -1.0;
 		bitangentWorld = cross(normalWorld, tangentWorld);
 	}
-
-	/*
-	for(int i = 0; i < 2; i++){
-		if(spotShadowMap[i].use){
-			spotLightShadowSpace[i] = spotShadowMap[i].lightSpaceMatrix * vec4(posWorld, 1.0);
-		}
-		else {
-			spotLightShadowSpace[i] = vec4(0.0);
-		}
-	}
-	*/
 
 	TexCoord = aTexCoord;
 }

@@ -227,6 +227,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 			texture.isAlpha = alphaTexture.end() != std::find(alphaTexture.begin(), alphaTexture.end(), fileName);
 
+			if (texture.isAlpha) {
+				std::cout << "alpha confirm" << std::endl;
+			}
+
 			textures.push_back(texture);
 			textures_loaded.push_back(texture);
 		}

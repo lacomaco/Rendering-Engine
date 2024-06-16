@@ -42,9 +42,7 @@ public:
 	void BindLightUBO(const char* shaderProgramName);
 	void UpdateLightUBO();
 
-	// 아직 미완성
 	void BindShadowUBO(const char* shaderProgramName);
-	// 아직 미완성
 	void UpdateShadowUBO();
 
 	void CreateShadow(shared_ptr<MeshRenderer> meshRenderer);

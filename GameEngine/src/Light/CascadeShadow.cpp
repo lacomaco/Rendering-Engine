@@ -90,31 +90,13 @@ glm::mat4 CascadeShadow::GetDirectionalLightMatrix(
 		maxZ = std::max(maxZ, trf.z);
 	}
 
-	// 각 값을 구분하기 쉽게 출력
-	std::cout << "minX: " << minX << std::endl;
-	std::cout << "maxX: " << maxX << std::endl;
-	std::cout << "minY: " << minY << std::endl;
-	std::cout << "maxY: " << maxY << std::endl;
-	std::cout << "minZ: " << minZ << std::endl;
-	std::cout << "maxZ: " << maxZ << std::endl;
+	auto temp = -minZ;
+	minZ = -maxZ;
+	maxZ = temp;
 
-	// ortho 평면 넓히기용.
-
-	const float zMult = 5.0f;
-
-	if (minZ < 0) {
-		minZ *= zMult;
-	}
-	else {
-		minZ /= zMult;
-	}
-
-	if (maxZ < 0) {
-		maxZ /= zMult;
-	}
-	else {
-		maxZ *= zMult;
-	}
+	auto mid = (maxZ - minZ) / 2.0f;
+	minZ -= mid * 5.0f;
+	maxZ += mid * 5.0f;
 
 	glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 
@@ -125,89 +107,15 @@ std::vector<glm::mat4> CascadeShadow::GetLightSpaceMatrices(Light light) {
 	std::vector<glm::mat4> matrices;
 	for (int i = 0; i <= cascadeLevels.size(); i++) {
 		if (i == 0) {
-			std::cout << "구간 " << CameraShareValue::near << " - " << cascadeLevels[0] << std::endl;
 			matrices.push_back(GetDirectionalLightMatrix(CameraShareValue::near, cascadeLevels[0], light));
 		}
 		else if (i == cascadeLevels.size()) {
 			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i-1], CameraShareValue::far, light));
 		}
 		else {
-			std::cout << "구간 " << cascadeLevels[i - 1] << " - " << cascadeLevels[i] << std::endl;
 			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i-1],cascadeLevels[i], light));
 		}
 	}
 
 	return matrices;
-}
-
-void CascadeShadow::drawCascadeVolumeVisualizers(Light light) {
-	auto shader = Shader::getInstance();
-	glUseProgram(shader->getShaderProgram("cascade-debug"));
-
-	std::vector<glm::mat4> lightMatrices = GetLightSpaceMatrices(light);
-
-	visualizerVAOs.resize(8);
-	visualizerEBOs.resize(8);
-	visualizerVBOs.resize(8);
-
-
-	const GLuint indices[] = {
-		0, 2, 3,
-		0, 3, 1,
-		4, 6, 2,
-		4, 2, 0,
-		5, 7, 6,
-		5, 6, 4,
-		1, 3, 7,
-		1, 7, 5,
-		6, 7, 3,
-		6, 3, 2,
-		1, 5, 4,
-		0, 1, 4
-	};
-
-	const glm::vec4 colors[] = {
-		{1.0, 0.0, 0.0, 0.5f},
-		{0.0, 1.0, 0.0, 0.5f},
-		{0.0, 0.0, 1.0, 0.5f},
-	};
-
-	for (int i = 0; i < lightMatrices.size(); ++i)
-	{
-		const auto corners = GetFrustumCornerWorldSpace(lightMatrices[i]);
-		std::vector<glm::vec3> vec3s;
-		for (const auto& v : corners)
-		{
-			vec3s.push_back(glm::vec3(v));
-		}
-
-		glGenVertexArrays(1, &visualizerVAOs[i]);
-		glGenBuffers(1, &visualizerVBOs[i]);
-		glGenBuffers(1, &visualizerEBOs[i]);
-
-		glBindVertexArray(visualizerVAOs[i]);
-
-		glBindBuffer(GL_ARRAY_BUFFER, visualizerVBOs[i]);
-		glBufferData(GL_ARRAY_BUFFER, vec3s.size() * sizeof(glm::vec3), &vec3s[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, visualizerEBOs[i]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
-
-		glBindVertexArray(visualizerVAOs[i]);
-		shader->setVec4("cascade-debug", "color", colors[i % 3]);
-		glDrawElements(GL_TRIANGLES, GLsizei(36), GL_UNSIGNED_INT, 0);
-
-		glDeleteBuffers(1, &visualizerVBOs[i]);
-		glDeleteBuffers(1, &visualizerEBOs[i]);
-		glDeleteVertexArrays(1, &visualizerVAOs[i]);
-
-		glBindVertexArray(0);
-	}
-
-	visualizerVAOs.clear();
-	visualizerEBOs.clear();
-	visualizerVBOs.clear();
 }

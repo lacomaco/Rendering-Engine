@@ -65,10 +65,10 @@
 #endif
 
 #ifndef SHADOW_RESOLUTION
-#define SHADOW_RESOLUTION 1024
+#define SHADOW_RESOLUTION 2048
 #endif
 
 // 9 * 9 그림자맵이 들어감.
 #ifndef SHADOW_ATLAS
-#define SHADOW_ATLAS 9216
+#define SHADOW_ATLAS 9216 * 2
 #endif

@@ -67,6 +67,8 @@ void main() {
 	pbrMaterial.ndotO = ndotO;
 	pbrMaterial.posWorld = posWorld;
 
+
+
 	float attenuation = 0.0;
 
 	int shadowMapPointer = 0;
@@ -115,13 +117,6 @@ void main() {
 				pbrMaterial
 			);
 
-			
-			if(!shadow.isShadow){
-			    attenuation = 1.0;
-			} else {
-			    attenuation = 0.1;
-			}
-
 			shadowIndex += directionalCascadeLevel;
 		} else if(light.lightType == 1){
 		/*
@@ -136,9 +131,6 @@ void main() {
 				shadow.shadow,
 				pbrMaterial
 			);
-
-			float distance = length(light.position - posWorld);
-			attenuation = max(attenuation, calcAttenuation(distance,light));
 			*/
 		}
 		else if(light.lightType == 2){
@@ -158,15 +150,11 @@ void main() {
 				shadow.shadow,
 				pbrMaterial
 			);
-
-			float distance = length(light.position - posWorld);
-			attenuation = max(attenuation, calcAttenuation(distance,light));
 			*/
 		}
 	}
 
-	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness) * attenuation;
-
+	vec3 ambientLight = ambientIBL(ambientColor, normal, pixelToEye, ao, metallic, roughness);
 	color += ambientLight;
 	vec4 colorWithAlpha = vec4(color, texture(albedo0,TexCoord).a);
 

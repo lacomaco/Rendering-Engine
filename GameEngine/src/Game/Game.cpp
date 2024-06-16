@@ -26,18 +26,11 @@ void Game::GenerateOutput() {
 	float timeValue = SDL_GetTicks() / 1000.0f;
 	auto shader = Shader::getInstance();
 
-	// 리셋해줘야함!
 	meshRenderer->ResetMesh();
 
 	if (modelOn) {
 		meshRenderer->AddMesh(backPack);
 	}
-
-	/*
-	for (auto& circle : pbrTestCircle) {
-		meshRenderer->AddMesh(circle);
-	}
-	*/
 	
 
 	meshRenderer->MeshAlignment(camera.get());
@@ -70,7 +63,6 @@ void Game::GenerateOutput() {
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	lightManager->PutShadowUniform(shaderName);
-
 	meshRenderer->Draw(shaderName); 
 	cubeMap->Draw("cubemap");
 
@@ -144,84 +136,8 @@ bool Game::Initialize() {
 	graphicsPipe = make_shared<GraphicsPipeLine>();
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
 
-	// 화면에 그릴 오브젝트들 생성
-	plane = make_shared<Plane>();
-	plane->scale = glm::vec3(5.0f, 5.0f, 5.0f);
-	plane->position = glm::vec3(0.0f, 0.0f, -2.0f);
-	plane->SetTexture("./assets/images/bricks2.jpg", "albedo");
-	plane->SetTexture("./assets/images/bricks2_normal.jpg", "normal");
-	plane->SetTexture("./assets/images/bricks2_disp.jpg", "height");
-	plane->SetupMesh();
-
-	plane->rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
-
-	vector<glm::vec3> translations = {
-		glm::vec3(-1.5f,0.0f,-0.48f),
-		glm::vec3(1.5f, 0.0f, 0.51f),
-		glm::vec3(0.0f, 0.0f, 0.7f),
-		glm::vec3(-0.3f, 0.0f, -2.3f),
-		glm::vec3(0.5f, 0.0f, -0.6f)
-	};
-
-	for (int i = 0; i < translations.size(); i++) {
-		auto box = make_shared<Box>();
-
-		box->SetTexture("./assets/container2.png", "albedo");
-		box->SetTexture("./assets/container2_specular.png", "specular");
-		box->SetupMesh();
-		box->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-		box->position = translations[i] + glm::vec3(0.0f, 0.5f, 0.0f);
-
-		this->box.push_back(box);
-		box->isAlphaMesh = false;
-	}
-
-	for (int i = 0; i < translations.size(); i++) {
-		auto grass = make_shared<Plane>();
-		grass->SetTexture("./assets/images/grass.png", "albedo");
-		grass->SetupMesh();
-		grass->scale = glm::vec3(0.5f, 0.5f, 0.5f);
-		grass->position = translations[i] + glm::vec3(0.0f,0.5f,0.6f);
-
-		this->grass.push_back(grass);
-		grass->isAlphaMesh = true;
-	}
-
-	auto _circle = make_shared<Circle>();
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_albedo.png", "albedo");
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_metallic.png", "metallic");
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_roughness.png", "roughness");
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_normal-ogl.png", "normal");
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_ao.png", "ao");
-	_circle->SetTexture("./assets/pbr-test/knotty-plywood_height.png", "height");
-	_circle->SetupMesh();
-	_circle->position = glm::vec3(0.0f, 1.0f, 0.0f);
-
-
-	// 위로 : metallic
-	// 오른쪽 : roughness
-	int count = 0;
-	for (float i = 0; i < 5; i++) {
-		for (float j = 0; j < 5; j++) {
-			auto forPbrTestCircle = make_shared<Circle>();
-			forPbrTestCircle->SetupMesh();
-			forPbrTestCircle->position = glm::vec3(j, i, 0.0f);
-
-			this->pbrTestCircle.push_back(forPbrTestCircle);
-
-			float metallic = (float)i / 5.0;
-			float roughness = (float)j / 5.0;
-
-			this->pbrTestMetallic.push_back(metallic);
-			this->pbrTestRoughness.push_back(roughness);
-			count++;
-		}
-		count = 0;
-	}
-
 	if (modelOn) {
 		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
-		//backPack = make_shared<Model>("./assets/interogation_room/scene.gltf");
 	}
 
 	camera = make_shared<Camera>(
@@ -239,7 +155,7 @@ bool Game::Initialize() {
 		camera->bindUBO("SSAO");
 	}
 
-	camera->cameraPos = glm::vec3(0.0f, 1.0f, 4.0f);
+	camera->cameraPos = glm::vec3(-10.008f, 1.144f, -0.001f);
 
 	lightManager = make_shared<LightManager>();
 	{
@@ -251,17 +167,6 @@ bool Game::Initialize() {
 		lightManager->BindShadowUBO("cascade-shadow");
 		lightManager->BindShadowUBO("default");
 	}
-
-	// 포인트.
-	/*
-	lightManager->CreateLight
-	(
-		1,
-		glm::vec3(-0.116, 2.117, -1.116),
-		glm::vec3(-0.042, -0.390, 0.952),
-		3
-	);
-	*/
 
 	input = Input::GetInstance();
 
@@ -281,12 +186,6 @@ void Game::UpdateGame() {
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
 
-	/*
-	if (deltaTime > 0.05f) {
-		deltaTime = 0.05f;
-	}
-	*/
-
 	camera->Update(deltaTime);
 	lightManager->UpdateLightUBO();
 	lightManager->UpdateShadowUBO();
@@ -299,29 +198,7 @@ void Game::UpdateGame() {
 
 	graphicsPipe->exposure = exposure;
 
-
-	if (EditorSharedValue::useSun) {
-		// lightManager->directionLights[0]->setPosition(EditorSharedValue::directionalLightPosition);
-		// lightManager->directionLights[0]->direction = EditorSharedValue::directionalLightDirection;
-
-		// lightManager->EnableDirectionalLight(0);
-	}
-	else {
-		// lightManager->DisableDirectionalLight(0);
-	}
-
-	if (EditorSharedValue::usePointLight) {
-		// lightManager->EnablePointLight(0);
-		//lightManager->EnablePointLight(1);
-	}
-	else {
-		// lightManager->DisablePointLight(0);
-		//lightManager->DisablePointLight(1);
-	}
-
 	graphicsPipe->bloomThreshold = EditorSharedValue::bloomThreshold;
-
-	//lightManager->UpdateLight(deltaTime);
 
 	cubeMap->select = EditorSharedValue::select;
 	cubeMap->lodLevel = EditorSharedValue::lodLevel;
@@ -485,11 +362,5 @@ void Game::CreateShaderProgram() {
 		"./shader/hdr-vertex.glsl",
 		"./shader/ssao-blur-fragment.glsl",
 		"SSAOBlur"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/cascade-debug.vs",
-		"./shader/cascade-debug.fs",
-		"cascade-debug"
 	);
 }

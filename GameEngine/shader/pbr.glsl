@@ -49,7 +49,7 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
 
 
 vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness){
-    vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic);
+    vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic) * 0.3;
     vec3 specularIBL = specularIBL(albedo,normalW,pixelToEye,metallic,roughness);
 
     return (diffuseIBL + specularIBL) * ao;
@@ -210,7 +210,8 @@ ShadowStruct cascadeShadowCalculation(
     Light light
 ){
     ShadowStruct result;
-    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
+
+    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace + vec3(0.0,-1.0,0.1), 1.0);
     float depthValue = abs(fragPosViewSpace.z);
 
     int layer = -1;
@@ -243,16 +244,16 @@ ShadowStruct cascadeShadowCalculation(
     vec3 normal = normalize(normalWorld);
     vec3 direction = light.direction;
 
-    float bias = max(0.05 * (1.0 - dot(normal, direction)),0.005);
+    float bias = max(0.05 * (1.0 - dot(normal,-direction)),0.005);
     const float biasModifier = 0.5f;
 
     if(layer + 1 == directionalCascadeLevel) {
-        // bias *= 1 / (far * biasModifier);
+        bias *= 1 / (far * biasModifier);
     } else {
-        // bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
+        bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
     }
 
-    float closestDepth = texture(shadowMaps, vec3(projCoords.x, projCoords.y, layer + shadowIndex)).r;
+    float closestDepth = texture(shadowMaps, vec3(projCoords.x, projCoords.y, layer + shadowIndex), layer * 2.0).r;
 
     result.isShadow = currentDepth - bias > closestDepth;
     result.shadow = PCF(bias,currentDepth,layer + shadowIndex,projCoords);

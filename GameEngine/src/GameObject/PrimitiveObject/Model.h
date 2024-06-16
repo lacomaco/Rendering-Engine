@@ -34,7 +34,7 @@ private:
 	void processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 tr);
 	std::shared_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene, aiMatrix4x4 tr, std::string nodeName);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string textureType);
-	unsigned int TextureFromFile(const char* path, const std::string& directory, bool& hasAlpha, bool gamma = false);
+	unsigned int TextureFromFile(const char* path, const std::string& directory);
 	std::string ExtractFileName(const std::string& path);
 
 
