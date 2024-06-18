@@ -509,6 +509,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_assets.bat" />
+    <None Include="docs\index.html" />
     <None Include="glew32.dll" />
     <None Include="libs\glm\detail\func_common.inl" />
     <None Include="libs\glm\detail\func_common_simd.inl" />

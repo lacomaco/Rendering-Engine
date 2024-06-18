@@ -1483,6 +1483,7 @@
     <None Include="copy_assets.bat">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include="docs\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
