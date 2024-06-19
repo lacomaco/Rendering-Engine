@@ -38,7 +38,7 @@ vec3 diffuseIBL(vec3 albedo,vec3 normalWorld,vec3 pixelToEye,float metallic) {
 vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,float roughness) {
     vec2 brdf = texture(
         brdfTexture, 
-        vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
+        vec2(dot(pixelToEye,normalWorld),roughness)
     ).rg;
 
     vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
@@ -76,14 +76,14 @@ float SchlickGGX(float ndotI, float ndotO, float roughness) {
 vec3 PBR(PBRValue value,vec3 lightStrength,float shadow){
     vec3 F0 = mix(Fdielectric, value.albedo, value.metallic);
     vec3 F = SchlickFresnel(F0, max(dot(value.halfWayDir,value.pixelToEye),0.0));
-    vec3 kd = mix(1.0 - F, vec3(0.0), value.metallic);
+    vec3 kd = mix(1.0 - F, vec3(0.0), value.metallic); // 에너지 보존법칙. Specular가 늘면 diffuse는 내려가야함.
     vec3 diffuseBRDF = kd * value.albedo;
 
     float D = NdfGGX(value.ndotH, value.roughness);
     float G = SchlickGGX(value.ndotl, value.ndotO, value.roughness);
 
     vec3 specularBRDF = (D * G * F) / max((4 * value.ndotl * value.ndotO),Epsilon);
-
+     
     vec3 radiance = lightStrength * value.ndotl;
 
     return (diffuseBRDF + specularBRDF) * radiance * (1.0 - shadow);

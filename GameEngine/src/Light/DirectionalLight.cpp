@@ -12,7 +12,7 @@ DirectionalLight::DirectionalLight(
 	lightInfo.position = position;
 	lightInfo.lightType = 0;
 
-	lightInfo.strength = glm::vec3(1.0);
+	lightInfo.strength = glm::vec3(10.0);
 	auto light = lightPowers[lightPower];
 	lightInfo.constant = light.constant;
 

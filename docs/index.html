@@ -87,6 +87,11 @@ h3 {
     font-size: 28px;
     margin-bottom: 1rem;
 }
+
+h4 {
+    font-size: 23px;
+    margin-bottom: 1rem;
+}
 li {
     margin-bottom: 0.5rem;
 }
@@ -120,19 +125,22 @@ a{
             프로젝트 개요
         </h3>
         <p>
-            이 엔진은 물리기반 렌더링을 사용한 엔진이며 제가 학습한 내용을 실제로 구현하며 제대로 학습하였는지 검증을 위한 용도로 제작되었습니다. <br/><br/>
-            이 엔진은 게임엔진이 아닌 렌더링 엔진입니다. 따라서 물리엔진, 씬 관리를 위한 xml기능은 포함되지 않습니다. 그래픽 요소를 표현하고 렌더링 하는걸 목적으로한 작은 프로젝트입니다.
+            이 엔진은 물리기반 렌더링(PBR)을 사용한 엔진으로, 학습한 내용을 실제로 구현하고 검증하기 위해 제작되었습니다.<br/><br/>
+            이 엔진은 그래픽 요소를 표현하고 렌더링하는 것을 목적으로 하며, 물리 엔진이나 씬 관리를 위한 XML 기능은 포함되지 않습니다.
         </p>
         <h3>
             주요 특징
         </h3>
         <p>
             <ul>
-                <li><strong><a href="#pbr">물리 기반 렌더링</a></strong> : 언리얼 엔진에서 소개된 방식을 이용하여 구현되었습니다. 엔진 내부에서 BRDF LUT을 계산하는게 아닌 IBL 에서 생성한 이미지를 바탕으로 구현됩니다.</li>
-                <li><strong><a href="#bloom">Bloom</a></strong> : Bloom Disasters를 피하기 위하여 업스케일링과 다운스케일링을 통한 Physically Based Bloom을 사용하였습니다.</li>
-                <li><strong><a href="#shadow">그림자</a></strong> : 더 사실적인 그림자 묘사를 위한 PCF, 그림자 해상도 문제를 해결하기 위하여 CSM을 적용하였습니다.</li>
-                <li><strong><a href="#ssao">SSAO</a></strong> : Screen Space Ambient Occlusion을 통하여 더 사실적인 렌더링을 하였습니다.</li>
+                <li><strong><a href="#pbr">물리 기반 렌더링</a></strong> : 언리얼 엔진에서 소개된 방식을 이용하여 구현되었습니다. 엔진 내부에서 BRDF LUT을 계산하는 대신 IBL에서 생성한 이미지를 바탕으로 구현됩니다.</li>
+                <li><strong><a href="#bloom">Bloom</a></strong> : Bloom 효과에서 Bloom Disaster를 피하기 위해 업스케일링과 다운스케일링을 통한 Physically Based Bloom을 사용하였습니다.</li>
+                <li><strong><a href="#shadow">그림자</a></strong> : 더 사실적인 그림자 묘사를 위해 PCF(Percentage-Closer Filtering)와 CSM(Cascaded Shadow Maps)을 적용하였습니다.</li>
                 <li><strong><a href="#environment">환경 효과</a></strong> : Screen Space God Rays, Lens Flare Effect를 추가하였습니다.</li>
+                <li><strong>SSAO</strong> : Screen Space Ambient Occlusion을 통해 더 사실적인 렌더링을 구현하였습니다.</li>
+                <li><strong>HDR</strong> : 큐브맵 HDR 텍스처가 적용될 수 있도록 구현하였습니다.</li>
+                <li><strong>ACES Tone Mapping</strong> : ACES Tone Mapping을 통해 좀 더 아름다운 화면을 구현하였습니다.</li>
+
             </ul>
         </p>
         <h3>
@@ -150,20 +158,197 @@ a{
         <br/>
         <div class="bordered"></div>
         <h3>
-            <a id="pbr">물리 기반 렌더링</a>
+            <p id="pbr">물리기반 렌더링</p>
         </h3>
+        <h4>
+            개요
+        </h4>
+        <p>
+            이번 프로젝트는 오브젝트의 사실적인 묘사를 위해 물리기반 렌더링을 적용하는 것을 목적으로 제작되었습니다. 물리기반 렌더링 방법 중 2013년 SIGGRAPH에서 소개된 Epic Games의 Unreal Engine에서 사용된 방법을 채택하였습니다.
+        </p>
+        <h4>
+            기술적 상세
+        </h4>
+        <p>
+            <a href="https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf">Epic Games 2013 Siggraph Presentation</a>
+            <br/>
+            위의 언리얼 논문, Nardin PBR 및 인터넷 강의를 참고하며 구현하였습니다.
+            <br/><br/>
+            Unreal PBR에선 Microfacet Specular BRDF와 IBL이 함께 사용되고 있습니다. IBL은 IBL Baker 툴을 사용하였습니다.
+            <br/><br/>
+            Microfacet은 Cook Torance model을 사용하여 구현하였습니다.<br/>
+            <img src="https://i.ibb.co/JrBwNfJ/340966073-7cf39f0e-e491-47bc-8833-2ff3bbdc0941.png"/>
+            <br/> 각 Distribution, Fresnel, Geometry Function의 수식은 아래와 같습니다.<br/>
+            <img src="https://i.ibb.co/C2PvqVC/340966305-f3728369-39b9-452d-9fb5-0d88748c2152.png"/>(NDF GGX)
+            <br/><br/>
+            <img src="https://i.ibb.co/BjFRdQS/340966633-0d59e8d0-61df-4e05-8f93-00cba2a1c71a.png"> Schlick GGX
+            <br/><br/>
+            <img src="https://i.ibb.co/ctHT1d9/340967004-adf56dba-0834-4863-8541-a3874d41147c.png" width="500">
+            <br/><br/>
+            위 공식을 그대로 쉐이더에 적용하여 Microfacet Specular BRDF를 구하였고 Fresnel에서 역산한 Diffuse 값을 더하여 PBR 값을 계산하였습니다. <br/><br/>
+
+            IBL(Image Based Lighting)의 경우 IBL Baker 툴을 사용하였습니다.<br/><br/>
+
+            <img width="500" src="https://i.ibb.co/jZWmMsN/340977338-4a896870-5d9c-41b5-9375-9c7a137db4e9.jpg"><br/>
+
+            IBL Baker를 사용하여 BRDF LUT와 Specular IBL, Irradiance IBL을 계산한 텍스처 이미지를 얻을 수 있었고 이를 샘플링하여 계산하는 방식을 사용했습니다.<br/><br/>
+        </p>
+        <h4>
+            성과
+        </h4>
+        <p>
+            좌 (Phong + IBL), 우 (Unreal PBR)
+            <br/>
+            <img width="300" src="https://i.ibb.co/Rcc38p3/340980223-1d50cf4e-228a-4271-a3e9-90de81766f39.png">
+            <img width="300" src="https://i.ibb.co/qCQpLKQ/340980968-d9381258-914a-404a-86ff-e311d6e3525c.png">
+            <br/>
+            왼쪽은 Phong 라이팅과 IBL을 섞은 화면이고 오른쪽은 PBR을 사용한 모델인데 오른쪽이 좀 더 화사한 느낌을 주고있습니다.<br/>
+            Phong 라이트는 모델이 간편하고 계산이 빠르지만 현실적인 재질표현을 하기엔 한계가 분명합니다. <br/>
+            이 프로젝트를 진행하면서 좀 더 현실적이고 고품질 그래픽 이미지를 생성하는데 필요한 기술을 학습하고 적용해보았고, Lighting에 대해서 심층적으로 이해할 수 있는 계기가 되었습니다.
+        </p>
+        
+        <div class="bordered"></div>
         <h3>
             <a id="bloom">Bloom</a>
         </h3>
+        <h4>
+            개요
+        </h4>
+        <p>
+            화면에서 좀더 빛이 퍼지는 느낌을 주기 위해서 Bloom 이펙트를 제작해 도입했습니다. <br/>
+            처음엔 널리 알려진 Bloom 이펙트를 적용했는데 어두운 부분도 Bloom이 퍼져 그림자 경계선이 흐려지는 현상을 경험하였고 이를 해결하고자 Physically Based Bloom을 적용했습니다. <br/>
+            <img width="500" src="http://gangles.ca/images/bloom/bloom-twilight.jpg"> <br/>
+            (Bloom Disaster 예시)
+        </p>
+        <h4>
+            기술적 상세
+        </h4>
+        <p>
+           <a href="https://learnopengl.com/Guest-Articles/2022/Phys.-Based-Bloom">Learn Opengl</a> <br/>
+           이 기술은 Learn OpenGL에서 소개된 방식을 그대로 따라하였습니다. <br/>
+           기존엔 2개의 버퍼로 색에서 밝은 영역을 축출해 뭉개는 Bloom을 사용하였지만, 이 방식에선 Call of duty 제작진이 설개한 DownSample UpSample 알고리즘을 통해 밝은영역과 어두운 영역을 분리해 이를 혼합하는 방식으로 진행됩니다. <br/>
+
+           <img src="https://learnopengl.com/img/guest/2022/physically_based_bloom/bloom-diagram.png">
+           <br/>
+           <br/>
+           <img width="160" src="https://i.ibb.co/ft3JBsD/340985663-1b4a4238-24fe-419e-acd5-c6d2945b085a.png">
+           <img width="160" src="https://i.ibb.co/92VkLVR/340985706-ce0370da-4705-45c7-8873-01f55d022a44.png">
+           <img width="160" src="https://i.ibb.co/8zL6JJb/340985725-78c39f86-5046-47ba-9ca1-0a6937b8d6bb.png">
+           <img width="160" src="https://i.ibb.co/qYBpVhg/340985764-8d5ed724-03eb-4079-bf31-02fdb0506849.png">
+           <img width="160" src="https://i.ibb.co/y4rQNz7/340985788-d182a206-becf-48cb-bb96-49dc56c5fb6e.png">
+           <br/>
+           이후 생성된 Bloom 이펙트는 PostProcess 과정에서 최종 화면과 결합되어 Bloom 효과를 주게 됩니다.
+
+           <br/><br/>
+           좌 : Bloom 없음, 우 : Bloom 있음<br/>
+
+           <img width="400" src="https://i.ibb.co/YjYqHMV/340986826-6e4676bb-9417-4b12-951b-cfb350af4267.png">
+           <img width="400" src="https://i.ibb.co/6gK4mky/340986857-012a7462-3262-4d21-9230-4b9d5f0f0c1c.png">
+
+        </p>
+        
+        <div class="bordered"></div>
         <h3>
             <a id="shadow">그림자</a>
         </h3>
-        <h3>
-            <a id="ssao">SSAO</a>
-        </h3>
+        <h4>
+            개요
+        </h4>
+        <p>
+            그림자는 제가 가장 열정적으로 구현한 것중 하나입니다. <br/>
+            그림자는 물체의 위치와 깊에 형태를 파악하게 해주는 중요한 요소중 하나입니다. 또한 까다로운 요소중 하나입니다.<br/>
+            그림자에선 PCF와 CSM을 적용하여 여러 개선을 진행하였습니다.
+        </p>
+        <h4>
+            기술적 상세
+        </h4>
+        <p>
+            그림자는 주로 광원으로 카메라를 움직여 뎁스맵을 렌더링한 후 물체 렌더링시 뎁스맵의 z값을 파악하여 물체가 뒤에있는지 앞에있는지 확인하여 그림자를 그립니다.<br/>
+            만약 광원이 Directional Light이면 Orthogonal Projection을 사용하여 뎁스맵을 기록하게 되는데 이때 문제가 발생합니다.<br/>
+            <img src="https://learnopengl.com/img/advanced-lighting/shadow_mapping_depth_map.png" width="500"><br/>
+            Orthogonal Projection 특징상 카메라에 보이는 영역만 뎁스맵을 찍는것이 아닌 다른 영역에도 뎁스맵을 찍게됩니다. 따라서 필연적으로 뎁스맵 해상도가 부족하여 아래와 같이 그림자가 직각직각으로 나타나는 현상이 보이게 됩니다.
+            <div>
+            <img width="500" src="https://i.ibb.co/WyvqdVV/1234.png">
+            <br/>
+            그림자 해상도 부족으로 인하여 발생한 아티팩트
+            </div>
+            <br/>
+            이를 해결하고자 <strong>CSM</strong>을 적용하였습니다.
+            <div>
+                <img width="500" src="https://learnopengl.com/img/guest/2021/CSM/frustum_fitting.png">
+            </div>
+
+            CSM을 적용하여 화면에 보이는 부분만 렌더링하게되면 그림자 해상도 이슈를 부분적으로 해결할 수 있습니다.
+
+            <div>
+                <img width="250" src="https://i.ibb.co/2tgB9Cr/340994831-19f138b8-b4f2-40c2-a076-8454a7de6d5d.png">
+                <img width="250" src="https://i.ibb.co/R94bwCt/340994838-2f3fa9fa-2ed9-4233-bc8e-fe1abe25ff50.png">
+                <img width="250" src="https://i.ibb.co/k0SWj80/340994847-7cbccee7-48fc-45f6-9ea4-a2129cee98cc.png">
+            </div>
+
+            또한 한번에 여러개의 쉐도우맵을 만들어낼시 프레임드랍이 발생하기 때문에 인스턴싱을 활용하여 최대한 한번에 여러 쉐도우맵을 만들어 Texture2DArray 버퍼에 담아서 사용할 수 있게 구조를 개선하였습니다.
+        </p>
+        <h4>
+            성과
+        </h4>
+        <p>
+            <div>
+                <img width="500" src="https://i.ibb.co/mD3Hh2v/340995916-ea1d9fcc-5046-4ee4-9f1a-60cadbff07eb.png">
+            </div>
+            많은 쉐도우 아티팩트를 줄일 수 있었습니다. 하지만 가까이서 보면 여전히 아티팩트가 보입니다. 그래도 멀리서 보면 인지하기 어려울 정도로 개선되었습니다.
+        </p>
+        
+        <div class="bordered"></div>
         <h3>
             <a id="environment">환경 효과</a>
         </h3>
+        <p>
+            화면을 렌더링하는것 외에도 태양의 빛이 퍼지는 God Rays효과, 렌즈 플레어 효과들을 추가하여 재미요소를 더했습니다.
+        </p>
+        <h4>
+            기술적 상세
+        </h4>
+        <p>
+            <a href="https://developer.nvidia.com/gpugems/gpugems3/part-ii-light-and-shadows/chapter-13-volumetric-light-scattering-post-process">god rays</a><br/>
+
+            GodRays는 Nvidia의 GPU Gems를 참고하였습니다.
+            <div>
+                <img src="https://i.ibb.co/sVMYC2z/equ278-02.jpg" width="500"/>
+            </div>
+            GodRays를 생성하는데 사용된 공식은 다음과 같습니다 각 요소들의 이미는 아래와 같습니다.
+            <p>
+                <strong>decay </strong> : 빛의 감쇠를 조절하는 값
+            </p>
+            <p>
+                <strong>density</strong> : 밀도를 조절하는 값
+            </p>
+            <p>
+                <strong>weight</strong> : 샘플 가중치
+            </p>
+            <p>
+                <strong>exposure </strong> : 노출량
+            </p>
+            <p>
+                <strong>L </strong> : 샘플링한 값
+            </p>
+
+            위의 수식을 쉐이더로 옮긴후 먼저 태양을 렌더링할때는 별도의 버퍼에 렌더링하여 메인 씬과 독립적으로 있게 하였습니다.<br/>
+            <img width="500" src="https://i.ibb.co/vYRFj7Z/340999564-de175299-bdc9-4016-b60c-7d4c297e47b5.png"><br/>
+            이후 태양에 God Rays 프로세스를 적용하여 빛의 퍼짐을 적용한 후 최종 화면에 결합하면 아래의 결과가 나옵니다.<br/>
+            <img width="500" src="https://i.ibb.co/Jc7KxNG/341000042-856e8420-61aa-44df-85a3-76c13cc1596f.png">
+        </p>
+        <div class="bordered"></div>
+        <h3> ### 끝내며 </h3>
+        <p>
+            이 프로젝트를 구현하면서 그래픽스 프로그래밍에 대한 이해와 파이프라인에 대한 경험을 얻을 수 있었습니다. <br/><br/>
+            이 프로젝트는 계속해서 공부한것을 더 덧붙여 구현해보는 토이프로젝트로 계속 활용할 생각입니다. <br/><br/>
+            최대한 복잡한 설명 없이 그림위주로 설명을 이어붙이다 보니 빠진 부분이 있고 미흡한 부분이 있을수도 있습니다. <br/><br/>
+            만약 피드백이 필요하다면 아래 블로그에 댓글을 남겨주세요. <br/><br/>
+            https://blog.naver.com/lacomaco122
+
+            <br/><br/>
+            감사합니다.
+        </p>
     </div>
 </main>
 </body>

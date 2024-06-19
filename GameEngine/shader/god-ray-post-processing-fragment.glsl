@@ -12,9 +12,6 @@ uniform float density;
 uniform float weight;
 uniform float exposure;
 
-uniform int ghosts;
-uniform float ghostDispersal;
-
 void main() {
     int NUM_SAMPLES = 250;
     
