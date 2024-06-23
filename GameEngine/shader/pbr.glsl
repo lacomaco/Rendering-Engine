@@ -244,8 +244,8 @@ ShadowStruct cascadeShadowCalculation(
     vec3 normal = normalize(normalWorld);
     vec3 direction = light.direction;
 
-    float bias = max(0.05 * (1.0 - dot(normal,-direction)),0.005);
-    const float biasModifier = 0.5f;
+    float bias = max(0.005 * (1.0 - dot(normal,-direction)),0.0005);
+    const float biasModifier = 15.0f;
 
     if(layer + 1 == directionalCascadeLevel) {
         bias *= 1 / (far * biasModifier);

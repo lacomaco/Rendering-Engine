@@ -10,8 +10,8 @@ namespace EditorSharedValue {
 	float cameraSpeed = 2.5f;
 	float exposure = 1.0f;
 
-	glm::vec3 directionalLightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 directionalLightDirection = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 directionalLightPosition = glm::vec3(0, 20, -0.001);
+	glm::vec3 directionalLightDirection = glm::vec3(0, -1, 0.3);
 	unsigned int directionalLightDepthMap = 0;
 
 	float bloomThreshold = 0.04;

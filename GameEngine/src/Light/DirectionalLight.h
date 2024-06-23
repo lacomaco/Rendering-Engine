@@ -26,6 +26,7 @@ public:
 
 	void MovePosition(vec3 position);
 	void MoveDirection(vec3 direction);
+	void SyncGUI();
 
 	Light GetLightInfo() {
 		return lightInfo;

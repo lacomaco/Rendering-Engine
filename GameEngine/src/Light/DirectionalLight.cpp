@@ -1,4 +1,5 @@
 #include "DirectionalLight.h"
+#include "../Editor/EditorSharedValue.h"
 
 DirectionalLight::DirectionalLight(
 	vec3 position,
@@ -26,9 +27,14 @@ DirectionalLight::DirectionalLight(
 }
 
 void DirectionalLight::MovePosition(vec3 position) {
-	position = position;
+	lightInfo.position = position;
 }
 
 void DirectionalLight::MoveDirection(vec3 direction) {
-	direction = direction;
+	lightInfo.direction = direction;
+}
+
+void DirectionalLight::SyncGUI() {
+	MovePosition(EditorSharedValue::directionalLightPosition);
+	MoveDirection(EditorSharedValue::directionalLightDirection);
 }

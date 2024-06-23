@@ -87,6 +87,9 @@ void LightManager::BindLightUBO(const char* shaderProgramName) {
 }
 
 void LightManager::UpdateLightUBO() {
+	if (Sun) {
+		Sun->SyncGUI();
+	}
 	// Lights 사이즈 생성
 	int stack = 0;
 	const int maxLights = 100;
