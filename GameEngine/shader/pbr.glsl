@@ -38,7 +38,7 @@ vec3 diffuseIBL(vec3 albedo,vec3 normalWorld,vec3 pixelToEye,float metallic) {
 vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,float roughness) {
     vec2 brdf = texture(
         brdfTexture, 
-        vec2(dot(pixelToEye,normalWorld),roughness)
+        vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
     ).rg;
 
     vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
@@ -49,7 +49,7 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
 
 
 vec3 ambientIBL(vec3 albedo, vec3 normalW, vec3 pixelToEye, float ao, float metallic,float roughness){
-    vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic) * 0.3;
+    vec3 diffuseIBL = diffuseIBL(albedo,normalW,pixelToEye,metallic) * 0.5;
     vec3 specularIBL = specularIBL(albedo,normalW,pixelToEye,metallic,roughness);
 
     return (diffuseIBL + specularIBL) * ao;

@@ -82,34 +82,6 @@ void main() {
 				shadowIndex,
 				light
 			);
-			bool useCascadeDebug = false;
-
-			if(useCascadeDebug){
-				if(shadow.layer == 0){
-					FragColor = vec4(1.0,0.0,0.0,1.0);
-					return;
-				}
-
-				if(shadow.layer == 1){
-					FragColor = vec4(0.0,1.0,0.0,1.0);
-					return;
-				}
-
-				if(shadow.layer == 2){
-					FragColor = vec4(0.0,0.0,1.0,1.0);
-					return;
-				}
-
-				if(shadow.layer == 3){
-					FragColor = vec4(1.0,1.0,0.0,1.0);
-					return;
-				}
-
-				if(shadow.layer == 4){
-					FragColor = vec4(1.0,0.0,1.0,1.0);
-					return;
-				}
-			}
 
 			color += directionalLight(
 				light,
