@@ -8,7 +8,6 @@ Write-Output "Target Directory: $targetDir"
 $assetsPath = "assets"
 $shaderPath = "shader"
 
-# assets 폴더 복사 함수 정의
 function Copy-Assets {
     param (
         [string]$source,
@@ -16,7 +15,7 @@ function Copy-Assets {
     )
     
     Write-Output "Copying assets from $source to $destination"
-    robocopy $source $destination /E /MT:8 /XD .git /XO # /XO 옵션을 사용하여 이미 존재하는 파일 제외
+    robocopy $source $destination /E /MT:8 /XD .git /XN /XO # /XN 및 /XO 옵션을 사용하여 이미 존재하는 파일 제외
 }
 
 # shader 폴더 덮어쓰기 복사 함수 정의

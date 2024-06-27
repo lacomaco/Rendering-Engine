@@ -67,38 +67,39 @@ glm::mat4 CascadeShadow::GetDirectionalLightMatrix(
 
 	center /= corners.size();
 
-	const auto lightView = glm::lookAt(
-		center - light.direction,
-		center,
-		glm::vec3(0.0, 1.0, 0.0)
+	float radius = glm::length(corners[0] - corners[6]) / 2.0f;
+	radius = std::max(radius, 15.0f);
+	float texelPerUnit = (float)SHADOW_RESOLUTION / (radius * 2.0f);
+
+	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(texelPerUnit));
+
+	glm::vec3 zeroVector = glm::vec3(0.0f);
+	glm::vec3 upDir = glm::vec3(0, 1, 0);
+	glm::vec3 baseLookAt = -light.direction;
+
+	glm::mat4 tempLookAt = glm::lookAt(
+		zeroVector,
+		baseLookAt,
+		upDir
 	);
 
-	float minX = std::numeric_limits<float>::max();
-	float maxX = std::numeric_limits<float>::lowest();
-	float minY = std::numeric_limits<float>::max();
-	float maxY = std::numeric_limits<float>::lowest();
-	float minZ = std::numeric_limits<float>::max();
-	float maxZ = std::numeric_limits<float>::lowest();
+	tempLookAt *= scaleMatrix;
+	glm::mat4 tempInverseLookAt = glm::inverse(tempLookAt);
 
-	for (const auto& v : corners) {
-		const auto trf = lightView * vec4(v,1.0f);
-		minX = std::min(minX, trf.x);
-		maxX = std::max(maxX, trf.x);
-		minY = std::min(minY, trf.y);
-		maxY = std::max(maxY, trf.y);
-		minZ = std::min(minZ, trf.z);
-		maxZ = std::max(maxZ, trf.z);
-	}
+	center = tempLookAt * glm::vec4(center,1.0f);
+	center.x = (float)floor(center.x);
+	center.y = (float)floor(center.y);
+	center = tempInverseLookAt * glm::vec4(center, 1.0f);
 
-	auto temp = -minZ;
-	minZ = -maxZ;
-	maxZ = temp;
+	glm::vec3 eye = center - (light.direction * radius * 2.0f);
 
-	auto mid = (maxZ - minZ) / 2.0f;
-	minZ -= mid * 5.0f;
-	maxZ += mid * 5.0f;
+	glm::mat4 lightView = glm::lookAt(
+		eye,
+		center,
+		upDir
+	);
 
-	glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+	glm::mat4 lightProjection = glm::ortho(-radius, radius, -radius, radius, -radius * 6.0f, radius * 6.0f);
 
 	return lightProjection * lightView;
 }
