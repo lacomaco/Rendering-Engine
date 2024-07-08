@@ -13,10 +13,6 @@ in vec3 normalWorld;
 uniform bool isGodRay;
 
 void main() {
-    if(isGodRay){
-        godRays = vec4(1.0, 1.0, 1.0, 1.0);
-        return;
-    }
 
     vec3 _normal = normalWorld;
 
@@ -32,5 +28,12 @@ void main() {
 
     positionMetallic = vec4(FragPos, metallic);
 	albedoRoughness = vec4(albedo, roughness);
-    godRays = vec4(0.0, 0.0, 0.0, 0.0);
+
+    if(isGodRay){
+        godRays = vec4(1.0, 1.0, 1.0, 1.0);
+        return;
+    } else {
+        godRays = vec4(0.0,0.0,0.0,0.0);
+    }
+
 }

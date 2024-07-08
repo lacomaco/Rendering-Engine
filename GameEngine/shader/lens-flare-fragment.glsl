@@ -15,38 +15,42 @@ uniform int uGhostCount;
 //color gradient 생성기
 
 const vec3 centerColor = vec3(0.8, 0.8, 0.8);
+
 const vec3 lightBlue = vec3(0.2, 0.4, 0.6);
 const vec3 darkBlue = vec3(0.0, 0.1, 0.2);
+
 const vec3 warmYellow = vec3(0.8, 0.6, 0.2);
-const vec3 lightRed = vec3(0.8, 0.2, 0.2);
-const vec3 darkRed = vec3(0.4, 0.0, 0.0);
+
+const vec3 lightRed = vec3(0.4, 0.2, 0.3);
 
 vec3 circularGradient(vec2 uv){
     vec2 center = vec2(0.5);
     float dist = length(uv-center) * 2.0;
-    
-    const float blueThreshold = 0.2;
+    const float redThreshold = 0.2;
     const float yellowThreshold = 0.4;
-    const float redThreshold = 0.6;
-    const float darkRedThreshold = 0.8;
+    const float blueThreshold = 0.6;
+    const float darkBlueThreshold = 0.95; 
     
-    vec3 color = mix(centerColor, lightBlue, smoothstep(0.0, blueThreshold, dist));
+    vec3 color = mix(centerColor, lightRed, smoothstep(0.0, redThreshold, dist));
+
+    if(dist > redThreshold){
+        color = mix(lightRed, warmYellow, smoothstep(redThreshold, yellowThreshold, dist));
+    }
+
+    if(dist > yellowThreshold){
+        color = mix(warmYellow, lightBlue, smoothstep(yellowThreshold, blueThreshold, dist));
+    }
     
     if(dist > blueThreshold){
-        color = mix(lightBlue, darkBlue, smoothstep(blueThreshold, yellowThreshold, dist));
+        color = mix(lightBlue, darkBlue, smoothstep(blueThreshold, darkBlueThreshold, dist));
     }
-    if(dist > yellowThreshold){
-        color = mix(darkBlue, warmYellow, smoothstep(yellowThreshold, redThreshold, dist));
-    }
-    if(dist > redThreshold){
-        color = mix(warmYellow, lightRed, smoothstep(redThreshold, darkRedThreshold, dist));
-    }
-    if(dist > darkRedThreshold){
-        color = mix(lightRed, darkRed, smoothstep(darkRedThreshold, 1.0, dist));
+
+    if(dist > darkBlueThreshold){
+        color = mix(darkBlue, centerColor, smoothstep(darkBlueThreshold, 1.0, dist));
     }
     
     // 패턴 추가
-    float pattern = sin(dist * 20.0) * 0.5 + 0.5;
+    float pattern = sin(dist * 20.0) * 2.0;
     color = mix(color, vec3(0.0), pattern * 0.2);
     
     return color;
@@ -74,10 +78,10 @@ void main() {
 		result += texture(godRayTexture, offset) * weight;
 	}
 
-    float haloWidth = 0.4;
+    float haloWidth = 0.43;
     vec2 haloVec = normalize(ghostVec) * haloWidth;
     float weight = length(vec2(0.5) - fract(inversedTexCoord + haloVec)) / length(vec2(0.5));
-    weight = pow(1.0 - weight, 5.0);
+    weight = pow(1.0 - weight, 11);
     result += texture(godRayTexture, fract(inversedTexCoord + haloVec)) * weight;
 
     result *= vec4(circularGradient(TexCoords),1.0);
