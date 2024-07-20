@@ -257,6 +257,9 @@ void Game::ProcessInput() {
 
 
 void Game::CreateShaderProgram() {
+	std::cout << "Shader Compile Start" << std::endl;
+	auto start = std::chrono::high_resolution_clock::now();
+
 	auto shader = Shader::getInstance();
 	shader->loadShaderProgram(
 		"./shader/default-vertex.glsl",
@@ -350,4 +353,9 @@ void Game::CreateShaderProgram() {
 		"./shader/ssao-blur-fragment.glsl",
 		"SSAOBlur"
 	);
+
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;
+
+	std::cout << "Shader Compile Complete " << duration.count()  << std::endl;
 }
