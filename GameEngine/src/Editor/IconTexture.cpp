@@ -30,7 +30,7 @@ IconTexture::IconTexture(const char* filename) {
 		internalFormat = GL_RGBA8;
 	}
 	else {
-		std::cerr << "Unsupported number of channels: " << nrChannels << std::endl;
+		std::cerr << "Unsupported number of channels: " << nrChannels<< " " << filename << std::endl;
 		stbi_image_free(data);
 		return;
 	}

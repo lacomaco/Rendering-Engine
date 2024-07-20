@@ -58,7 +58,6 @@ void Game::GenerateOutput() {
 	}
 	graphicsPipe->use();
 	
-	//const char* shaderName = "simple-pbr-shading";
 	const char* shaderName = "default";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
@@ -314,18 +313,6 @@ void Game::CreateShaderProgram() {
 		"./shader/point-shadow-fragment.glsl",
 		"point-shadow",
 		"./shader/point-shadow-geometry.glsl"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/simple-shading-vertex.glsl",
-		"./shader/simple-shading-fragment.glsl",
-		"simple-shading"
-	);
-
-	shader->loadShaderProgram(
-		"./shader/simple-shading-vertex.glsl",
-		"./shader/simple-pbr-shading-fragment.glsl",
-		"simple-pbr-shading"
 	);
 
 	shader->loadShaderProgram(

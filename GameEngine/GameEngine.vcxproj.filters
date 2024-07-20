@@ -1465,12 +1465,9 @@
     <None Include="shader\point-shadow-fragment.glsl" />
     <None Include="shader\hdr-vertex.glsl" />
     <None Include="shader\hdr-fragment.glsl" />
-    <None Include="shader\simple-shading-vertex.glsl" />
-    <None Include="shader\simple-shading-fragment.glsl" />
     <None Include="shader\up-sample-fragment.glsl" />
     <None Include="shader\down-sample-fragment.glsl" />
     <None Include="todo.md" />
-    <None Include="shader\simple-pbr-shading-fragment.glsl" />
     <None Include="shader\pbr.glsl" />
     <None Include="shader\god-ray-bloom-fragment.glsl" />
     <None Include="shader\god-ray-post-processing-fragment.glsl" />

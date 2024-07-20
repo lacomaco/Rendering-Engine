@@ -8,9 +8,9 @@ char ContentsBrowser::xmlName[128] = "";
 
 ContentsBrowser::ContentsBrowser() {
 
-	folderIcon = std::make_shared<IconTexture>("./icons/folder.png");
-	xmlIcon = std::make_shared<IconTexture>("./icons/xml.png");
-	fbxIcon = std::make_shared<IconTexture>("./icons/fbx.png");
+	folderIcon = std::make_shared<IconTexture>("./assets/icons/folder.png");
+	xmlIcon = std::make_shared<IconTexture>("./assets/icons/xml.png");
+	fbxIcon = std::make_shared<IconTexture>("./assets/icons/fbx.png");
 
 	RootFolder = new FileStructure();
 	RootFolder->type = FileType::Folder;

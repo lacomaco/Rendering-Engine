@@ -78,18 +78,6 @@ void CubeMap::CreateBrdfLutTexture(std::string map) {
         Format.Type,
         Texture.data()
     );
-    /*
-    glCompressedTexImage2D(
-    	GL_TEXTURE_2D,
-		0,
-        GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
-		Texture.extent().x,
-		Texture.extent().y,
-		0,
-		Texture.size(),
-		Texture.data()
-    );
-    */
 }
 
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
