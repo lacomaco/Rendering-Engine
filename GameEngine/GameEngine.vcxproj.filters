@@ -1490,6 +1490,8 @@
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="copy_assets.ps1" />
+    <None Include="shader\diffuse-irradiance-fragment.glsl" />
+    <None Include="shader\diffuse-irradiance-vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

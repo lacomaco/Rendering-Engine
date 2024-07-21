@@ -4,6 +4,13 @@
 
 CubeMap::CubeMap(std::string filePath) {
 
+    captureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    captureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    captureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    captureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+    captureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    captureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
     std::vector<std::string> skyBox = {
         filePath + "skybox_posx.dds",
         filePath + "skybox_negx.dds",
@@ -36,6 +43,9 @@ CubeMap::CubeMap(std::string filePath) {
     CreateCubeMapTexture(irradianceId, skyBoxIrradiance);
     // TODO: test 말고 envbrdf.dds로 바꾸자.
     CreateBrdfLutTexture(filePath + "test.dds");
+
+    CreateDiffuseIrradianceMap();
+
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -160,4 +170,8 @@ void CubeMap::Draw(const char* shaderProgramName) {
     shader->setMat4(shaderProgramName, "model", scaleMatrix);
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void CubeMap::CreateDiffuseIrradianceMap() {
+
 }

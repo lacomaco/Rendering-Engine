@@ -8,12 +8,24 @@
 #include "../../Util/Shader.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "../../Constants.h"
 
 class CubeMap
 {
 private:
     void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
     void CreateBrdfLutTexture(std::string map);
+    void CreateDiffuseIrradianceMap();
+
+    glm::mat4 projection = glm::perspective(
+        glm::radians(90.0f),
+        1.0f, // 정사각형
+        0.1f,
+        10.0f
+    );
+
+    glm::mat4 captureViews[6];
+
 public:
 	CubeMap(std::string filePath);
     unsigned int skyBoxId;

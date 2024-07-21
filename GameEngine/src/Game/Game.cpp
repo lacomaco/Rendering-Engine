@@ -354,6 +354,12 @@ void Game::CreateShaderProgram() {
 		"SSAOBlur"
 	);
 
+	shader->loadShaderProgram(
+		"./shader/diffuse-irradiance-vertex.glsl",
+		"./shader/diffuse-irradiance-fragment.glsl",
+		"diffuse-irradiance"
+	);
+
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = end - start;
 
