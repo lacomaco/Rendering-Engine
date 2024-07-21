@@ -29,22 +29,10 @@ CubeMap::CubeMap(std::string filePath) {
         filePath + "radiance_negz.dds"
     };
 
-    std::vector<std::string> skyBoxIrradiance = {
-		filePath + "irradiance_posx.dds",
-		filePath + "irradiance_negx.dds",
-		filePath + "irradiance_posy.dds",
-		filePath + "irradiance_negy.dds",
-		filePath + "irradiance_posz.dds",
-		filePath + "irradiance_negz.dds"
-	}; 
-
     CreateCubeMapTexture(skyBoxId, skyBox);
     CreateCubeMapTexture(radianceId, skyBoxRadiance);
-    CreateCubeMapTexture(irradianceId, skyBoxIrradiance);
     // TODO: test 말고 envbrdf.dds로 바꾸자.
     CreateBrdfLutTexture(filePath + "test.dds");
-
-    CreateDiffuseIrradianceMap();
 
 
     glGenVertexArrays(1, &vao);
@@ -60,6 +48,17 @@ CubeMap::CubeMap(std::string filePath) {
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    glGenRenderbuffers(1, &rbo);
+    glGenFramebuffers(1, &fbo);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+
+    CreateDiffuseIrradianceMap();
 }
 
 
@@ -173,5 +172,55 @@ void CubeMap::Draw(const char* shaderProgramName) {
 }
 
 void CubeMap::CreateDiffuseIrradianceMap() {
+    glGenTextures(1, &irradianceId);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceId);
 
+    const int textureSize = 128;
+
+    for (unsigned int i = 0; i < 6; i++) {
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            GL_RGB16F,
+            textureSize,
+            textureSize,
+            0,
+            GL_RGB,
+            GL_FLOAT,
+            nullptr
+        );
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, textureSize, textureSize);
+
+    auto shader = Shader::getInstance();
+    const char* shaderProgramName = "diffuse-irradiance";
+    glUseProgram(shader->getShaderProgram("diffuse-irradiance"));
+    shader->setInt(shaderProgramName,"skyMap",0);
+    shader->setMat4(shaderProgramName,"projection", projection);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxId);
+
+    glViewport(0, 0, textureSize, textureSize);
+    for (unsigned int i= 0; i < 6; i++) {
+        shader->setMat4(shaderProgramName, "view", captureViews[i]);
+        glFramebufferTexture2D(
+            GL_FRAMEBUFFER,
+            GL_COLOR_ATTACHMENT0,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            irradianceId,
+            0
+        );
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 }

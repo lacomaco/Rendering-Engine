@@ -25,6 +25,8 @@ private:
     );
 
     glm::mat4 captureViews[6];
+    unsigned int fbo;
+    unsigned int rbo;
 
 public:
 	CubeMap(std::string filePath);
@@ -42,8 +44,6 @@ public:
 	
     std::vector<std::string> skyBox;
     std::vector<std::string> skyBoxRadiance;
-
-    std::vector<std::string> skyBoxIrradiance;
 
     std::vector<float> skyboxVertices = {      
         -1.0f,  1.0f, -1.0f,
