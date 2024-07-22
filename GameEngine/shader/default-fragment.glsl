@@ -90,39 +90,6 @@ void main() {
 			) * light.strength;
 
 			shadowIndex += directionalCascadeLevel;
-		} else if(light.lightType == 1){
-		/*
-			ShadowStruct shadow = pointShadowCalculation(
-				posWorld,
-				light,
-				pointShadowDepthMap[i]
-			);
-		
-			color += pointLight(
-				light,
-				shadow.shadow,
-				pbrMaterial
-			);
-			*/
-		}
-		else if(light.lightType == 2){
-
-		/*
-			ShadowStruct shadow = shadowCalculation(
-				spotLightShadowSpace[spotLightCount],
-				spotShadowDepthMap[spotLightCount],
-				normal,
-				normalize(light.position - posWorld)
-			);
-		
-			spotLightCount++;
-
-			color += spotLight(
-				light,
-				shadow.shadow,
-				pbrMaterial
-			);
-			*/
 		}
 	}
 

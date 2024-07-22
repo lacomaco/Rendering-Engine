@@ -30,7 +30,7 @@ CubeMap::CubeMap(std::string filePath) {
     };
 
     CreateCubeMapTexture(skyBoxId, skyBox);
-    CreateCubeMapTexture(radianceId, skyBoxRadiance);
+    CreateCubeMapTexture(preFilterEnvironmentMap, skyBoxRadiance);
     // TODO: test 말고 envbrdf.dds로 바꾸자.
     CreateBrdfLutTexture(filePath + "test.dds");
 
@@ -147,8 +147,8 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
     shader->setInt(shaderProgramName, "skyBox", 0);
 
     glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, radianceId);
-    shader->setInt(shaderProgramName, "radianceMap", 1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, preFilterEnvironmentMap);
+    shader->setInt(shaderProgramName, "preFilterEnvironmentMap", 1);
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceId);
@@ -223,4 +223,30 @@ void CubeMap::CreateDiffuseIrradianceMap() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+void CubeMap::CreatePreFilterEnviromentMap() {
+    glGenTextures(1, &preFilterEnvironmentMap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, preFilterEnvironmentMap);
+    for (int i = 0; i < 6; i++) {
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            GL_RGB16F,
+            128,
+            128,
+            0,
+            GL_RGB,
+            GL_FLOAT,
+            nullptr
+        );
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 }

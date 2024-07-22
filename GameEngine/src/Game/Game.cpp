@@ -360,6 +360,12 @@ void Game::CreateShaderProgram() {
 		"diffuse-irradiance"
 	);
 
+	shader->loadShaderProgram(
+		"./shader/diffuse-irradiance-vertex.glsl",
+		"./shader/pre-filter-environment-fragment.glsl",
+		"pre-filter-environment"
+	);
+
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = end - start;
 

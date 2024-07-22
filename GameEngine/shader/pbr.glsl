@@ -41,7 +41,7 @@ vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,
         vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
     ).rg;
 
-    vec3 specularIrradiance = textureLod(radianceMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
+    vec3 specularIrradiance = textureLod(preFilterEnvironmentMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
     vec3 F0 = mix(Fdielectric, albedo, metallic);
 
     return (F0 * brdf.x  + brdf.y) * specularIrradiance;

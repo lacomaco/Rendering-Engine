@@ -16,6 +16,7 @@ private:
     void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
     void CreateBrdfLutTexture(std::string map);
     void CreateDiffuseIrradianceMap();
+    void CreatePreFilterEnviromentMap();
 
     glm::mat4 projection = glm::perspective(
         glm::radians(90.0f),
@@ -31,7 +32,7 @@ private:
 public:
 	CubeMap(std::string filePath);
     unsigned int skyBoxId;
-	unsigned int radianceId;
+	unsigned int preFilterEnvironmentMap;
     unsigned int irradianceId;
     unsigned int brdfLUTTextureId;
     unsigned int vao, vbo;

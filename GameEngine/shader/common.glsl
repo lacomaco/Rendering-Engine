@@ -82,7 +82,7 @@ uniform sampler2D emissive0;
 
 
 uniform samplerCube skyBox;
-uniform samplerCube radianceMap; //specular
+uniform samplerCube preFilterEnvironmentMap; //specular
 uniform samplerCube irradianceMap;
 uniform sampler2D brdfTexture;
 

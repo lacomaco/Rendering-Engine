@@ -4,7 +4,7 @@ out vec4 FragColor;
 
 in vec3 localPos;
 
-uniform samplerCube skyMap;
+uniform samplerCube skyMap; 
 
 const float PI = 3.141592;
 
