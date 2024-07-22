@@ -19,18 +19,8 @@ CubeMap::CubeMap(std::string filePath) {
         filePath + "skybox_posz.dds",
         filePath + "skybox_negz.dds"
     };
-    
-    std::vector<std::string> skyBoxRadiance = {
-        filePath + "radiance_posx.dds",
-        filePath + "radiance_negx.dds",
-        filePath + "radiance_posy.dds",
-        filePath + "radiance_negy.dds",
-        filePath + "radiance_posz.dds",
-        filePath + "radiance_negz.dds"
-    };
 
     CreateCubeMapTexture(skyBoxId, skyBox);
-    CreateCubeMapTexture(preFilterEnvironmentMap, skyBoxRadiance);
     // TODO: test 말고 envbrdf.dds로 바꾸자.
     CreateBrdfLutTexture(filePath + "test.dds");
 
@@ -59,6 +49,7 @@ CubeMap::CubeMap(std::string filePath) {
 
 
     CreateDiffuseIrradianceMap();
+    CreatePreFilterEnviromentMap();
 }
 
 
@@ -228,13 +219,14 @@ void CubeMap::CreateDiffuseIrradianceMap() {
 void CubeMap::CreatePreFilterEnviromentMap() {
     glGenTextures(1, &preFilterEnvironmentMap);
     glBindTexture(GL_TEXTURE_CUBE_MAP, preFilterEnvironmentMap);
+    const int cubeMapSize = 256;
     for (int i = 0; i < 6; i++) {
         glTexImage2D(
             GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
             0,
             GL_RGB16F,
-            128,
-            128,
+            cubeMapSize,
+            cubeMapSize,
             0,
             GL_RGB,
             GL_FLOAT,
@@ -249,4 +241,38 @@ void CubeMap::CreatePreFilterEnviromentMap() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    auto shader = Shader::getInstance();
+    const char* shaderProgramName = "pre-filter-environment";
+    glUseProgram(shader->getShaderProgram(shaderProgramName));
+    shader->setInt(shaderProgramName, "skyMap", 0);
+    shader->setMat4(shaderProgramName, "projection", projection);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxId);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    unsigned int maxMipLevel = 9;
+    for (unsigned int mip = 0; mip < maxMipLevel; mip++) {
+        const int mipWidth = cubeMapSize * std::pow(0.5, mip);
+        const int mipHeight = cubeMapSize * std::pow(0.5, mip);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+        glViewport(0, 0, mipWidth, mipHeight);
+
+        const float roughness = (float)mip / (float)(maxMipLevel - 1);
+        for (int i = 0; i < 6; i++) {
+            shader->setMat4(shaderProgramName, "view", captureViews[i]);
+            glFramebufferTexture2D(
+                GL_FRAMEBUFFER,
+                GL_COLOR_ATTACHMENT0,
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                preFilterEnvironmentMap,
+                mip
+            );
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glBindVertexArray(vao);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+    }
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
