@@ -650,6 +650,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="libs\glm\LICENSE" />
     <None Include="libs\imgui\LICENSE" />
     <None Include="SDL2.dll" />
+    <None Include="shader\brdf-fragment.glsl" />
     <None Include="shader\cascade-shadow-map-fragment.glsl" />
     <None Include="shader\cascade-shadow-map-geometry.glsl" />
     <None Include="shader\cascade-shaodw-map-vertex.glsl" />
