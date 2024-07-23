@@ -68,7 +68,7 @@ glm::mat4 CascadeShadow::GetDirectionalLightMatrix(
 	center /= corners.size();
 
 	float radius = glm::length(corners[0] - corners[6]) / 2.0f;
-	radius = std::max(radius, 15.0f);
+	radius *= 1.3f;
 	float texelPerUnit = (float)SHADOW_RESOLUTION / (radius * 2.0f);
 
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(texelPerUnit));
