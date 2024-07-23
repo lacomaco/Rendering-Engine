@@ -14,9 +14,9 @@ class CubeMap
 {
 private:
     void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
-    void CreateBrdfLutTexture(std::string map);
     void CreateDiffuseIrradianceMap();
     void CreatePreFilterEnviromentMap();
+    void CreateBRDFLut();
 
     glm::mat4 projection = glm::perspective(
         glm::radians(90.0f),

@@ -366,6 +366,12 @@ void Game::CreateShaderProgram() {
 		"pre-filter-environment"
 	);
 
+	shader->loadShaderProgram(
+		"./shader/hdr-vertex.glsl",
+		"./shader/brdf-fragment.glsl",
+		"brdf-lut"
+	);
+
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = end - start;
 

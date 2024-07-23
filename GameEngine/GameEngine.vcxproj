@@ -669,6 +669,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="shader\god-ray-post-processing-fragment.glsl" />
     <None Include="shader\hdr-fragment.glsl" />
     <None Include="shader\hdr-vertex.glsl" />
+    <None Include="shader\Importance-sample.glsl" />
     <None Include="shader\lens-flare-dirt-fragment.glsl" />
     <None Include="shader\lens-flare-fragment.glsl" />
     <None Include="shader\light-fragment.glsl" />

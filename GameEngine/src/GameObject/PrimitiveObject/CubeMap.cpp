@@ -1,5 +1,6 @@
 #include "CubeMap.h"
 #include <memory>
+#include "../../Util/GLHelper.h"
 #include <gli/gli.hpp>
 
 CubeMap::CubeMap(std::string filePath) {
@@ -21,9 +22,6 @@ CubeMap::CubeMap(std::string filePath) {
     };
 
     CreateCubeMapTexture(skyBoxId, skyBox);
-    // TODO: test 말고 envbrdf.dds로 바꾸자.
-    CreateBrdfLutTexture(filePath + "test.dds");
-
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -50,34 +48,7 @@ CubeMap::CubeMap(std::string filePath) {
 
     CreateDiffuseIrradianceMap();
     CreatePreFilterEnviromentMap();
-}
-
-
-void CubeMap::CreateBrdfLutTexture(std::string map) {
-    glGenTextures(1, &brdfLUTTextureId);
-    glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    gli::texture2d Texture(gli::load_dds(map.c_str()));
-    gli::flip(Texture);
-
-    gli::gl GL(gli::gl::PROFILE_GL33);
-    gli::gl::format const Format(GL.translate(Texture.format(), Texture.swizzles()));
-    
-    glTexImage2D(GL_TEXTURE_2D,
-        0,
-        Format.Internal,
-        Texture.extent().x,
-        Texture.extent().y,
-       	0,
-        Format.External,
-        Format.Type,
-        Texture.data()
-    );
+    CreateBRDFLut();
 }
 
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
@@ -275,4 +246,30 @@ void CubeMap::CreatePreFilterEnviromentMap() {
         }
     }
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+void CubeMap::CreateBRDFLut() {
+    glGenTextures(1, &brdfLUTTextureId);
+
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTextureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    SimpleQuad quad = CreateSimpleQuad();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTextureId, 0);
+
+    glViewport(0, 0, 512, 512);
+    auto shader = Shader::getInstance();
+    glUseProgram(shader->getShaderProgram("brdf-lut"));
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glBindVertexArray(quad.VAO);
+    glDrawArrays(GL_TRIANGLES,0,6);
 }
