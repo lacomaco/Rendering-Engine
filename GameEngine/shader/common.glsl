@@ -29,7 +29,9 @@ layout (std140, binding = 0) uniform Camera {
     mat4 view; // 64
     mat4 skyBoxView; // 64
     vec3 cameraPos; //16 total : 208
-    float padding; // 212
+    float far; // 212
+    float near; // 216
+    // 12 byte padding total 228
 };
 
 layout (std140, binding = 1) uniform Lights {
@@ -85,8 +87,6 @@ uniform samplerCube skyBox;
 uniform samplerCube preFilterEnvironmentMap; //specular
 uniform samplerCube irradianceMap;
 uniform sampler2D brdfTexture;
-
-uniform float far;
 
 
 struct Material {

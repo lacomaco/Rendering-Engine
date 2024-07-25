@@ -184,6 +184,11 @@ const vec2 diskSamples16[16] = vec2[](
     vec2( 0.14383161, -0.14100790 )
 );
 
+float N2V(float ndcDepth, mat4 invProj) {
+    vec4 pointView = invProj * vec4(0.0, 0.0, ndcDepth, 1.0);
+    return pointView.z / pointView.w;
+}
+
 float PCF(float bias,float currentDepth,int index,vec3 projCoords){
     float shadow = 0.0;
 

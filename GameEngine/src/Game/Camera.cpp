@@ -14,9 +14,9 @@
 Camera::Camera(float fov, int width, int height) {
 	glGenBuffers(1, &cameraUniformBlock);
 	glBindBuffer(GL_UNIFORM_BUFFER, cameraUniformBlock);
-	glBufferData(GL_UNIFORM_BUFFER, 212, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, 228, NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	glBindBufferRange(GL_UNIFORM_BUFFER, CAMERA_UBO, cameraUniformBlock, 0, 212);
+	glBindBufferRange(GL_UNIFORM_BUFFER, CAMERA_UBO, cameraUniformBlock, 0, 228);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
@@ -107,15 +107,20 @@ void Camera::UpdateUBO() {
 	);
 	stack += sizeof(glm::vec3);
 
-	float padding = 0.0f;
 	glBufferSubData(
 		GL_UNIFORM_BUFFER,
 		stack,
 		sizeof(float),
-		&padding
+		&CameraShareValue::far
 	);
-	stack += sizeof(float);
 
+	stack += sizeof(float);
+	glBufferSubData(
+		GL_UNIFORM_BUFFER,
+		stack,
+		sizeof(float),
+		&CameraShareValue::near
+	);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
