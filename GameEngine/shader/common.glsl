@@ -48,8 +48,11 @@ layout (std140, binding = 1) uniform Lights {
 
 layout (std140, binding = 2) uniform LightSpaceMatrices {
     mat4 lightSpaceMatrices[61];
+    mat4 invProjMatrices[61];
+    // std140 데이터에 의해서 float 배열엔 4byte가 아닌 16바이트가 할당된다.
+    float radius[61];
 
-    // total: 3904 byte
+    // total: 3904 * 2 + 16 * 61 -> 7164  byte
 };
 
 uniform mat4 model;

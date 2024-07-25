@@ -36,8 +36,17 @@ public:
 		return cascadeLevel;
 	}
 
-	std::vector<glm::mat4> GetLightSpaceMatrices() {
-		return Shadow->GetLightSpaceMatrices(lightInfo);
+	void GetLightSpaceMatrices(
+		std::vector<mat4>& lightMatrices,
+		std::vector<glm::mat4>& invProjMatrices,
+		std::vector<float>& radius
+	) {
+		Shadow->GetLightSpaceMatrices(
+			lightInfo,
+			lightMatrices,
+			invProjMatrices,
+			radius
+		);
 	}
 
 	std::vector<float> GetCasacdeLevel() {

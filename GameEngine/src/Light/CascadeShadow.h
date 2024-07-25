@@ -17,13 +17,23 @@ private:
 		const glm::mat4& proj, const glm::mat4& view);
 
 	vector<glm::vec3> GetFrustumCornerWorldSpace(const glm::mat4& matrix);
-	glm::mat4 GetDirectionalLightMatrix(const float near, 
+	void GetDirectionalLightMatrix(
+		const float near, 
 		const float far,
-		const Light light);
+		const Light light,
+		std::vector<mat4>& lightMatrices,
+		std::vector<glm::mat4>& invProjMatrices,
+		std::vector<float>& radiusVector
+	);
 
 public:
 	CascadeShadow(float cascadeLevel);
-	std::vector<glm::mat4> GetLightSpaceMatrices(Light light);
+	void GetLightSpaceMatrices(
+		Light light,
+		std::vector<mat4>& lightMatrices,
+		std::vector<glm::mat4>& invProjMatrices,
+		std::vector<float>& radius
+	);
 
 
 	std::vector<float> GetCascadeLevels() const {

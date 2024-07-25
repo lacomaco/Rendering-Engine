@@ -47,10 +47,14 @@ vector<glm::vec3> CascadeShadow::GetFrustumCornerWorldSpace(
 }
 
 
-glm::mat4 CascadeShadow::GetDirectionalLightMatrix(
+void CascadeShadow::GetDirectionalLightMatrix(
 	const float near,
 	const float far,
-	const Light light) {
+	const Light light,
+	std::vector<mat4>& lightMatrices,
+	std::vector<glm::mat4>& invProjMatrices,
+	std::vector<float>& radiusVector
+) {
 	const glm::mat4 projection = glm::perspective(
 		glm::radians(CameraShareValue::fov),
 		(float)WINDOW_WIDTH / (float)WINDOW_HEIGHT,
@@ -101,22 +105,47 @@ glm::mat4 CascadeShadow::GetDirectionalLightMatrix(
 
 	glm::mat4 lightProjection = glm::ortho(-radius, radius, -radius, radius, -radius * 6.0f, radius * 6.0f);
 
-	return lightProjection * lightView;
+	lightMatrices.push_back(lightProjection * lightView);
+	invProjMatrices.push_back(glm::inverse(lightProjection));
+	radiusVector.push_back(2 * radius);
 }
 
-std::vector<glm::mat4> CascadeShadow::GetLightSpaceMatrices(Light light) {
-	std::vector<glm::mat4> matrices;
+void CascadeShadow::GetLightSpaceMatrices(
+	Light light,
+	std::vector<mat4>& lightMatrices,
+	std::vector<glm::mat4>& invProjMatrices,
+	std::vector<float>& radius
+) {
 	for (int i = 0; i <= cascadeLevels.size(); i++) {
 		if (i == 0) {
-			matrices.push_back(GetDirectionalLightMatrix(CameraShareValue::near, cascadeLevels[0], light));
+			GetDirectionalLightMatrix(
+				CameraShareValue::near, 
+				cascadeLevels[0], 
+				light,
+				lightMatrices,
+				invProjMatrices,
+				radius
+			);
 		}
 		else if (i == cascadeLevels.size()) {
-			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i-1], CameraShareValue::far, light));
+			GetDirectionalLightMatrix(
+				cascadeLevels[i-1], 
+				CameraShareValue::far, 
+				light,
+				lightMatrices,
+				invProjMatrices,
+				radius
+			);
 		}
 		else {
-			matrices.push_back(GetDirectionalLightMatrix(cascadeLevels[i-1],cascadeLevels[i], light));
+			GetDirectionalLightMatrix(
+				cascadeLevels[i-1],
+				cascadeLevels[i], 
+				light,
+				lightMatrices,
+				invProjMatrices,
+				radius
+			);
 		}
 	}
-
-	return matrices;
 }
