@@ -39,13 +39,15 @@ public:
 	void GetLightSpaceMatrices(
 		std::vector<mat4>& lightMatrices,
 		std::vector<glm::mat4>& invProjMatrices,
-		std::vector<float>& radius
+		std::vector<float>& radius,
+		std::vector<mat4>& lightViewMatrices
 	) {
 		Shadow->GetLightSpaceMatrices(
 			lightInfo,
 			lightMatrices,
 			invProjMatrices,
-			radius
+			radius,
+			lightViewMatrices
 		);
 	}
 

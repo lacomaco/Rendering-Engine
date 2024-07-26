@@ -23,7 +23,8 @@ private:
 		const Light light,
 		std::vector<mat4>& lightMatrices,
 		std::vector<glm::mat4>& invProjMatrices,
-		std::vector<float>& radiusVector
+		std::vector<float>& radiusVector,
+		std::vector<mat4>& lightViewMatrices
 	);
 
 public:
@@ -32,7 +33,8 @@ public:
 		Light light,
 		std::vector<mat4>& lightMatrices,
 		std::vector<glm::mat4>& invProjMatrices,
-		std::vector<float>& radius
+		std::vector<float>& radius,
+		std::vector<mat4>& lightViewMatrices
 	);
 
 

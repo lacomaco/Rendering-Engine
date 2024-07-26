@@ -53,7 +53,8 @@ void CascadeShadow::GetDirectionalLightMatrix(
 	const Light light,
 	std::vector<mat4>& lightMatrices,
 	std::vector<glm::mat4>& invProjMatrices,
-	std::vector<float>& radiusVector
+	std::vector<float>& radiusVector,
+	std::vector<mat4>& lightViewMatrices
 ) {
 	const glm::mat4 projection = glm::perspective(
 		glm::radians(CameraShareValue::fov),
@@ -108,13 +109,15 @@ void CascadeShadow::GetDirectionalLightMatrix(
 	lightMatrices.push_back(lightProjection * lightView);
 	invProjMatrices.push_back(glm::inverse(lightProjection));
 	radiusVector.push_back(2 * radius);
+	lightViewMatrices.push_back(lightView);
 }
 
 void CascadeShadow::GetLightSpaceMatrices(
 	Light light,
 	std::vector<mat4>& lightMatrices,
 	std::vector<glm::mat4>& invProjMatrices,
-	std::vector<float>& radius
+	std::vector<float>& radius,
+	std::vector<mat4>& lightViewMatrices
 ) {
 	for (int i = 0; i <= cascadeLevels.size(); i++) {
 		if (i == 0) {
@@ -124,17 +127,19 @@ void CascadeShadow::GetLightSpaceMatrices(
 				light,
 				lightMatrices,
 				invProjMatrices,
-				radius
+				radius,
+				lightViewMatrices
 			);
 		}
 		else if (i == cascadeLevels.size()) {
 			GetDirectionalLightMatrix(
-				cascadeLevels[i-1], 
-				CameraShareValue::far, 
+				cascadeLevels[i - 1],
+				CameraShareValue::far,
 				light,
 				lightMatrices,
 				invProjMatrices,
-				radius
+				radius,
+				lightViewMatrices
 			);
 		}
 		else {
@@ -144,7 +149,8 @@ void CascadeShadow::GetLightSpaceMatrices(
 				light,
 				lightMatrices,
 				invProjMatrices,
-				radius
+				radius,
+				lightViewMatrices
 			);
 		}
 	}

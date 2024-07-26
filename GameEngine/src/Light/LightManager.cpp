@@ -20,8 +20,8 @@ LightManager::LightManager() {
 	glBindBuffer(GL_UNIFORM_BUFFER, shadowUniformBlock);
 
 	// 7808 + 976
-	glBufferData(GL_UNIFORM_BUFFER, 8784, NULL, GL_DYNAMIC_DRAW);
-	glBindBufferRange(GL_UNIFORM_BUFFER, SHADOW_UBO, shadowUniformBlock, 0, 8784);
+	glBufferData(GL_UNIFORM_BUFFER, 12688, NULL, GL_DYNAMIC_DRAW);
+	glBindBufferRange(GL_UNIFORM_BUFFER, SHADOW_UBO, shadowUniformBlock, 0, 12688);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glGenFramebuffers(1, &shadowFBO);
@@ -181,21 +181,23 @@ void LightManager::UpdateShadowUBO() {
 
 	std::vector<mat4> lightMatrices;
 	std::vector<mat4> invProjMatrices;
+	std::vector<mat4> lightViewMatrices;
 	std::vector<float> radius;
 
-	Sun->GetLightSpaceMatrices(lightMatrices, invProjMatrices, radius);
+	Sun->GetLightSpaceMatrices(lightMatrices, invProjMatrices, radius, lightViewMatrices);
 	// Spot Light 贸府
 
 	// Point Light 贸府
 
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, lightMatrices.size() * sizeof(glm::mat4), lightMatrices.data());
-	glBufferSubData(GL_UNIFORM_BUFFER, 3904, invProjMatrices.size() * sizeof(glm::mat4), invProjMatrices.data());
+	glBufferSubData(GL_UNIFORM_BUFFER, 3904, lightViewMatrices.size() * sizeof(glm::mat4), lightViewMatrices.data());
+	glBufferSubData(GL_UNIFORM_BUFFER, 7808, invProjMatrices.size() * sizeof(glm::mat4), invProjMatrices.data());
 	
 	std::vector<float> paddedRadius(radius.size() * 4, 0.0f);
 	for (int i = 0; i < radius.size(); i++) {
 		paddedRadius[i * 4] = radius[i];
 	}
-	glBufferSubData(GL_UNIFORM_BUFFER, 7808, paddedRadius.size() * sizeof(float), paddedRadius.data());
+	glBufferSubData(GL_UNIFORM_BUFFER, 11712, paddedRadius.size() * sizeof(float), paddedRadius.data());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
