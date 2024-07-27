@@ -237,14 +237,7 @@ ShadowStruct cascadeShadowCalculation(
     vec4 fragInLightView = lightViewMatrices[shadowIndex + layer] * vec4(fragPosWorldSpace, 1.0);
     float currentDepth = fragInLightView.z;
 
-    float shadowDepth = texture(shadowMaps,vec3(projCoords.xy,shadowIndex + layer)).r;
-    shadowDepth = N2V(shadowDepth, invProjMatrices[shadowIndex + layer]);
-
-    if(currentDepth > shadowDepth){
-        result.shadow = 0.0;
-    } else {
-        result.shadow = 1.0;
-    }
+    result.shadow = 1.0 - PCF(currentDepth,shadowIndex + layer, projCoords);
 
     return result;
 }
