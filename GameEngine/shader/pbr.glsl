@@ -191,15 +191,44 @@ float N2V(float ndcDepth, mat4 invProj) {
     return pointView.z / pointView.w; // Perspective divide to get view space depth
 }
 
+// Bilinear 필터링을 적용하는 함수
+float bilinearPCF(sampler2DArray shadowMap, vec3 uvIndex, mat4 invProj, float compare) {
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0).xy;
+
+    vec2 uv00 = uvIndex.xy + texelSize * vec2(-0.5, -0.5);
+    vec2 uv10 = uvIndex.xy + texelSize * vec2(0.5, -0.5);
+    vec2 uv01 = uvIndex.xy + texelSize * vec2(-0.5, 0.5);
+    vec2 uv11 = uvIndex.xy + texelSize * vec2(0.5, 0.5);
+
+    float depth00 = texture(shadowMap, vec3(uv00, uvIndex.z)).r;
+    float depth10 = texture(shadowMap, vec3(uv10, uvIndex.z)).r;
+    float depth01 = texture(shadowMap, vec3(uv01, uvIndex.z)).r;
+    float depth11 = texture(shadowMap, vec3(uv11, uvIndex.z)).r;
+
+    // NDC에서 View z좌표로 변환
+    depth00 = N2V(depth00, invProj);
+    depth10 = N2V(depth10, invProj);
+    depth01 = N2V(depth01, invProj);
+    depth11 = N2V(depth11, invProj);
+
+    float factorX = fract(uvIndex.x * textureSize(shadowMap, 0).x);
+    float factorY = fract(uvIndex.y * textureSize(shadowMap, 0).y);
+
+    float depth0 = mix(depth00, depth10, factorX);
+    float depth1 = mix(depth01, depth11, factorX);
+    float depth = mix(depth0, depth1, factorY);
+
+    return compare < depth ? 1.0 : 0.0;
+}
+
 float PCF(float currentDepth,int index,vec3 projCoords){
     float shadow = 0.0;
 
     vec2 texelSize = 1.0 / vec2(textureSize(shadowMaps, 0));
 
     for(int x = 0; x < 16; ++x) {
-		float pcfDepth = texture(shadowMaps, vec3(projCoords.xy + diskSamples16[x] * texelSize,index)).r;
-        pcfDepth = N2V(pcfDepth, invProjMatrices[index]);
-		shadow += currentDepth > pcfDepth ? 1.0 : 0.0;
+        vec2 sampleUV = projCoords.xy + diskSamples16[x] * texelSize;
+        shadow += bilinearPCF(shadowMaps, vec3(sampleUV, index), invProjMatrices[index], currentDepth);
 	}
 
     return shadow / 16.0f;
@@ -237,7 +266,7 @@ ShadowStruct cascadeShadowCalculation(
     vec4 fragInLightView = lightViewMatrices[shadowIndex + layer] * vec4(fragPosWorldSpace, 1.0);
     float currentDepth = fragInLightView.z;
 
-    result.shadow = 1.0 - PCF(currentDepth,shadowIndex + layer, projCoords);
+    result.shadow = PCF(currentDepth,shadowIndex + layer, projCoords);
 
     return result;
 }
