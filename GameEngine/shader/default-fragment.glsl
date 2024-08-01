@@ -87,7 +87,7 @@ void main() {
 				light,
 				shadow.shadow,
 				pbrMaterial
-			) * light.strength;
+			);
 
 			shadowIndex += directionalCascadeLevel;
 		}

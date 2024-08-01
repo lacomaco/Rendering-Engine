@@ -11,7 +11,7 @@ namespace EditorSharedValue {
 	float exposure = 1.0f;
 
 	glm::vec3 directionalLightPosition = glm::vec3(0, 20, -0.001);
-	glm::vec3 directionalLightDirection = glm::vec3(0, -1, 0.3);
+	glm::vec3 directionalLightDirection = glm::vec3(0, -1, -0.221);
 	unsigned int directionalLightDepthMap = 0;
 
 	float bloomThreshold = 0.04;

@@ -6,7 +6,7 @@
 LightManager::LightManager() {
 	Sun = std::make_shared<DirectionalLight>(
 		glm::vec3(0,20,-0.001),
-		glm::vec3(0,-1,0.3),
+		glm::vec3(0,-1,-0.221),
 		12
 	);
 

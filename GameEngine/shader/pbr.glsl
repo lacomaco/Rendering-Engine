@@ -38,7 +38,7 @@ vec3 diffuseIBL(vec3 albedo,vec3 normalWorld,vec3 pixelToEye,float metallic) {
 vec3 specularIBL(vec3 albedo, vec3 normalWorld, vec3 pixelToEye, float metallic,float roughness) {
     vec2 brdf = texture(
         brdfTexture, 
-        vec2(dot(pixelToEye,normalWorld),1.0 - roughness)
+        vec2(dot(pixelToEye,normalWorld),roughness)
     ).rg;
 
     vec3 specularIrradiance = textureLod(preFilterEnvironmentMap, reflect(-pixelToEye,normalWorld), 2.0 + roughness * 10.0f).rgb;
@@ -61,7 +61,7 @@ float NdfGGX(float ndotH, float roughness) {
     float alpha2 = pow(alpha, 2);
     float denom = pow(ndotH,2) * (alpha2 - 1) + 1;
 
-    return alpha2 / pi * pow(denom, 2);
+    return alpha2 / (pi * denom * denom);
 }
 
 float SchlickG1(float ndotV, float k) {
@@ -83,10 +83,8 @@ vec3 PBR(PBRValue value,vec3 lightStrength,float shadow){
     float G = SchlickGGX(value.ndotl, value.ndotO, value.roughness);
 
     vec3 specularBRDF = (D * G * F) / max((4 * value.ndotl * value.ndotO),Epsilon);
-     
-    vec3 radiance = lightStrength * value.ndotl;
 
-    return (diffuseBRDF + specularBRDF) * radiance * (1.0 - shadow);
+    return (diffuseBRDF + specularBRDF) * lightStrength * (1.0 - shadow);
 }
 
 vec3 directionalLight(
@@ -104,7 +102,7 @@ vec3 directionalLight(
     value.ndotl = max(dot(value.normalWorld, lightVec), 0.0);
     value.halfWayDir = halfWayDir;
 
-    vec3 lightStrength = vec3(max(dot(value.normalWorld, lightVec), 0.0));
+    vec3 lightStrength = vec3(max(dot(value.normalWorld, lightVec), 0.0)) * l.strength;
 
     return PBR(value,lightStrength,shadow);
 }
