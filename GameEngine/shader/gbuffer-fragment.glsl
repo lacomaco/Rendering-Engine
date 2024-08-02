@@ -20,7 +20,7 @@ void main() {
         _normal = getNormal(normal0, TexCoords, TBN);
     }
 
-    normal = vec4(_normal,0.0);
+    normal = vec4(_normal,1.0);
 
 	float roughness = use_roughness0 ? texture(roughness0, TexCoords).g : 0.0;
 	float metallic = use_metallic0 ? texture(metallic0, TexCoords).b : 0.0;
