@@ -29,7 +29,7 @@ void Game::GenerateOutput() {
 	meshRenderer->ResetMesh();
 
 	if (modelOn) {
-		meshRenderer->AddMesh(backPack);
+		meshRenderer->AddMesh(model);
 	}
 	
 
@@ -58,11 +58,14 @@ void Game::GenerateOutput() {
 	}
 	graphicsPipe->use();
 	
-	const char* shaderName = "default";
+	const char* shaderName = "deffered";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	lightManager->PutShadowUniform(shaderName);
-	meshRenderer->Draw(shaderName); 
+	// meshRenderer -> defferedLighting으로 교체예정
+	graphicsPipe->DefferedLighting();
+	//meshRenderer->Draw(shaderName);
+	model->DrawBoundingBox();
 	cubeMap->Draw("cubemap");
 
 	auto normalMode = EditorSharedValue::showNormal;
@@ -136,7 +139,7 @@ bool Game::Initialize() {
 	cubeMap = make_shared<CubeMap>("./assets/hdr-cubemap/");
 
 	if (modelOn) {
-		backPack = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
+		model = make_shared<Model>("./assets/pbrSponza/sponza/Sponza.gltf");
 	}
 
 	camera = make_shared<Camera>(
@@ -261,10 +264,11 @@ void Game::CreateShaderProgram() {
 	auto start = std::chrono::high_resolution_clock::now();
 
 	auto shader = Shader::getInstance();
+
 	shader->loadShaderProgram(
-		"./shader/default-vertex.glsl",
-		"./shader/default-fragment.glsl",
-		"default"
+		"./shader/deferred-vertex.glsl",
+		"./shader/deferred-fragment.glsl",
+		"deffered"
 	);
 
 	shader->loadShaderProgram(
@@ -370,6 +374,12 @@ void Game::CreateShaderProgram() {
 		"./shader/hdr-vertex.glsl",
 		"./shader/brdf-fragment.glsl",
 		"brdf-lut"
+	);
+
+	shader->loadShaderProgram(
+		"./shader/bounding-box-debug-vertex.glsl",
+		"./shader/bounding-box-debug-fragment.glsl",
+		"bounding-box"
 	);
 
 	auto end = std::chrono::high_resolution_clock::now();

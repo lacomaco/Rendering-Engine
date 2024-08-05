@@ -60,8 +60,6 @@ private:
 
 	shared_ptr<MeshRenderer> meshRenderer;
 
-	shared_ptr<Model> backPack;
-
 	shared_ptr<GraphicsPipeLine> graphicsPipe;
 
 	float accTime;

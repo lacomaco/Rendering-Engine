@@ -35,6 +35,7 @@ namespace EditorSharedValue {
 	unsigned int albedoRoughnessTexture = 0;
 	unsigned int normalTexture = 0;
 	unsigned int godRayTexture = 0;
+	unsigned int lightingTexture = 0;
 
 	unsigned int ssaoTexture = 0;
 	unsigned int ssaoBlurTexture = 0;

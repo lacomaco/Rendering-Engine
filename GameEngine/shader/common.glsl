@@ -60,10 +60,6 @@ uniform mat4 model;
 
 uniform mat3 invTranspose;
 
-// 그림자는
-// directional point spot 순으로 들어온다.
-uniform sampler2DArray ShadowAtlas;
-
 uniform sampler2D albedo0;
 
 uniform bool use_metallic0;

@@ -1,4 +1,5 @@
 #include "BoundingBox.h"
+#include <vector>
 
 BoundingBox::BoundingBox() {
 	Reset();
@@ -46,6 +47,50 @@ void BoundingBox::MakeCube() {
 
 	min = center - halfSize;
 	max = center + halfSize;
+}
+
+void BoundingBox::SetupVAO() {
+	std::vector<glm::vec3> vertices = {
+		// Front face
+		min,
+		glm::vec3(max.x, min.y, min.z),
+		glm::vec3(max.x, max.y, min.z),
+		glm::vec3(min.x, max.y, min.z),
+
+		// Back face
+		glm::vec3(min.x, min.y, max.z),
+		glm::vec3(max.x, min.y, max.z),
+		max,
+		glm::vec3(min.x, max.y, max.z),
+
+		// Connectors
+		min,
+		glm::vec3(min.x, min.y, max.z),
+		glm::vec3(max.x, min.y, min.z),
+		glm::vec3(max.x, min.y, max.z),
+		glm::vec3(max.x, max.y, min.z),
+		max,
+		glm::vec3(min.x, max.y, min.z),
+		glm::vec3(min.x, max.y, max.z)
+	};
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void BoundingBox::Draw() const {
+	glBindVertexArray(vao);
+	glDrawArrays(GL_LINES, 0, 24); // 24 vertices to draw 12 edges of the bounding box
+	glBindVertexArray(0);
 }
 
 

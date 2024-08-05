@@ -654,6 +654,8 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="libs\glm\LICENSE" />
     <None Include="libs\imgui\LICENSE" />
     <None Include="SDL2.dll" />
+    <None Include="shader\bounding-box-debug-fragment.glsl" />
+    <None Include="shader\bounding-box-debug-vertex.glsl" />
     <None Include="shader\brdf-fragment.glsl" />
     <None Include="shader\cascade-shadow-map-fragment.glsl" />
     <None Include="shader\cascade-shadow-map-geometry.glsl" />
@@ -664,6 +666,8 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="LICENSE.md" />
     <None Include="shader\cubemap-fragment.glsl" />
     <None Include="shader\cubemap-vertex.glsl" />
+    <None Include="shader\deferred-fragment.glsl" />
+    <None Include="shader\deferred-vertex.glsl" />
     <None Include="shader\diffuse-irradiance-fragment.glsl" />
     <None Include="shader\diffuse-irradiance-vertex.glsl" />
     <None Include="shader\down-sample-fragment.glsl" />
@@ -682,12 +686,6 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-vertex.glsl" />
-    <None Include="shader\default-fragment.glsl">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-    </None>
-    <None Include="shader\default-vertex.glsl">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-    </None>
     <None Include="shader\pbr.glsl" />
     <None Include="shader\point-shadow-fragment.glsl" />
     <None Include="shader\point-shadow-geometry.glsl" />

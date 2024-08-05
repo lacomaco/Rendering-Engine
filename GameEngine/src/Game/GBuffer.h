@@ -12,6 +12,7 @@ class GBuffer
 {
 private:
 	void createGBufferTexture(unsigned int& texture);
+	void createLightingTexture();
 	int currentTextureIndex = 0;
 	
 public:

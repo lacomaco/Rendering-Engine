@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <iostream>
 #include <mutex>
+#include "./BoundingBox.h"
 
 struct RawTextureData {
 	std::string fileName;
@@ -28,6 +29,7 @@ class Model : public BaseObject
 private:
 	std::string directory;
 	std::string path;
+	BoundingBox bbox;
 	bool gammaCorrection;
 
 	void loadModel(std::string path);
@@ -57,8 +59,8 @@ public:
 	Model(const char* path);
 	~Model();
 
-
-	void Draw(const char* shaderProgramName);
+	void DrawBoundingBox();
 	void SetScale(glm::vec3 _scale);
+	void CalculateBoundingBox();
 };
 

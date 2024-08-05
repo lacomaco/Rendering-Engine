@@ -16,28 +16,19 @@ GraphicsPipeLine::GraphicsPipeLine()
 	ssao = std::make_shared<SSAO>();
 	lensFlare = std::make_shared<LensFlare>();
 	CreateVAO();
-	CreateMSAAFrameBuffer();
-	CreateIntermediateFrameBuffer();
+	CreateLigtingFramebuffer();
+
+
+	EditorSharedValue::lightingTexture = lightingTexture;
 }
 
 void GraphicsPipeLine::Draw(const char* programName)
 {
 	UpdateImGui();
 	auto shader = Shader::getInstance();
-	
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFrameBuffer);
-	glReadBuffer(GL_COLOR_ATTACHMENT0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFrameBuffer);
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
-	glBlitFramebuffer(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
-		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 
-		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-	lensFlare->Draw(screenTexture, gBuffer->godRayTexture);
-	bloom->Draw(screenTexture);
-
-
-	// Physically Based Bloom 코드는 msaaFrameBuffer에서 resolve한 텍스처를 다시 복사해서 써야함.
+	lensFlare->Draw(lightingTexture, gBuffer->godRayTexture);
+	bloom->Draw(lightingTexture);
 
 	if (EditorSharedValue::editorMode) {
 		glBindFramebuffer(GL_FRAMEBUFFER, EditorSharedValue::EditorMainSceneFrameBuffer);
@@ -54,8 +45,8 @@ void GraphicsPipeLine::Draw(const char* programName)
 	PutExposure(programName);
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, screenTexture);
-	shader->setInt(programName, "screenTexture", 0);
+	glBindTexture(GL_TEXTURE_2D, lightingTexture);
+	shader->setInt(programName, "lightingTexture", 0);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, bloom->fbo->textures[0]->texture);
 	shader->setInt(programName, "bloomTexture", 1);
@@ -81,7 +72,8 @@ void GraphicsPipeLine::Draw(const char* programName)
 void GraphicsPipeLine::use()
 {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
+	// @TODO: GBUFFER rbo -> lightingFramebuffer로 복사 (bliting?)
+	glBindFramebuffer(GL_FRAMEBUFFER, lightingFrameBuffer);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -94,68 +86,33 @@ void GraphicsPipeLine::PutExposure(const char* programName) {
 	shader->setFloat(programName, "exposure", exposure);
 }
 
-void GraphicsPipeLine::CreateIntermediateFrameBuffer() {
-	glGenFramebuffers(1, &intermediateFrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, intermediateFrameBuffer);
 
-	screenTexture = CreateSimpleTexture();
+void GraphicsPipeLine::CreateLigtingFramebuffer() {
+	glGenFramebuffers(1, &lightingFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, lightingFrameBuffer);
+
+	glGenTextures(1, &lightingTexture);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, lightingTexture);
+	lightingTexture = CreateSimpleTexture();
+	glBindTexture(GL_TEXTURE_2D, lightingTexture);
 
 	glFramebufferTexture2D(
 		GL_FRAMEBUFFER,
 		GL_COLOR_ATTACHMENT0,
 		GL_TEXTURE_2D,
-		screenTexture,
+		lightingTexture,
 		0
 	);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		std::cerr << "ERROR::FRAMEBUFFER:: Intermediate Framebuffer is not complete!" << std::endl;
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void GraphicsPipeLine::CreateMSAAFrameBuffer() {
-	glGenFramebuffers(1, &msaaFrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
-
-	// MSAA용 컬러버퍼 텍스처 생성
-	glGenTextures(1, &msaaTexture);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaTexture);
-	glTexImage2DMultisample(
-		GL_TEXTURE_2D_MULTISAMPLE,
-		4,
-		GL_RGBA32F,
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT,
-		GL_TRUE
-	);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
-	// 프레임버퍼 - 텍스처 연결할때 사용하는 함수.
-	// target: 연결 대상 프레임버퍼
-	// attachment: 텍스처 종료, COLOR_ATTACHMENT0 <- 컬러버퍼
-	// texTarget: 연결할 텍스처 종류
-	// texTarget : 텍스처 ID
-	// level: mip level
-	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT0,
-		GL_TEXTURE_2D_MULTISAMPLE,
-		msaaTexture,
-		0
-	);
-
-	// rbo 생성
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorageMultisample(
-		GL_RENDERBUFFER,
-		4,
-		GL_DEPTH24_STENCIL8,
-		WINDOW_WIDTH,
+	glRenderbufferStorage(
+		GL_RENDERBUFFER, 
+		GL_DEPTH24_STENCIL8, 
+		WINDOW_WIDTH, 
 		WINDOW_HEIGHT
 	);
+
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(
 		GL_FRAMEBUFFER,
@@ -164,7 +121,6 @@ void GraphicsPipeLine::CreateMSAAFrameBuffer() {
 		rbo
 	);
 
-	// opengl 에러 체크
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	}
@@ -209,6 +165,32 @@ void GraphicsPipeLine::DrawGBuffer(
 
 void GraphicsPipeLine::DrawSSAO() {
 	ssao->DrawSSAO(gBuffer->positionMetallicTexture, gBuffer->normalTexture);
+}
+
+void GraphicsPipeLine::DefferedLighting() {
+	const char* programName = "deffered";
+
+	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram(programName));
+	glBindVertexArray(vao);
+
+	glActiveTexture(GL_TEXTURE0 + 13);
+	glBindTexture(GL_TEXTURE_2D, gBuffer->positionMetallicTexture);
+	shader->setInt(programName, "positionMetallicTexture", 13);
+
+	glActiveTexture(GL_TEXTURE0 + 9);
+	glBindTexture(GL_TEXTURE_2D, gBuffer->albedoRoughnessTexture);
+	shader->setInt(programName, "albedoRoughnessTexture", 9);
+
+	glActiveTexture(GL_TEXTURE0 + 11);
+	glBindTexture(GL_TEXTURE_2D, gBuffer->normalTexture);
+	shader->setInt(programName, "normalTexture", 11);
+
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void GraphicsPipeLine::UpdateImGui() {

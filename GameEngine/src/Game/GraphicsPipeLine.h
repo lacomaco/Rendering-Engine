@@ -13,8 +13,7 @@ class GraphicsPipeLine
 {
 private:
 	void CreateVAO();
-	void CreateMSAAFrameBuffer();
-	void CreateIntermediateFrameBuffer();
+	void CreateLigtingFramebuffer();
 	const char* programName = "gBuffer";
 
 public:
@@ -30,11 +29,8 @@ public:
 
 	void DrawSSAO();
 
-	unsigned int msaaFrameBuffer;
-	unsigned int msaaTexture; // 컬러버퍼 텍스처, MSAA
-
-	unsigned int intermediateFrameBuffer;
-	unsigned int screenTexture; // 컬러버퍼 텍스처, MSAA 해제
+	unsigned int lightingFrameBuffer;
+	unsigned int lightingTexture; // 컬러버퍼 텍스처, MSAA
 
 	unsigned int rbo;
 	unsigned int vao;
@@ -56,5 +52,6 @@ public:
 	bool useSSAO = true;
 
 	void UpdateImGui();
+	void DefferedLighting();
 };
 

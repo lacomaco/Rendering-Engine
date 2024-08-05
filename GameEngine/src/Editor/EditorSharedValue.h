@@ -44,6 +44,7 @@ namespace EditorSharedValue {
 	extern unsigned int albedoRoughnessTexture;
 	extern unsigned int normalTexture;
 	extern unsigned int godRayTexture;
+	extern unsigned int lightingTexture;
 
 	// SSAO
 	extern unsigned int ssaoTexture;

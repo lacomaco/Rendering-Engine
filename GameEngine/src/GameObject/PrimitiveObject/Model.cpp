@@ -20,14 +20,6 @@ Model::~Model()
 	FreePreLoadTextures();
 }
 
-void Model::Draw(const char* shaderProgramName)
-{
-	PutModelUniform(shaderProgramName);
-	for (auto& mesh : meshes) {
-		mesh->Draw(shaderProgramName);
-	}
-}
-
 // see: https://learnopengl.com/Model-Loading/Model
 void Model::loadModel(std::string path)
 {
@@ -41,6 +33,8 @@ void Model::loadModel(std::string path)
 	directory = path.substr(0, path.find_last_of('/'));
 
 	processNode(scene->mRootNode, scene, aiMatrix4x4());
+
+	CalculateBoundingBox();
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 tr)
@@ -410,4 +404,27 @@ RawTextureData Model::FindTextureData(const std::string& fileName) {
 	}
 
 	return RawTextureData();
+}
+
+void Model::DrawBoundingBox() {
+	PutModelUniform("bounding-box");
+	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram("bounding-box"));
+	bbox.Draw();
+}
+
+void Model::CalculateBoundingBox() {
+	std::cout << " Calculated? " << std::endl;
+	bbox.Reset();
+
+	for (const auto& mesh : meshes) {
+		const auto& vertices = mesh->vertices;
+
+		for (const auto& vertex : vertices) {
+			bbox.Update(vertex.position);
+		}
+	}
+
+	bbox.MakeCube();
+	bbox.SetupVAO();
 }

@@ -142,6 +142,14 @@ namespace RenderingDebugPanel {
 				ImVec2(1, 0)
 			);
 
+			ImGui::Text("Lighting Texture");
+			ImGui::Image(
+				(void*)(intptr_t)EditorSharedValue::lightingTexture,
+				ImVec2(200, 200),
+				ImVec2(0, 1),
+				ImVec2(1, 0)
+			);
+
 			ImGui::TreePop();
 		}
 

@@ -1460,8 +1460,6 @@
     <None Include="libs\imgui\LICENSE" />
     <None Include="libs\glm\LICENSE" />
     <None Include="shader\common.glsl" />
-    <None Include="shader\default-fragment.glsl" />
-    <None Include="shader\default-vertex.glsl" />
     <None Include="shader\normal-geometry.glsl" />
     <None Include="shader\normal-fragment.glsl" />
     <None Include="shader\normal-vertex.glsl" />
@@ -1507,6 +1505,10 @@
     <None Include="shader\brdf-fragment.glsl" />
     <None Include="shader\Importance-sample.glsl" />
     <None Include="shader\pre-filter-environment-fragment.glsl" />
+    <None Include="shader\bounding-box-debug-vertex.glsl" />
+    <None Include="shader\bounding-box-debug-fragment.glsl" />
+    <None Include="shader\deferred-fragment.glsl" />
+    <None Include="shader\deferred-vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

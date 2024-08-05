@@ -7,6 +7,9 @@
 
 using namespace std;
 
+BaseObject::BaseObject() {
+	std::cout << " ÃÊ±âÈ­...? " << std::endl;
+}
 
 void BaseObject::PutModelUniform(const char* shaderProgramName) {
 	auto shader = Shader::getInstance();
