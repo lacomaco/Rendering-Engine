@@ -32,8 +32,7 @@ void main() {
 
 	vec3 pixelToEye = normalize(cameraPos - posWorld);
 
-	vec3 normalTextureValue = normalize(normal * 2.0 - 1.0);
-	float ao = normalTextureValue.y * 0.5 + 0.5;
+	float ao = 1.0;
 
 	// halfWayVector 계산은 라이트 처리에서 다룸.
 	float ndotO = max(dot(normal, pixelToEye), 0.0);

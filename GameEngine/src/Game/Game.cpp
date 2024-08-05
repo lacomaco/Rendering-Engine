@@ -92,6 +92,11 @@ bool Game::Initialize() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
+	// V Sync 비활성화.
+	if (SDL_GL_SetSwapInterval(0) != 0) {
+		std::cerr << "SDL_GL_SetSwapInterval Error: " << SDL_GetError() << std::endl;
+	}
+
 
 	mWindow = SDL_CreateWindow(
 		"My Game Practices",
@@ -183,7 +188,6 @@ void Game::Shutdown() {
 }
 
 void Game::UpdateGame() {
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(),mTicksCount + 16));
 
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	mTicksCount = SDL_GetTicks();
