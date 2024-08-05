@@ -1,7 +1,5 @@
 1. 구현해야할것
 
-[] CSM
-[] PCSS
 [] Fog Light
 [] VPL
 [] Animation

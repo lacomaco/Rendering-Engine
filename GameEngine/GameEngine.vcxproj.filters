@@ -900,6 +900,12 @@
     <ClInclude Include="libs\glm\ext\vector_packing.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\Octree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\PrimitiveObject\BoundingBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -1044,6 +1050,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Light\LightType.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\Octree.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\PrimitiveObject\BoundingBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1492,6 +1504,9 @@
     <None Include="copy_assets.ps1" />
     <None Include="shader\diffuse-irradiance-fragment.glsl" />
     <None Include="shader\diffuse-irradiance-vertex.glsl" />
+    <None Include="shader\brdf-fragment.glsl" />
+    <None Include="shader\Importance-sample.glsl" />
+    <None Include="shader\pre-filter-environment-fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">
