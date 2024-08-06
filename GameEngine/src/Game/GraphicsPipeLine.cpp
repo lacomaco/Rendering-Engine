@@ -69,25 +69,6 @@ void GraphicsPipeLine::Draw(const char* programName)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GraphicsPipeLine::use()
-{
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer->gBufferFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, lightingFrameBuffer);
-	// 뎁스버퍼 복사.
-	glBlitFramebuffer(
-		0, 0,
-		WINDOW_WIDTH, WINDOW_HEIGHT,
-		0, 0,
-		WINDOW_WIDTH, WINDOW_HEIGHT,
-		GL_DEPTH_BUFFER_BIT, GL_NEAREST
-	);
-	glBindFramebuffer(GL_FRAMEBUFFER, lightingFrameBuffer);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-}
-
 void GraphicsPipeLine::PutExposure(const char* programName) {
 	auto shader = Shader::getInstance();
 	auto progrma = shader->getShaderProgram(programName);
@@ -181,6 +162,7 @@ void GraphicsPipeLine::DefferedLighting() {
 
 	auto shader = Shader::getInstance();
 	glUseProgram(shader->getShaderProgram(programName));
+	glBindFramebuffer(GL_FRAMEBUFFER, lightingFrameBuffer);
 	glBindVertexArray(vao);
 
 	glActiveTexture(GL_TEXTURE0 + 13);
@@ -196,10 +178,21 @@ void GraphicsPipeLine::DefferedLighting() {
 	shader->setInt(programName, "normalTexture", 11);
 
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer->gBufferFBO);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, lightingFrameBuffer);
+	// 뎁스버퍼 복사.
+	glBlitFramebuffer(
+		0, 0,
+		WINDOW_WIDTH, WINDOW_HEIGHT,
+		0, 0,
+		WINDOW_WIDTH, WINDOW_HEIGHT,
+		GL_DEPTH_BUFFER_BIT, GL_NEAREST
+	);
 }
 
 void GraphicsPipeLine::UpdateImGui() {

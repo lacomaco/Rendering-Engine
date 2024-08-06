@@ -35,7 +35,6 @@ public:
 	unsigned int rbo;
 	unsigned int vao;
 	unsigned int vbo;
-	void use();
 
 	void Draw(const char* programName);
 

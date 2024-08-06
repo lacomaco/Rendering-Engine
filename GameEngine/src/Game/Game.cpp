@@ -56,7 +56,6 @@ void Game::GenerateOutput() {
 			graphicsPipe->gBuffer->godRayTexture
 		);
 	}
-	graphicsPipe->use();
 	
 	const char* shaderName = "deffered";
 	graphicsPipe->PutExposure(shaderName);
