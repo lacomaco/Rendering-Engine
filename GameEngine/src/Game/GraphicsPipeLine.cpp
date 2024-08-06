@@ -27,8 +27,9 @@ void GraphicsPipeLine::Draw(const char* programName)
 	UpdateImGui();
 	auto shader = Shader::getInstance();
 
-	lensFlare->Draw(lightingTexture, gBuffer->godRayTexture);
 	bloom->Draw(lightingTexture);
+	lensFlare->Draw(lightingTexture, gBuffer->godRayTexture);
+
 
 	if (EditorSharedValue::editorMode) {
 		glBindFramebuffer(GL_FRAMEBUFFER, EditorSharedValue::EditorMainSceneFrameBuffer);
