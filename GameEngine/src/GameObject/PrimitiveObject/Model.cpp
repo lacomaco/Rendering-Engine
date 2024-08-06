@@ -414,7 +414,6 @@ void Model::DrawBoundingBox() {
 }
 
 void Model::CalculateBoundingBox() {
-	std::cout << " Calculated? " << std::endl;
 	bbox.Reset();
 
 	for (const auto& mesh : meshes) {

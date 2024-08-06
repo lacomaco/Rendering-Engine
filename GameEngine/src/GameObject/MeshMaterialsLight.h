@@ -47,11 +47,6 @@ public:
 	// 모든 vertex들의 평균 위치.
 	glm::vec3 position = glm::vec3(0.0f);
 	bool isAlphaMesh = false;
-	Material mat;
-	/*
-	Mesh(std::vector<Vertex>&& vertices,
-		std::vector<unsigned int>&& indices);
-	*/
 	Mesh(std::vector<Vertex> _vertices,
 		std::vector<unsigned int> _indices,
 		std::vector<Texture>_textures = {});

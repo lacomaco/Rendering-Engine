@@ -30,7 +30,7 @@ public:
 	void DrawSSAO();
 
 	unsigned int lightingFrameBuffer;
-	unsigned int lightingTexture; // 컬러버퍼 텍스처, MSAA
+	unsigned int lightingTexture;
 
 	unsigned int rbo;
 	unsigned int vao;

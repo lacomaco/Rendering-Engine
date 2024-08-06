@@ -45,7 +45,6 @@ Mesh::~Mesh() {
 
 void Mesh::Draw(const char* shaderProgramName,int instanceCount) {
 	auto shader = Shader::getInstance();
-	mat.PutMaterialUniforms(shaderProgramName);
 	auto program = shader->getShaderProgram(shaderProgramName);
 
 	glUseProgram(program);
