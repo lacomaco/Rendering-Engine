@@ -9,6 +9,7 @@ using namespace std;
 
 void BaseObject::PutModelUniform(const char* shaderProgramName) {
 	auto shader = Shader::getInstance();
+	glUseProgram(shader->getShaderProgram(shaderProgramName));
 
 	glm::mat4 model = glm::mat4(1.0f);
 

@@ -408,8 +408,6 @@ RawTextureData Model::FindTextureData(const std::string& fileName) {
 
 void Model::DrawBoundingBox() {
 	PutModelUniform("bounding-box");
-	auto shader = Shader::getInstance();
-	glUseProgram(shader->getShaderProgram("bounding-box"));
 	bbox.Draw();
 }
 
