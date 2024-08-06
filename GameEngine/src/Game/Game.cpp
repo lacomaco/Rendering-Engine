@@ -56,15 +56,14 @@ void Game::GenerateOutput() {
 			graphicsPipe->gBuffer->godRayTexture
 		);
 	}
+ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ
 	graphicsPipe->use();
 	
 	const char* shaderName = "deffered";
 	graphicsPipe->PutExposure(shaderName);
 	cubeMap->PutCubeMapTexture(shaderName);
 	lightManager->PutShadowUniform(shaderName);
-	// meshRenderer -> defferedLighting으로 교체예정
 	graphicsPipe->DefferedLighting();
-	//meshRenderer->Draw(shaderName);
 	model->DrawBoundingBox();
 	cubeMap->Draw("cubemap");
 
@@ -91,11 +90,6 @@ bool Game::Initialize() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
-	// V Sync 비활성화.
-	if (SDL_GL_SetSwapInterval(0) != 0) {
-		std::cerr << "SDL_GL_SetSwapInterval Error: " << SDL_GetError() << std::endl;
-	}
 
 
 	mWindow = SDL_CreateWindow(
@@ -156,7 +150,7 @@ bool Game::Initialize() {
 	{
 		camera->bindUBO("normal");
 		camera->bindUBO("cubemap");
-		camera->bindUBO("default");
+		camera->bindUBO("deffered");
 		camera->bindUBO("gBuffer");
 		camera->bindUBO("light");
 		camera->bindUBO("SSAO");
@@ -166,13 +160,13 @@ bool Game::Initialize() {
 
 	lightManager = make_shared<LightManager>();
 	{
-		lightManager->BindLightUBO("default");
+		lightManager->BindLightUBO("deffered");
 		lightManager->BindLightUBO("gBuffer");
 	}
 
 	{
 		lightManager->BindShadowUBO("cascade-shadow");
-		lightManager->BindShadowUBO("default");
+		lightManager->BindShadowUBO("deffered");
 	}
 
 	input = Input::GetInstance();
