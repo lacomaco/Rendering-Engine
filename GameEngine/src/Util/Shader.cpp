@@ -45,49 +45,18 @@ GLuint Shader::compileShader(const char* shaderCode, GLenum shaderType, const ch
     return shader;
 }
 
-GLuint Shader::getVertexShader(const char* filePath) {
-    auto vertexShader = shaderMap.find(filePath);
+GLuint Shader::getShader(const char* filePath, GLenum shaderType) {
+    auto shader = shaderMap.find(filePath);
+    if (shader == shaderMap.end()) {
+        std::string shaderSource = readShaderSource(filePath);
+        std::string processedShaderSource = ProcessShaderIncludes(shaderSource, "./shader");
 
-    if (vertexShader == shaderMap.end()) {
-        std::string vertexShaderSource = readShaderSource(filePath);
-        std::string processedVertexShaderSource = ProcessShaderIncludes(vertexShaderSource, "./shader");
-
-        GLuint vertexShaderID = compileShader(processedVertexShaderSource.c_str(), GL_VERTEX_SHADER, filePath);
-        shaderMap[filePath] = vertexShaderID;
-        return vertexShaderID;
+        GLuint shaderId = compileShader(processedShaderSource.c_str(), shaderType, filePath);
+        shaderMap[filePath] = shaderId;
+        return shaderId;
     }
 
-    return vertexShader->second;
-}
-
-GLuint Shader::getFragmentShader(const char* filePath) {
-    auto fragmentShader = shaderMap.find(filePath);
-
-	if (fragmentShader == shaderMap.end()) {
-		std::string fragmentShaderSource = readShaderSource(filePath);
-        std::string processedFragmentShaderSource = ProcessShaderIncludes(fragmentShaderSource, "./shader");
-
-		GLuint fragmentShaderID = compileShader(processedFragmentShaderSource.c_str(), GL_FRAGMENT_SHADER, filePath);
-		shaderMap[filePath] = fragmentShaderID;
-		return fragmentShaderID;
-	}
-
-	return fragmentShader->second;
-}
-
-GLuint Shader::getGeometryShader(const char* filePath) {
-    auto geometryShader = shaderMap.find(filePath);
-
-    if (geometryShader == shaderMap.end()) {
-		std::string geometryShaderSource = readShaderSource(filePath);
-		std::string processedGeometryShaderSource = ProcessShaderIncludes(geometryShaderSource, "./shader");
-
-		GLuint geometryShaderID = compileShader(processedGeometryShaderSource.c_str(), GL_GEOMETRY_SHADER, filePath);
-		shaderMap[filePath] = geometryShaderID;
-		return geometryShaderID;
-	}
-
-	return geometryShader->second;
+    return shader->second;
 }
 
 unsigned int Shader::loadShaderProgram(
@@ -100,14 +69,14 @@ unsigned int Shader::loadShaderProgram(
 
     if(shaderProgramId == shaderProgramMap.end()) {
 		GLuint shaderProgram = glCreateProgram();
-        auto vertexShaderId = getVertexShader(vertexShaderPath);
-        auto fragmentShaderId = getFragmentShader(fragmentShaderPath);
+        auto vertexShaderId = getShader(vertexShaderPath, GL_VERTEX_SHADER);
+        auto fragmentShaderId = getShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
 
 		glAttachShader(shaderProgram, vertexShaderId);
 		glAttachShader(shaderProgram, fragmentShaderId);
 
         if (geometryShaderPath != nullptr) {
-			GLuint geometryShaderId = getGeometryShader(geometryShaderPath);
+			GLuint geometryShaderId = getShader(geometryShaderPath, GL_GEOMETRY_SHADER);
 			glAttachShader(shaderProgram, geometryShaderId);
 		}
 
@@ -134,6 +103,16 @@ unsigned int Shader::loadShaderProgram(
 	}
 
     return shaderProgramId->second;
+}
+
+unsigned int Shader::loadComputeShaderProgram(const char* computeShaderPath, const char* shaderProgramName) {
+    auto computeShaderProgramId = shaderProgramMap.find(shaderProgramName);
+
+    if (computeShaderProgramId == shaderProgramMap.end()) {
+        
+    }
+
+    return computeShaderProgramId->second;
 }
 
 unsigned int Shader::getShaderProgram(const char* shaderProgramName) {

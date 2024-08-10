@@ -13,14 +13,16 @@ class Shader
 public:
 	std::string readShaderSource(const char* filePath);
 	GLuint compileShader(const char* shaderCode,GLenum shaderType, const char* filePath);
-	GLuint getVertexShader(const char* filePath);
-	GLuint getFragmentShader(const char* filePath);
-	GLuint getGeometryShader(const char* filePath);
 	unsigned int loadShaderProgram(
 		const char* vertexShaderPath,
 		const char* fragmentShaderPath,
 		const char* shaderProgramName,
 		const char* geometryShaderPath = nullptr
+	);
+
+	unsigned int loadComputeShaderProgram(
+		const char* computeShaderPath,
+		const char* shaderProgramName
 	);
 
 	unsigned int getShaderProgram(const char* shaderProgramName);
@@ -52,6 +54,8 @@ private:
 
 	Shader() = default;
 	~Shader() = default;
+
+	GLuint getShader(const char* filePath, GLenum shaderType);
 
 	static Shader* instance;
 	std::unordered_map<const char*, GLuint> shaderMap;
