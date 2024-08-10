@@ -86,11 +86,6 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-
-    error = glGetError();
-    if (error != GL_NO_ERROR) {
-        std::cerr << "mipmapFalse : " << error << std::endl;
-    }
 }
 
 

@@ -379,8 +379,8 @@ void Game::CreateShaderProgram() {
 	);
 
 	shader->loadComputeShaderProgram(
-		"./shader/test-compute.glsl",
-		"test-compute"
+		"./shader/SH-irradiance-compute.glsl",
+		"irradiance"
 	);
 
 	auto end = std::chrono::high_resolution_clock::now();
