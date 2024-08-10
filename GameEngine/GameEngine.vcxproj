@@ -691,6 +691,7 @@ xcopy /E /Y /I "$(ProjectDir)shader" "$(TargetDir)shader"
     <None Include="shader\point-shadow-geometry.glsl" />
     <None Include="shader\point-shadow-vertex.glsl" />
     <None Include="shader\pre-filter-environment-fragment.glsl" />
+    <None Include="shader\SH-irradiance-compute.glsl" />
     <None Include="shader\ssao-blur-fragment.glsl" />
     <None Include="shader\ssao-fragment.glsl" />
     <None Include="todo.md" />

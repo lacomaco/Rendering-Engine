@@ -1509,6 +1509,7 @@
     <None Include="shader\bounding-box-debug-fragment.glsl" />
     <None Include="shader\deferred-fragment.glsl" />
     <None Include="shader\deferred-vertex.glsl" />
+    <None Include="shader\SH-irradiance-compute.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

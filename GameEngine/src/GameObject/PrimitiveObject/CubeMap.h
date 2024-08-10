@@ -17,6 +17,7 @@ private:
     void CreateDiffuseIrradianceMap();
     void CreatePreFilterEnviromentMap();
     void CreateBRDFLut();
+    void CalculateSHCoefficients();
 
     glm::mat4 projection = glm::perspective(
         glm::radians(90.0f),

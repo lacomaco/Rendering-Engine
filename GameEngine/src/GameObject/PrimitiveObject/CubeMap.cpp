@@ -49,6 +49,7 @@ CubeMap::CubeMap(std::string filePath) {
     CreateDiffuseIrradianceMap();
     CreatePreFilterEnviromentMap();
     CreateBRDFLut();
+    CalculateSHCoefficients();
 }
 
 void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps) {
@@ -86,6 +87,43 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+}
+
+void CubeMap::CalculateSHCoefficients() {
+    std::vector<float> a1Data(16 * 16);
+
+    GLuint a1;
+    glGenBuffers(1, &a1);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, a1);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER, 
+        a1Data.size() * sizeof(float), 
+        a1Data.data(), 
+        GL_DYNAMIC_COPY
+    );
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, a1);
+
+    auto shader = Shader::getInstance();
+
+    glUseProgram(shader->getShaderProgram("irradiance"));
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, a1);
+    glGetBufferSubData(
+        GL_SHADER_STORAGE_BUFFER, 
+        0, 
+        a1Data.size() * sizeof(float),
+        a1Data.data()
+    );
+
+
+    std::cout << "Compute Shade Result!";
+    for (int i = 0; i < a1Data.size(); i++) {
+        std::cout << a1Data[i] << " ";
+    }
+    std::cout << "Compute Shade Done!";
 }
 
 
