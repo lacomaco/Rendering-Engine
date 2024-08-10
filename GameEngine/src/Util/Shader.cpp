@@ -109,7 +109,29 @@ unsigned int Shader::loadComputeShaderProgram(const char* computeShaderPath, con
     auto computeShaderProgramId = shaderProgramMap.find(shaderProgramName);
 
     if (computeShaderProgramId == shaderProgramMap.end()) {
-        
+        auto shaderId = getShader(computeShaderPath, GL_COMPUTE_SHADER);
+
+        auto programId = glCreateProgram();
+
+        glAttachShader(programId, shaderId);
+        glLinkProgram(programId);
+
+        // 링크 오류 확인
+        GLint success;
+        GLchar infoLog[512];
+
+        glGetProgramiv(programId, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(programId, 1024, NULL, infoLog);
+            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: COMPUTE"  << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+        }
+
+        shaderProgramMap[shaderProgramName] = programId;
+
+        glDeleteShader(shaderId);
+        shaderMap.erase(computeShaderPath);
+
+        return programId;
     }
 
     return computeShaderProgramId->second;

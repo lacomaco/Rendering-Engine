@@ -378,6 +378,11 @@ void Game::CreateShaderProgram() {
 		"bounding-box"
 	);
 
+	shader->loadComputeShaderProgram(
+		"./shader/test-compute.glsl",
+		"test-compute"
+	);
+
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = end - start;
 

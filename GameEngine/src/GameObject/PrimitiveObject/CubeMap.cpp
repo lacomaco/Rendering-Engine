@@ -57,11 +57,6 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 8);
 
-    GLenum error = glGetError();
-    if (error != GL_NO_ERROR) {
-        std::cerr << "Error Bind Texture : " << error << std::endl;
-    }
-
     for (unsigned int i = 0; i < maps.size(); i++)
     {
         gli::texture2d Texture(gli::load_dds(maps[i].c_str()));
