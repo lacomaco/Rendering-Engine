@@ -16,11 +16,10 @@ layout(local_size_x = ThreadGroupX, local_size_y = ThreadGroupY, local_size_z = 
 shared vec3 SharedCoeffs[ThreadGroupX * ThreadGroupY][9];
 shared int TotalSample;
 
-vec3 irradianceLight(float normalTheta,float normalPhi)	{
+vec3 irradianceLight(vec3 normal)	{
 	float sampleDelta = 0.025;
 	float nrSamples = 0.0;
 
-	vec3 normal = vec3(sin(normalTheta)*cos(normalPhi), sin(normalTheta) * sin(normalPhi),cos(normalTheta));
 	vec3 up = vec3(0.0,1.0,0.0);
 	vec3 right = normalize(cross(up, normal));
 	up = normalize(cross(normal,right));
@@ -38,7 +37,7 @@ vec3 irradianceLight(float normalTheta,float normalPhi)	{
 		}
 	}
 
-	return PI * irradiance * (1.0 / float(nrSamples)); 
+	return 2.0 * PI * irradiance * (1.0 / float(nrSamples)); 
 }
 
 void main () {
@@ -71,13 +70,14 @@ void main () {
 
 	for(float phi = startPhi; phi < endPhi; phi += SampleDelta){
 		for(float theta = startTheta; theta < endTheta; theta += SampleDelta){
-			vec3 color = irradianceLight(theta,phi);
+		    vec3 normal = vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+			vec3 color = irradianceLight(normal);
 
 			float y[9];
 			L2(theta,phi, y);
 
 			for(int i = 0; i < 9; i++){
-				SHCoeffs[i] += color * y[i];
+				SHCoeffs[i] += color * y[i] * sin(theta);
 			}
 
 			nrSamples++;
@@ -102,11 +102,13 @@ void main () {
 				data[j * 3 + 2] += SharedCoeffs[i][j].b;
 			}
 		}
+
+		float normalizationFactor = 4.0 * PI / float(TotalSample);
 		// Monte Carlo
 		for(int j = 0; j < 9; j++){
-			data[j * 3] = 4 * PI * data[j * 3] / float(TotalSample);
-			data[j * 3 + 1] = 4 * PI * data[j * 3 + 1] / float(TotalSample);
-			data[j * 3 + 2] = 4 * PI * data[j * 3 + 2] / float(TotalSample);
+			data[j * 3] *= normalizationFactor;
+			data[j * 3 + 1] *= normalizationFactor;
+			data[j * 3 + 2] *= normalizationFactor;
 		}
 	}
 }

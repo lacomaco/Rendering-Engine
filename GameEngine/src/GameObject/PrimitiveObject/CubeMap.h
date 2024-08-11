@@ -14,7 +14,6 @@ class CubeMap
 {
 private:
     void CreateCubeMapTexture(unsigned int& texture, std::vector<std::string> maps);
-    void CreateDiffuseIrradianceMap();
     void CreatePreFilterEnviromentMap();
     void CreateBRDFLut();
 
@@ -36,7 +35,6 @@ public:
 	CubeMap(std::string filePath);
     unsigned int skyBoxId;
 	unsigned int preFilterEnvironmentMap;
-    unsigned int irradianceId;
     unsigned int brdfLUTTextureId;
     unsigned int vao, vbo;
 

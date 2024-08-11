@@ -84,8 +84,8 @@ void M0(float theta,out float Y[9]) {
 }
 
 vec3 computeF(vec3 v,float Y[27]){
-	float theta = atan(v.y,v.x);
-	float phi = atan(sqrt(v.x * v.x + v.y * v.y), v.z);
+	float theta = acos(v.z);
+	float phi = atan(v.y, v.x);
 
 	vec3 result = vec3(0.0);
 
