@@ -180,6 +180,11 @@ void Shader::setFloat(const char* shaderProgramName, const char* name, float val
 	glUniform1f(glGetUniformLocation(getShaderProgram(shaderProgramName), name), value);
 }
 
+void Shader::setFloat(const char* shaderProgramName, const char* name, float* values, int count) {
+    glUniform1fv(glGetUniformLocation(getShaderProgram(shaderProgramName), name), 100, values);
+}
+
+
 void Shader::setVec2(const char* shaderProgramName, const char* name, const glm::vec2& value) {
 	glUniform2fv(glGetUniformLocation(getShaderProgram(shaderProgramName), name), 1, &value[0]);
 }

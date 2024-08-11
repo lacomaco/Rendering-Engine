@@ -30,6 +30,7 @@ public:
 	void setBool(const char* shaderProgramName, const char* name, bool value);
 	void setInt(const char* shaderProgramName, const char* name, int value);
 	void setFloat(const char* shaderProgramName, const char* name, float value);
+	void setFloat(const char* shaderProgramName, const char* name, float* values, int count);
 	void setVec2(const char* shaderProgramName, const char* name, const glm::vec2& value);
 	void setVec2(const char* shaderProgramName, const char* name, float x, float y);
 	void setVec3(const char* shaderProgramName, const char* name, const glm::vec3& value);

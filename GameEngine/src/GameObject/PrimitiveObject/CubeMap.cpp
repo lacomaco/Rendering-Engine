@@ -90,7 +90,7 @@ void CubeMap::CreateCubeMapTexture(unsigned int& texture, std::vector<std::strin
 }
 
 void CubeMap::CalculateSHCoefficients() {
-    std::vector<float> a1Data(16 * 16);
+    std::vector<float> a1Data(9 * 3);
 
     GLuint a1;
     glGenBuffers(1, &a1);
@@ -106,6 +106,10 @@ void CubeMap::CalculateSHCoefficients() {
     auto shader = Shader::getInstance();
 
     glUseProgram(shader->getShaderProgram("irradiance"));
+    shader->setInt("irradiance", "skyMap", 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxId);
+
     glDispatchCompute(1, 1, 1);
 
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
@@ -124,6 +128,8 @@ void CubeMap::CalculateSHCoefficients() {
         std::cout << a1Data[i] << " ";
     }
     std::cout << "Compute Shade Done!";
+
+    SHCoeffs = a1Data;
 }
 
 
@@ -150,6 +156,7 @@ void CubeMap::PutCubeMapTexture(const char* shaderProgramName) {
 
     shader->setFloat(shaderProgramName, "lodLevel", lodLevel);
     shader->setInt(shaderProgramName, "select", select);
+    shader->setFloat(shaderProgramName, "shCoeffs", SHCoeffs.data(), SHCoeffs.size());
 }
 
 void CubeMap::Draw(const char* shaderProgramName) {

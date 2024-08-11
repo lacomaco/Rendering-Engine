@@ -2,7 +2,10 @@
 
 #define ThreadGroupX 16
 #define ThreadGroupY 16
-#define PI 3.14159265359
+
+#include SH-common.glsl
+
+uniform samplerCube skyMap;
 
 layout(std430, binding = 0) buffer DataBuffer {
 	float data[];
@@ -10,71 +13,100 @@ layout(std430, binding = 0) buffer DataBuffer {
 
 layout(local_size_x = ThreadGroupX, local_size_y = ThreadGroupY, local_size_z = 1) in;
 
-int factorial(int n) {
-    int result = 1;
-    for (int i = 2; i <= n; ++i) {
-        result *= i;
-    }
-    return result;
-}
+shared vec3 SharedCoeffs[ThreadGroupX * ThreadGroupY][9];
+shared int TotalSample;
 
-// see : https://3dvar.com/Green2003Spherical.pdf
-float P(int l,int m,float x)
-{
-	float pmm = 1.0;
+vec3 irradianceLight(float normalTheta,float normalPhi)	{
+	float sampleDelta = 0.025;
+	float nrSamples = 0.0;
 
-	if(m>0) {
-		float somx2 = sqrt((1.0-x)*(1.0+x));
-		float fact = 1.0;
-		for(int i=1; i<=m; i++) {
-			pmm *= (-fact) * somx2;
-			fact += 2.0;
+	vec3 normal = vec3(sin(normalTheta)*cos(normalPhi), sin(normalTheta) * sin(normalPhi),cos(normalTheta));
+	vec3 up = vec3(0.0,1.0,0.0);
+	vec3 right = normalize(cross(up, normal));
+	up = normalize(cross(normal,right));
+
+	vec3 irradiance = vec3(0.0f);
+
+	for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta){
+		for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta){
+			vec3 tangentSample = vec3(sin(theta)*cos(phi), sin(theta) * sin(phi),cos(theta));
+
+			vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
+
+			irradiance += texture(skyMap, sampleVec).rgb * cos(theta) * sin(theta);
+			nrSamples++;
 		}
 	}
 
-	if(l==m) {
-		return pmm;
-	}
-
-	float pmmp1 = x * (2.0*m+1.0) * pmm;
-
-	if(l==m+1) {
-		return pmmp1;
-	}
-
-	float pll = 0.0;
-
-	for(int ll=m+2; ll<=l; ++ll) {
-		pll = ((2.0*ll-1.0) * x * pmmp1-(ll+m-1.0)*pmm) / (ll-m);
-		pmm = pmmp1;
-		pmmp1 = pll;
-	}
-
-	return pll;
-}
-
-float K(int l, int m)
-{
-	float temp = ((2.0*l+1.0)*factorial(l-m)) / (4.0*PI*factorial(l+m));
-	return sqrt(temp);
-}
-
-float SH(int l, int m, float theta, float phi)
-{
-	const float sqrt2 = sqrt(2.0);
-
-	if(m==0) {
-		return K(l,0)*P(l,m,cos(theta));
-	}
-	else if(m>0) {
-		return sqrt2*K(l,m)*cos(m*phi)*P(l,m,cos(theta));
-	}
-	else {
-		return sqrt2*K(l,-m)*sin(-m*phi)*P(l,-m,cos(theta));
-	}
+	return PI * irradiance * (1.0 / float(nrSamples)); 
 }
 
 void main () {
-	uint localId = gl_LocalInvocationID.x + gl_LocalInvocationID.y * ThreadGroupX;
-	data[localId] = float(localId);
+	if(gl_LocalInvocationIndex == 0){
+		// 0번 스레드만 초기화 해야함!
+		TotalSample = 0;
+	}
+
+	vec3 SHCoeffs[9];
+	for(int i = 0; i < 9; i++) {
+		SHCoeffs[i] = vec3(0.0);
+	}
+
+
+	int nrSamples = 0;
+	const float SampleDelta = 0.025;
+
+	const float DeltaPhi = 2.0 * PI / float(ThreadGroupX); 
+	const float DeltaTheta = PI / float(ThreadGroupY);
+
+	float startPhi = gl_LocalInvocationID.x * DeltaPhi;
+	float endPhi = startPhi + DeltaPhi;
+
+	float startTheta = gl_LocalInvocationID.y * DeltaTheta;
+	float endTheta = startTheta + DeltaTheta;
+
+	// 지금은 normal (0,1,0) 방향으로만 샘플링하고있어서 ziggle현상이바 ㄹ생함
+
+	// 4중 for문을 돌아야함
+
+	for(float phi = startPhi; phi < endPhi; phi += SampleDelta){
+		for(float theta = startTheta; theta < endTheta; theta += SampleDelta){
+			vec3 color = irradianceLight(theta,phi);
+
+			float y[9];
+			L2(theta,phi, y);
+
+			for(int i = 0; i < 9; i++){
+				SHCoeffs[i] += color * y[i];
+			}
+
+			nrSamples++;
+		}
+	}
+
+	int sharedIndex = int(gl_GlobalInvocationID.y) * ThreadGroupX + int(gl_GlobalInvocationID.x);
+
+	for(int i = 0; i < 9; i++){
+		SharedCoeffs[sharedIndex][i] = SHCoeffs[i];
+	}
+
+	atomicAdd(TotalSample, nrSamples);
+	groupMemoryBarrier();
+	barrier();
+
+	if(gl_LocalInvocationIndex == 0){
+		for(int i = 0; i < ThreadGroupX * ThreadGroupY; i++){
+			for(int j = 0; j < 9; j++){
+				data[j * 3] += SharedCoeffs[i][j].r;
+				data[j * 3 + 1] += SharedCoeffs[i][j].g;
+				data[j * 3 + 2] += SharedCoeffs[i][j].b;
+			}
+		}
+		// Monte Carlo
+		for(int j = 0; j < 9; j++){
+			data[j * 3] = 4 * PI * data[j * 3] / float(TotalSample);
+			data[j * 3 + 1] = 4 * PI * data[j * 3 + 1] / float(TotalSample);
+			data[j * 3 + 2] = 4 * PI * data[j * 3 + 2] / float(TotalSample);
+		}
+	}
 }

@@ -17,7 +17,6 @@ private:
     void CreateDiffuseIrradianceMap();
     void CreatePreFilterEnviromentMap();
     void CreateBRDFLut();
-    void CalculateSHCoefficients();
 
     glm::mat4 projection = glm::perspective(
         glm::radians(90.0f),
@@ -29,8 +28,11 @@ private:
     glm::mat4 captureViews[6];
     unsigned int fbo;
     unsigned int rbo;
+    std::vector<float> SHCoeffs;
 
 public:
+    void CalculateSHCoefficients();
+
 	CubeMap(std::string filePath);
     unsigned int skyBoxId;
 	unsigned int preFilterEnvironmentMap;

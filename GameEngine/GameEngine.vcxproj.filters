@@ -1510,6 +1510,7 @@
     <None Include="shader\deferred-fragment.glsl" />
     <None Include="shader\deferred-vertex.glsl" />
     <None Include="shader\SH-irradiance-compute.glsl" />
+    <None Include="shader\SH-common.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\awesomeface.png">

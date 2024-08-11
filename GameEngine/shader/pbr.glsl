@@ -1,4 +1,6 @@
 
+uniform float shCoeffs[27];
+
 // 나중에 uniform으로 바꿀 수 있도록 변경해도 괜찮을듯.
 vec3 Fdielectric = vec3(0.04); // 비금속 재질의 F0
 
@@ -30,7 +32,9 @@ vec3 diffuseIBL(vec3 albedo,vec3 normalWorld,vec3 pixelToEye,float metallic) {
     vec3 F = SchlickFresnel(F0, max(dot(normalWorld,pixelToEye),0.0));
     vec3 kd = mix(1.0 - F, vec3(0.0), metallic);
 
-    vec3 irradiance = textureLod(irradianceMap, normalWorld,0.0).rgb;
+    // vec3 irradiance = textureLod(irradianceMap, normalWorld,0.0).rgb;
+
+    vec3 irradiance = computeF(normalWorld, shCoeffs);
 
     return kd * albedo * irradiance;
 }

@@ -13,6 +13,7 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
+#include SH-common.glsl
 #include pbr.glsl
 
 void main() {
