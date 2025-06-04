@@ -6,8 +6,8 @@ std::string Shader::readShaderSource(const char* filePath)
 {
 	std::ifstream shaderFile;
     /*
-    * failbit <- I/O ÀÛ¾÷Áß ³í¸®Àû ½ÇÆÐ ¹ß»ý
-    * badbit <- ÀÐ±â ¾²±â ¿À·ù·Î ÀÎÇÑ ½ÇÆÐ
+    * failbit <- I/O ìž‘ì—…ì¤‘ ë…¼ë¦¬ì  ì‹¤íŒ¨ ë°œìƒ
+    * badbit <- ì½ê¸° ì“°ê¸° ì˜¤ë¥˜ë¡œ ì¸í•œ ì‹¤íŒ¨
     */
 	shaderFile.exceptions(
 		std::ifstream::failbit | std::ifstream::badbit
@@ -15,10 +15,10 @@ std::string Shader::readShaderSource(const char* filePath)
     try {
         shaderFile.open(filePath);
         std::stringstream shaderStream;
-        // ÆÄÀÏ ³»¿ëÀ» ½ºÆ®¸²¿¡ ÀÐ¾î¿É´Ï´Ù.
+        // íŒŒì¼ ë‚´ìš©ì„ ìŠ¤íŠ¸ë¦¼ì— ì½ì–´ì˜µë‹ˆë‹¤.
         shaderStream << shaderFile.rdbuf();
         shaderFile.close();
-        // ½ºÆ®¸²À» std::stringÀ¸·Î º¯È¯ÇÕ´Ï´Ù.
+        // ìŠ¤íŠ¸ë¦¼ì„ std::stringìœ¼ë¡œ ë³€í™˜í•©ë‹ˆë‹¤.
         return shaderStream.str();
     }
     catch (std::ifstream::failure& e) {
@@ -32,7 +32,7 @@ GLuint Shader::compileShader(const char* shaderCode, GLenum shaderType, const ch
     glShaderSource(shader, 1, &shaderCode, NULL);
     glCompileShader(shader);
 
-    // ÄÄÆÄÀÏ ¿À·ù È®ÀÎ
+    // ì»´íŒŒì¼ ì˜¤ë¥˜ í™•ì¸
     GLint success;
     GLchar infoLog[512];
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -82,7 +82,7 @@ unsigned int Shader::loadShaderProgram(
 
 		glLinkProgram(shaderProgram);
 
-		// ¸µÅ© ¿À·ù È®ÀÎ
+		// ë§í¬ ì˜¤ë¥˜ í™•ì¸
 		GLint success;
 		GLchar infoLog[512];
 		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
@@ -116,7 +116,7 @@ unsigned int Shader::loadComputeShaderProgram(const char* computeShaderPath, con
         glAttachShader(programId, shaderId);
         glLinkProgram(programId);
 
-        // ¸µÅ© ¿À·ù È®ÀÎ
+        // ë§í¬ ì˜¤ë¥˜ í™•ì¸
         GLint success;
         GLchar infoLog[512];
 
@@ -154,7 +154,7 @@ std::string Shader::ProcessShaderIncludes(const std::string& source, const std::
     std::string processedSource;
     while (std::getline(stream, line)) {
         if (line.substr(0, 8) == "#include") {
-            std::string includeFileName = line.substr(9).erase(0, line.find_first_not_of(" \t")); // ÆÄÀÏ¸í ÃßÃâ ¹× ¾ÕÂÊ °ø¹é Á¦°Å
+            std::string includeFileName = line.substr(9).erase(0, line.find_first_not_of(" \t")); // íŒŒì¼ëª… ì¶”ì¶œ ë° ì•žìª½ ê³µë°± ì œê±°
             std::string includeFilePath = directoryPath + "/" + includeFileName;
             std::string includeContent = readShaderSource(includeFilePath.c_str());
             if (!includeContent.empty()) {
@@ -181,7 +181,7 @@ void Shader::setFloat(const char* shaderProgramName, const char* name, float val
 }
 
 void Shader::setFloat(const char* shaderProgramName, const char* name, float* values, int count) {
-    glUniform1fv(glGetUniformLocation(getShaderProgram(shaderProgramName), name), 100, values);
+    glUniform1fv(glGetUniformLocation(getShaderProgram(shaderProgramName), name), count, values);
 }
 
 
